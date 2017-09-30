@@ -41,7 +41,7 @@ html {
 
 body {
     position: relative;
-    height: 100%;
+    min-height: 100%;
     padding: 0;
     padding-right: 20px;
     width: 900px;
