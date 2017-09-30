@@ -1,13 +1,21 @@
-# Divinitor DN Reference
+# reference.dn.divinitor.com
 
-This is the site for static reference data for Dragon Nest.
+> Divinitor DN Reference
 
-Data includes boss stats, enhancement rates and costs, nest information, and other relevant data.
+## Build Setup
 
-The site can be accessed [here](http://reference.dn.divinitor.com).
+``` bash
+# install dependencies
+npm install
 
-The [Driver](https://github.com/vincentzhang96/reference.dn.divinitor.com/tree/driver) branch contains code for the servers that listen for patches and updates the site data accordingly.
+# serve with hot reload at localhost:8080
+npm run dev
 
-The [gh-pages](https://github.com/vincentzhang96/reference.dn.divinitor.com/tree/gh-pages) branch contains the website code.
+# build for production with minification
+npm run build
 
-The master branch doesn't do anything but look pretty and host this readme file.
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+
+For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

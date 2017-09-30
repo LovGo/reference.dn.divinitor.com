@@ -1,0 +1,88 @@
+<template>
+  <div class="home">
+    <h1>Welcome</h1>
+
+    <div class="warn toast">
+      Under construction! Please check back later when we have real content.
+    </div>
+
+    <p>
+      This site provides information on various aspects of Dragon Nest. Information on monsters, 
+      bosses, nests, items, skills, and more are or will be available here.
+    </p>
+    <p>
+      Begin by selecting a category in the navigation pane. Change regions using the region selector in the top right.
+    </p>
+    <p>
+      Additional categories, other regions, side-by-side region comparisons, and language overrides will be coming 
+      later.
+    </p>
+
+    <h2>Region Information</h2>
+    <div class="tag-table">
+      <div class="row">
+        <div class="rowhead">Region</div>
+        <div class="data">{{ server.region }}</div>
+      </div>
+      <div class="row">
+        <div class="rowhead">Version</div>
+        <div class="data">{{ server.version }}</div>
+      </div>
+      <div class="row">
+        <div class="rowhead">Patched</div>
+        <div class="data">{{ server.patched | moment("MMM DD YYYY") }}</div>
+      </div>
+      <div class="row">
+        <div class="rowhead">Language</div>
+        <div class="data">{{ server.language }}</div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: 'home',
+  data () {
+    return {
+      server: {
+        id: "na",
+        region: "North America",
+        version: 636,
+        patched: "2017-09-16",
+        language: "English (US)"
+      }
+    };
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less" scoped>
+@import "../less/core.less";
+
+.tag-table {
+  .row {
+    position: relative;
+    vertical-align: center;
+    .rowhead {
+      width: 70px;
+      font-family: @dv-f-lato;
+      color: @dv-c-foreground;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: inline-block;
+    }
+    .data {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      display: inline-block;
+    }
+  }
+}
+
+</style>
