@@ -2,7 +2,7 @@
     <div id="app">
         <locale-select></locale-select>
         <div class="flex-box">
-            <div class="left-pane">
+            <div class="left-pane mobile-hide">
                 <navigation-pane></navigation-pane>
             </div>
             <div class="main-pane">
@@ -110,5 +110,52 @@ body {
   right: 20px;
 }
 
+@media only screen and (min-width:1300px) {
+    body {
+        width: 1050px;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    body {
+        width: 100%;
+        border: none;
+        padding: 0;
+        background-image: linear-gradient(rgba(5, 10, 13, 0.75), rgba(5, 10, 13, 0.75)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
+    }
+
+    .copyright {
+        right: 20px;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .header {
+        width: 100%;
+
+        h1 {
+            font-size: 14px;
+        }
+    }
+
+    .flex-box {
+        .main-pane {
+            padding-left: 0;
+        }
+    }
+
+    .mobile-only {
+        display: block;
+    }
+
+    .mobile-hide {
+        display: none;
+    }
+    
+    .copyright {
+        margin-top: 20px;
+        position: relative;
+    }
+}
 
 </style>

@@ -44,4 +44,14 @@ export default {
     }
 }
 
+
+@media only screen and (max-width: 650px) {
+    .locale-select {
+        top: 64px;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+}
+
 </style>
