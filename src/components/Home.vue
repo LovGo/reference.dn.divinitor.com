@@ -46,6 +46,10 @@
         <div class="rowhead">Language</div>
         <div class="data">{{ server.language }}</div>
       </div>
+      <div class="row">
+        <div class="rowhead">Level Cap</div>
+        <div class="data">{{ server.levelCap }}</div>
+      </div>
     </div>
   </div>
 </template>

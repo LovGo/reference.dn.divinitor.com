@@ -5,7 +5,8 @@ const Regions = {
         localizedName: "North America",
         version: 636,
         patched: "2017-09-16",
-        language: "English (US)"
+        language: "English (US)",
+        levelCap: 95
     },
     "kr": {
         id: "kr",
@@ -13,7 +14,8 @@ const Regions = {
         localizedName: "대한민국",
         version: 866,
         patched: "2017-09-27",
-        language: "Korean"
+        language: "Korean",
+        levelCap: 95
     }
 };
 
