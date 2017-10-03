@@ -31,7 +31,7 @@ html {
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
 
     position: relative;
@@ -41,13 +41,12 @@ html {
 
 body {
     position: relative;
-    min-height: 100%;
+    min-height: 100vh;
     padding: 0;
     padding-right: 20px;
     width: 900px;
     border-left: @dv-c-foreground solid 1px;
     border-right: @dv-c-foreground solid 1px;
-    height: 100%;
     margin: 0 auto;
 
     background-image: linear-gradient(rgba(5, 10, 13, 0.5), rgba(5, 10, 13, 0.5)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
@@ -56,7 +55,8 @@ body {
     background-position: 62.5% 70%;
     background-color: @dv-c-background;
     background-attachment: fixed;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 #app {
