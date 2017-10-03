@@ -104,6 +104,14 @@ p {
     margin: 1em 0;
     color: @dv-c-foreground;
 
+    & > .heading {
+        font-size: 0.8em;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        font-family: @dv-f-geomanist;
+        color: white;
+    }
+
     &.warn {
         border-color: @dv-c-red;
         background: fade(lighten(@dv-c-red, -30%), 50%);
