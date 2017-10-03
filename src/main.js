@@ -5,6 +5,7 @@ import App from './App';
 import router from './router';
 import NavigationPane from '@/components/NavigationPane';
 import LocaleSelect from '@/components/LocaleSelect';
+import store from './store';
 
 Vue.config.productionTip = false;
 
@@ -17,7 +18,11 @@ Vue.component('locale-select', LocaleSelect);
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
-  components: { App }
+  components: { App },
+  created() {
+    this.$store.dispatch('init');
+  }
 });
 

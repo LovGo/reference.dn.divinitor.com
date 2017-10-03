@@ -3,7 +3,8 @@
     <h1>Welcome</h1>
 
     <div class="warn toast">
-      Under construction! Please check back later when we have real content.
+      <div class="heading">Under construction!</div>
+      Please check back later when we have real content.
     </div>
 
     <p>
@@ -19,10 +20,19 @@
     </p>
 
     <h2>Region Information</h2>
-    <div class="tag-table">
+    <div class="loading" v-if="loading">
+      Loading region data...
+    </div>
+    <div class="warn toast" v-if="error">
+      <div class="heading">
+        Error
+      </div>
+      {{ error }}
+    </div>
+    <div class="tag-table" v-if="server">
       <div class="row">
         <div class="rowhead">Region</div>
-        <div class="data">{{ server.region }}</div>
+        <div class="data">{{ server.name }}</div>
       </div>
       <div class="row">
         <div class="rowhead">Version</div>
@@ -37,26 +47,40 @@
         <div class="data">{{ server.language }}</div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
+import region from '@/api/region';
 
 export default {
   name: 'home',
   data () {
     return {
-      server: {
-        id: "na",
-        region: "North America",
-        version: 636,
-        patched: "2017-09-16",
-        language: "English (US)"
-      }
+      loading: false,
+      server: null,
+      error: null
     };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.error = this.server = null;
+      this.loading = true;
+      region.getRegion(this.$store.state.regionCode,
+        (d) => {
+          this.server = d;
+          this.loading = false;
+        },
+        (err) => {
+          this.error = err;
+          this.loading = false;
+        });
+    }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
