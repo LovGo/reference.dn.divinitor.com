@@ -30,5 +30,14 @@ export default {
         } else {
             okcb(ret);
         }
+    },
+
+    getRegions(okcb, errcb) {
+        let ret = [];
+        for (let k in Regions) {
+            ret.push(Regions[k]);
+        }
+
+        okcb(ret);
     }
 };
