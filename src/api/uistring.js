@@ -3,9 +3,10 @@ export default {
     cache: {},
 
     getString(mid, { vue, region, param, format, okcb, errcb }) {
+        let cacheKey = `${mid}:${btoa(param)}//${format}`;
         let cachedRegion = this.cache[region];
         if (cachedRegion) {
-            let cachedResult = cachedRegion[mid + param];
+            let cachedResult = cachedRegion[cacheKey];
             if (cachedResult) {
                 okcb(cachedResult);
                 return;
@@ -25,7 +26,7 @@ export default {
                     cachedRegion = this.cache[region] = {};
                 }
 
-                cachedRegion[mid + param] = res.body;
+                cachedRegion[cacheKey] = res.body;
                 okcb(res.body);
             }, 
             errcb);

@@ -1,8 +1,10 @@
 <template>
-  <div class="uistrings">
-      <div class="button-bar stacked">
-        <router-link to="/text/uistring/browse" tag="div" class="row-button">Browse</router-link>
-        <router-link to="/text/uistring/midlup" tag="div" class="row-button">MID Lookup</router-link>
+  <div class="gametext">
+      <h1>Text</h1>
+      <div class="button-bar">
+        <router-link to="/text/uistring/" tag="div" class="row-button">UIString</router-link>
+        <router-link to="/text/server" tag="div" class="row-button disabled">Server Strings</router-link>
+        <router-link to="/text/prohibit" tag="div" class="row-button disabled">Prohibited Words</router-link>
       </div>
       <router-view></router-view>
   </div>

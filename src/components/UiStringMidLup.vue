@@ -1,8 +1,8 @@
 <template>
   <div class="uistrings midlup">
         <div class="searchbar">
-            <input type="search" v-model="query" v-on:keyup.enter="search" name="search" autocomplete="off" />
-            <label for="search">Enter MID</label>
+            <input type="search" v-model="query" v-on:keyup.enter="search" name="search" autocomplete="off" placeholder="Enter MID and/or parameters"/>
+            <label for="search">MID and/or parameters</label>
         </div>
         
         <div class="result-wrapper">
@@ -27,6 +27,12 @@ export default {
   name: 'uistringmidlup',
   data () {
     return {
+        loadedQuery: "",
+        query: "",
+        result: {},
+        loading: false,
+        error: null,
+        lastChangeTimer: null
     };
   },
   created() {
@@ -44,39 +50,6 @@ export default {
 @import "../less/core.less";
 
 .uistrings.midlup {
-    
-    .searchbar {
-        margin-top: 20px;
-        label {
-            display: block;
-            font-weight: normal;
-            letter-spacing: 0.1em;
-            color: @dv-c-accent-1;
-            font-family: @dv-f-geomanist;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            font-size: 10px;
-            margin: 0 0 0.5em 0;
-        }
-
-        input[type="search"] {
-            border: none;
-            border-bottom: 1px @dv-c-accent-1 solid;
-            background: none;
-            width: 100%;
-            color: @dv-c-foreground;
-            font-family: @dv-f-lato;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 24px;
-            transition: border-color 0.125s ease-in, color 0.125s ease-in;
-
-            &:focus {
-                border-bottom-color: @dv-c-foreground;
-            }
-        }
-    }
-    
     .result-wrapper {
         position: relative;
 

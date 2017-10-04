@@ -1,7 +1,7 @@
 <template>
     <div class="uistrings browse">
         <div class="searchbar">
-            <input type="search" v-model="query" v-on:keyup.enter="search" v-on:blur="search" name="search" autocomplete="off" placeholder="Enter search terms"/>
+            <input type="search" v-model="query" v-on:keyup.enter="search" v-on:change="search" v-on:input="changed" name="search" autocomplete="off" placeholder="Enter search terms"/>
             <label for="search">Search</label>
         </div>
         
@@ -14,6 +14,7 @@
             </div>
             <div class="results" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="0">
                 <div v-if="results.length">
+                    <div class="count">Found <span class="val">{{ approxResultCount | thousands }} results</span></div>
                     <div v-for="item in results" :key="item.mid" class="midresult">
                         <div class="mid">
                             {{ item.mid }}
@@ -27,15 +28,28 @@
                 </div>
                 <div v-else>
                     <div class="no-results" v-if="!loading">
-                        <div class="icon">
-                            <i class="fa fa-question-circle"></i>
+                        <div class="error" v-if="error">
+                            <div class="icon">
+                                <i class="fa fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="head">
+                                Error
+                            </div>
+                            <p>
+                                {{ error.statusText }}
+                            </p>
                         </div>
-                        <div class="head">
-                            No results
+                        <div v-else>
+                            <div class="icon">
+                                <i class="fa fa-question-circle"></i>
+                            </div>
+                            <div class="head">
+                                No results
+                            </div>
+                            <p>
+                                Try searching something different.
+                            </p>
                         </div>
-                        <p>
-                            Try searching something different.
-                        </p>
                     </div>
                 </div>
             </div>
@@ -56,8 +70,10 @@ export default {
         results: [],
         loading: false,
         page: 0,
+        approxResultCount: 0,
         end: false,
-        error: null
+        error: null,
+        lastChangeTimer: null
     };
   },
   created() {
@@ -66,6 +82,7 @@ export default {
   },
   methods: {
     fetchData() {
+        clearTimeout(this.lastChangeTimer);
         this.loading = true;
         uistring.getBulk({
             page: this.page,
@@ -79,18 +96,26 @@ export default {
             okcb: (res) => {
                 this.results.push(...res.strings);
                 this.end = this.results.length >= res.estimatedSize;
+                this.approxResultCount = res.estimatedSize;
                 this.loadedQuery = this.query;
+                this.error = null;
                 //  Add a slight delay cuz otherwise its too fast
                 setTimeout(() => this.loading = false, 250);
             },
             errcb: (err) => {
                 console.error(err);
+                this.error = err;
                 this.loading = false;
                 this.end = true;
             }
         });
     },
+    changed() {
+        clearTimeout(this.lastChangeTimer);
+        this.lastChangeTimer = setTimeout(this.search, 1000);
+    },
     search() {
+        clearTimeout(this.lastChangeTimer);
         if (this.query == this.loadedQuery) {
             return;
         }
@@ -98,7 +123,7 @@ export default {
         this.results = [];
         this.page = 0;
         this.end = false;
-        this.$router.push({ path: '/uistring', query: {q: this.query }});
+        this.$router.push({ path: '/text/uistring/browse', query: {q: this.query }});
         this.fetchData();
     },
     loadMore() {
@@ -116,44 +141,6 @@ export default {
 @import "../less/core.less";
 
 .uistrings.browse {
-    .searchbar {
-        margin-top: 20px;
-        label {
-            display: block;
-            font-weight: normal;
-            letter-spacing: 0.1em;
-            color: @dv-c-accent-1;
-            font-family: @dv-f-geomanist;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            font-size: 10px;
-            margin: 0 0 0.5em 0;
-        }
-
-        input[type="search"] {
-            border: none;
-            border-bottom: 1px @dv-c-accent-1 solid;
-            background: none;
-            width: 100%;
-            color: @dv-c-foreground;
-            font-family: @dv-f-lato;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 24px;
-            transition: border-color 0.125s ease-in, color 0.125s ease-in;
-
-            &:focus {
-                border-bottom-color: @dv-c-foreground;
-            }
-
-            &::placeholder {
-                color: @dv-c-idle;
-                font-size: 0.75em;
-                letter-spacing: 0.3em;
-            }
-        }
-    }
-
     .result-wrapper {
         position: relative;
 
@@ -283,6 +270,20 @@ export default {
                 }
                 p {
                     font-size: 18px;
+                }
+            }
+
+            .count {
+                font-weight: normal;
+                letter-spacing: 0.1em;
+                color: @dv-c-accent-1;
+                font-family: @dv-f-geomanist;
+                text-transform: uppercase;
+                letter-spacing: 0.3em;
+                font-size: 14px;
+
+                .val {
+                    color: @dv-c-accent-2;
                 }
             }
 

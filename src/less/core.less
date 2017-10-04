@@ -54,6 +54,10 @@ h4 {
     text-transform: uppercase;
 }
 
+textarea:focus, input:focus{
+    outline: none;
+}
+
 a {
     color: @dv-c-accent-1;
     text-decoration: none;
@@ -136,13 +140,120 @@ p {
     .format-s {
         color: #589ecb;
     }
+    .format-b {
+        color: #4080f0;
+    }
     .format-h {
         color: #505050;
     }
     .format-v {
         color: #a257a0;
     }
+    .format-r {
+        color: #fe3030;
+    }
+    .format-g {
+        color: @dv-c-green;
+    }
+    .format-j {
+        color: #e09048;
+    }
+    .format-p {
+        color: #aaaa90;
+    }
+    .format-n::before {
+        content: "\A";
+        white-space: pre;
+    }
+    .format-d {
+        //  nothing
+    }
+    .format-t {
+        color: #555;
+    }
 }
+
+
+.button-bar {
+    display: flex;
+    width: 100%;
+    .row-button {
+        flex: 1 0 0;
+        text-align: center;
+        font-family: @dv-f-geomanist;
+        color: @dv-c-foreground;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        font-size: 16px;
+        border: @dv-c-foreground 1px solid;
+        border-width: 1px 1px 1px 0;
+        padding: 0.5em;
+        cursor: pointer;
+        transition: background-color 0.25s ease-in, color 0.25s ease-in;
+
+
+        &:first-child {
+            border-width: 1px;
+        }
+
+        &:hover,
+        &.router-link-active {
+            background-color: @dv-c-foreground;
+            color: @dv-c-background;
+        }
+
+        &.disabled {
+            // pointer-events: none;
+            color: lighten(@dv-c-disabled, 20%);
+            background-color: fade(@dv-c-disabled, 70%);
+            cursor: not-allowed;
+        }
+    }
+    
+    &.stacked .row-button {
+        border-top: none;
+    }
+}
+
+
+.searchbar {
+    margin-top: 20px;
+    label {
+        display: block;
+        font-weight: normal;
+        letter-spacing: 0.1em;
+        color: @dv-c-accent-1;
+        font-family: @dv-f-geomanist;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        font-size: 10px;
+        margin: 0 0 0.5em 0;
+    }
+
+    input[type="search"] {
+        border: none;
+        border-bottom: 1px @dv-c-accent-1 solid;
+        background: none;
+        width: 100%;
+        color: @dv-c-foreground;
+        font-family: @dv-f-lato;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 24px;
+        transition: border-color 0.125s ease-in, color 0.125s ease-in;
+
+        &:focus {
+            border-bottom-color: @dv-c-foreground;
+        }
+
+        &::placeholder {
+            color: @dv-c-idle;
+            font-size: 0.75em;
+            letter-spacing: 0.3em;
+        }
+    }
+}
+
 
 @media only screen and (max-width: 650px) {
     h1 {
