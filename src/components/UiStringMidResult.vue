@@ -7,8 +7,10 @@
     </div>
     <!-- <div class="col strip" v-html="result.strip">
     </div> -->
-    <textarea class="col" v-model="result.raw" readonly onclick="this.focus();this.select()">
-    </textarea>
+    <div class="col raw">
+        <textarea v-model="result.raw" readonly onclick="this.focus();this.select()">
+        </textarea>
+    </div>
 </div>
 </template>
 
@@ -53,7 +55,7 @@ export default {
         position: relative;
         display: flex;
         flex: 1;
-        padding: 0.5em 1em 2em 1em;
+        padding: 1em 1em 2em 1em;
         border: 1px solid @dv-c-accent-1;
         background-color: rgba(0, 0, 0, 0.25);
         transition: background-color ease-in 0.125s;
@@ -67,6 +69,24 @@ export default {
             background-color: rgba(0, 0, 0, 0.75);
         }
 
+    }
+
+    .rich::before {
+        content: "HTML";
+        position: absolute;
+        font-size: 12px;
+        top: 0.1em;
+        left: 0.4em;
+        color: @dv-c-idle;
+    }
+
+    .raw::before {
+        content: "RAW";
+        position: absolute;
+        font-size: 12px;
+        top: 0.1em;
+        left: 0.4em;
+        color: @dv-c-idle;
     }
 
     .foot {
@@ -90,6 +110,9 @@ export default {
         font-size: 14px;
         font-family: @dv-f-lato;
         resize: none;
+        background: none;
+        border: none;
+        width: 100%;
 
         &.hidden {
             position: absolute;
