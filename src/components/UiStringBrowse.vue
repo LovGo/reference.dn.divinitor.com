@@ -14,8 +14,17 @@
             </div>
             <div class="results" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="0">
                 <div v-if="results.length">
+                    <div class="active-result" v-if="activeResultId">
+                        <div class="container">
+                            <h1>MID {{ activeResultId }}</h1>
+                            <uistring-midresult :result="activeResult"></uistring-midresult>
+                            <div class="buttonbox">
+                                <button v-on:click="closeActive">Close</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="count">Found <span class="val">{{ approxResultCount | thousands }} results</span></div>
-                    <div v-for="item in results" :key="item.mid" class="midresult">
+                    <div v-for="item in results" :key="item.mid" class="midresult" v-on:click.self="setActiveResult" :data-id="item.mid">
                         <div class="mid">
                             {{ item.mid }}
                         </div>
@@ -68,6 +77,8 @@ export default {
         loadedQuery: "",
         query: "",
         results: [],
+        activeResult: null,
+        activeResultId: 0,
         loading: false,
         page: 0,
         approxResultCount: 0,
@@ -119,8 +130,9 @@ export default {
         if (this.query == this.loadedQuery) {
             return;
         }
-        
+
         this.page = 0;
+        this.results = [];
         this.end = false;
         this.$router.push({ path: '/text/uistring/browse', query: {q: this.query }});
         this.fetchData();
@@ -130,6 +142,31 @@ export default {
             this.page += 1;
             this.fetchData();
         }
+    },
+    setActiveResult(evt) {
+        this.activeResultId = evt.target.dataset.id;
+        this.activeResult = null;
+        
+        uistring.getVariant(this.activeResultId, 
+        {
+            vue: this,
+            param: null,
+            region: this.$store.state.regionCode,
+            okcb: (res) => {
+                this.activeResult = {
+                    html: res.html,
+                    raw: res.raw,
+                    strip: res.strip.replace(/\n/g, "<br/>")
+                };
+            },
+            errcb: (err) => {
+                console.error(err);
+            }
+        });
+    },
+    closeActive() {
+        this.activeResultId = 0;
+        this.activeResult = null;
     }
   }
 };
@@ -221,6 +258,37 @@ export default {
         }
 
         .results {
+            position: relative;
+
+            .active-result {
+                background: rgba(10, 10, 10, 0.95);
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 100;
+                
+                .container {
+                    position: relative;
+                    width: 900px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+
+                .buttonbox {
+                    text-align: right;
+                }
+
+                button {
+                    margin-top: 4em;
+                    min-width: 100px;
+                    width: 20%;
+                }
+            }
+
             .midresult {
                 border-top: 1px solid @dv-c-accent-1;
                 position: relative;
@@ -243,10 +311,12 @@ export default {
                     position: absolute;
                     font-size: 12px;
                     color: @dv-c-accent-1;
+                    pointer-events: none;
                 }
 
                 .text {
                     margin-top: 0.8em;
+                    pointer-events: none;
                 }
             }
 

@@ -12,16 +12,19 @@
                     <div class="label">Loading</div>
                 </div>
             </div>
-            <div class="results" v-if="result">
-                <div class="col rich">
-                    <div v-html="result.html"></div>
-                    <div class="foot" v-on:click="copyHtml">{{ copyText }}</div>
-                    <textarea class="hidden" v-model="result.html" ref="htmltext"></textarea>
+            <div v-if="result">
+                <uistring-midresult :result="result"></uistring-midresult>
+            </div>
+            <div v-if="error" class="no-results">
+                <div class="icon">
+                    <i class="fa fa-exclamation-triangle"></i>
                 </div>
-                <!-- <div class="col strip" v-html="result.strip">
-                </div> -->
-                <textarea class="col" v-model="result.raw" readonly onclick="this.focus();this.select()">
-                </textarea>
+                <div class="head">
+                    Error: {{ error.statusText }}
+                </div>
+                <p>
+                    {{ error.bodyText }}
+                </p>
             </div>
         </div>
   </div>
@@ -53,6 +56,10 @@ export default {
   },
   methods: {
     fetchData() {
+        if (!this.query) {
+            return;
+        }
+
         clearTimeout(this.lastChangeTimer);
         let mid = 0;
         let params = "";
@@ -63,7 +70,10 @@ export default {
         mid = parseInt(midStr);
         if (isNaN(mid)) {
             //  TODO
-
+            this.error = {
+                statusText: "Invalid Request",
+                bodyText: "Not a valid MID"
+            };
             return;
         }
         if (split.length == 2) {
@@ -83,7 +93,6 @@ export default {
                     raw: res.raw,
                     strip: res.strip.replace(/\n/g, "<br/>")
                 };
-                console.log(this.result.strip);
                 this.loadedQuery = this.query;
                 this.error = null;
                 //  Add a slight delay cuz otherwise its too fast
@@ -110,18 +119,6 @@ export default {
         this.result = null;
         this.$router.push({ path: '/text/uistring/midlup', query: {q: this.query }});
         this.fetchData();
-    },
-    copyHtml() {
-        let hiddenArea = this.$refs.htmltext;
-        hiddenArea.focus();
-        hiddenArea.select();
-        let success = document.execCommand('copy');
-        if (success) {
-            this.copyText = COPIED_TEXT;
-            setTimeout(() => this.copyText = COPY_TEXT, 1000);
-        } else {
-            console.log("KO");
-        }
     }
   }
 };
@@ -212,79 +209,25 @@ export default {
             }
         }
 
-        .results {
-            
-            display: flex;
-            // flex-direction: column;
-
-            .col {
-                position: relative;
-                display: flex;
-                flex: 1;
-                padding: 0.5em 1em 2em 1em;
-                border: 1px solid @dv-c-accent-1;
-                background-color: rgba(0, 0, 0, 0.25);
-                transition: background-color ease-in 0.125s;
-                margin: 0;
-
-                &:first-child {
-                    border-right: none;
-                }
-
-                &:hover {
-                    background-color: rgba(0, 0, 0, 0.75);
-                }
-
+        .no-results {
+            margin-top: 2em;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.75);
+            padding-bottom: 1em;
+            border: 1px solid @dv-c-red;
+            .icon {
+                font-size: 144px;
+                color: @dv-c-red;
             }
-
-            .foot {
-                position: absolute;
-                bottom: -1.5em;
-                left: 0;
-                font-size: 12px;
-                color: @dv-c-accent-1;
-                letter-spacing: 0.2em;
-                text-transform: uppercase;
-                transition: color ease-in 0.125s;
-                cursor: pointer;
-
-                &:hover {
-                    color: @dv-c-foreground;
-                }
-            }
-
-            textarea {
-                color: @dv-c-body;
-                font-size: 14px;
+            .head {
                 font-family: @dv-f-lato;
-                resize: none;
-
-                &.hidden {
-                    position: absolute;
-                    opacity: 0;
-                }
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                font-size: 24px;
+                color: @dv-c-red;
             }
-
-            .no-results {
-                margin-top: 2em;
-                text-align: center;
-                background: rgba(0, 0, 0, 0.75);
-                padding-bottom: 1em;
-                border: 1px solid @dv-c-red;
-                .icon {
-                    font-size: 144px;
-                    color: @dv-c-red;
-                }
-                .head {
-                    font-family: @dv-f-lato;
-                    text-transform: uppercase;
-                    letter-spacing: 0.1em;
-                    font-size: 24px;
-                    color: @dv-c-red;
-                }
-                p {
-                    font-size: 18px;
-                }
+            p {
+                font-size: 18px;
             }
         }
     }
