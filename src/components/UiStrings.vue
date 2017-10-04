@@ -2,7 +2,7 @@
   <div class="uistrings">
       <h1>UI Strings</h1>
       <div class="button-bar">
-        <router-link to="/uistring" tag="div" class="row-button">Browse</router-link>
+        <router-link to="/uistring/browse" tag="div" class="row-button">Browse</router-link>
         <router-link to="/uistring/midlup" tag="div" class="row-button">MID Lookup</router-link>
       </div>
       <router-view></router-view>

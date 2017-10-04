@@ -24,7 +24,7 @@ export default new Router({
       children: [
         {
           path: '',
-          component: UiStringBrowse
+          redirect: 'browse'
         },
         {
           path: 'browse',
