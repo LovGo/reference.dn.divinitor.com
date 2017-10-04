@@ -32,6 +32,19 @@ export default {
             errcb);
     },
 
+    getVariant(mid, { vue, region, param, okcb, errcb }) {
+        vue.$http.get(`/api/server/${region}/uistring/${mid}/variant`,
+            {
+                params: {
+                    param: param
+                }
+            }).then(
+            (res) => {
+                okcb(res.body);
+            }, 
+            errcb);
+    },
+
     getBulk({ page, size, query }, { vue, region, format, okcb, errcb }) {
         if (query) {
             vue.$http.get(`/api/server/${region}/uistring/search`,

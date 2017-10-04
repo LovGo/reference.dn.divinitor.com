@@ -12,8 +12,16 @@
                     <div class="label">Loading</div>
                 </div>
             </div>
-            <div class="results">
-
+            <div class="results" v-if="result">
+                <div class="col rich">
+                    <div v-html="result.html"></div>
+                    <div class="foot" v-on:click="copyHtml">{{ copyText }}</div>
+                    <textarea class="hidden" v-model="result.html" ref="htmltext"></textarea>
+                </div>
+                <!-- <div class="col strip" v-html="result.strip">
+                </div> -->
+                <textarea class="col" v-model="result.raw" readonly onclick="this.focus();this.select()">
+                </textarea>
             </div>
         </div>
   </div>
@@ -23,23 +31,97 @@
 import region from '@/api/region';
 import uistring from '@/api/uistring';
 
+const COPY_TEXT = "Copy HTML Source";
+const COPIED_TEXT = "Copied!";
+
 export default {
   name: 'uistringmidlup',
   data () {
     return {
         loadedQuery: "",
         query: "",
-        result: {},
+        result: null,
         loading: false,
         error: null,
-        lastChangeTimer: null
+        lastChangeTimer: null,
+        copyText: COPY_TEXT,
     };
   },
   created() {
+    this.query = this.$route.query.q;
     this.fetchData();
   },
   methods: {
     fetchData() {
+        clearTimeout(this.lastChangeTimer);
+        let mid = 0;
+        let params = "";
+
+        let split = this.query.split(/\s/, 2);
+        let midStr = split[0].replace(/(^")|("$)/g, "");
+
+        mid = parseInt(midStr);
+        if (isNaN(mid)) {
+            //  TODO
+
+            return;
+        }
+        if (split.length == 2) {
+            params = split[1].replace(/(^")|("$)/g, "");
+        }
+
+        this.loading = true;
+        uistring.getVariant(mid, 
+        {
+            vue: this,
+            region: this.$store.state.regionCode,
+            param: params,
+            format: 'html',
+            okcb: (res) => {
+                this.result = {
+                    html: res.html,
+                    raw: res.raw,
+                    strip: res.strip.replace(/\n/g, "<br/>")
+                };
+                console.log(this.result.strip);
+                this.loadedQuery = this.query;
+                this.error = null;
+                //  Add a slight delay cuz otherwise its too fast
+                setTimeout(() => this.loading = false, 250);
+            },
+            errcb: (err) => {
+                console.error(err);
+                this.error = err;
+                this.loading = false;
+                this.end = true;
+            }
+        });
+    },
+    changed() {
+        clearTimeout(this.lastChangeTimer);
+        this.lastChangeTimer = setTimeout(this.search, 1000);
+    },
+    search() {
+        clearTimeout(this.lastChangeTimer);
+        if (this.query == this.loadedQuery) {
+            return;
+        }
+
+        this.result = null;
+        this.$router.push({ path: '/text/uistring/midlup', query: {q: this.query }});
+        this.fetchData();
+    },
+    copyHtml() {
+        let hiddenArea = this.$refs.htmltext;
+        hiddenArea.focus();
+        hiddenArea.select();
+        let success = document.execCommand('copy');
+        if (success) {
+            this.copyText = COPIED_TEXT;
+            setTimeout(() => this.copyText = COPY_TEXT, 1000);
+        } else {
+            console.log("KO");
+        }
     }
   }
 };
@@ -51,12 +133,12 @@ export default {
 
 .uistrings.midlup {
     .result-wrapper {
+        margin-top: 20px;
         position: relative;
 
         .loading {
             width: 100%;
             position: absolute;
-            background: rgba(0, 0, 0, 0.5);
             height: 100vh;
             padding-right: 16px;
             z-index: 10;
@@ -131,36 +213,55 @@ export default {
         }
 
         .results {
-            .midresult {
-                border-top: 1px solid @dv-c-accent-1;
+            
+            display: flex;
+            // flex-direction: column;
+
+            .col {
                 position: relative;
+                display: flex;
+                flex: 1;
+                padding: 0.5em 1em 2em 1em;
+                border: 1px solid @dv-c-accent-1;
+                background-color: rgba(0, 0, 0, 0.25);
                 transition: background-color ease-in 0.125s;
-                cursor: pointer;
-
-                .mid {
-                    position: absolute;
-                    font-size: 12px;
-                    color: @dv-c-accent-1;
-                }
-
-                .text {
-                    margin-top: 0.8em;
-                }
-
-                // max-height: 4em;
-                width: 100%;
-                overflow-y: hidden;
-                text-overflow: ellipsis;
-                // white-space: nowrap;
-                
-                padding: 12px 8px;
+                margin: 0;
 
                 &:first-child {
-                    border-top: none;
+                    border-right: none;
                 }
 
                 &:hover {
                     background-color: rgba(0, 0, 0, 0.75);
+                }
+
+            }
+
+            .foot {
+                position: absolute;
+                bottom: -1.5em;
+                left: 0;
+                font-size: 12px;
+                color: @dv-c-accent-1;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                transition: color ease-in 0.125s;
+                cursor: pointer;
+
+                &:hover {
+                    color: @dv-c-foreground;
+                }
+            }
+
+            textarea {
+                color: @dv-c-body;
+                font-size: 14px;
+                font-family: @dv-f-lato;
+                resize: none;
+
+                &.hidden {
+                    position: absolute;
+                    opacity: 0;
                 }
             }
 
@@ -184,18 +285,6 @@ export default {
                 p {
                     font-size: 18px;
                 }
-            }
-
-            .end-results {
-                text-align: center;
-                border-top: 1px solid @dv-c-accent-1;
-                padding-top: 0.25em;
-                padding-bottom: 0.25em;
-                font-family: @dv-f-geomanist;
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                font-size: 16px;
-                color: @dv-c-foreground;
             }
         }
     }

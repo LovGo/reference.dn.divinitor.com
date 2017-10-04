@@ -33,10 +33,10 @@
                                 <i class="fa fa-exclamation-triangle"></i>
                             </div>
                             <div class="head">
-                                Error
+                                Error: {{ error.statusText }}
                             </div>
                             <p>
-                                {{ error.statusText }}
+                                {{ error.bodyText }}
                             </p>
                         </div>
                         <div v-else>
@@ -119,8 +119,7 @@ export default {
         if (this.query == this.loadedQuery) {
             return;
         }
-
-        this.results = [];
+        
         this.page = 0;
         this.end = false;
         this.$router.push({ path: '/text/uistring/browse', query: {q: this.query }});
@@ -142,12 +141,12 @@ export default {
 
 .uistrings.browse {
     .result-wrapper {
+        margin-top: 20px;
         position: relative;
 
         .loading {
             width: 100%;
             position: absolute;
-            background: rgba(0, 0, 0, 0.5);
             height: 100%;
             padding-right: 16px;
             z-index: 10;
@@ -230,7 +229,7 @@ export default {
                 overflow-y: hidden;
                 text-overflow: ellipsis;
                 padding: 12px 8px;
-                    background-color: rgba(0, 0, 0, 0.25);
+                background-color: rgba(0, 0, 0, 0.25);
 
                 &:first-child {
                     border-top: none;
