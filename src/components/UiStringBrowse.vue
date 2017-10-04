@@ -1,7 +1,7 @@
 <template>
     <div class="uistrings browse">
         <div class="searchbar">
-            <input type="search" v-model="query" v-on:keyup.enter="search" name="search" autocomplete="off" />
+            <input type="search" v-model="query" v-on:keyup.enter="search" v-on:blur="search" name="search" autocomplete="off" placeholder="Enter search terms"/>
             <label for="search">Search</label>
         </div>
         
@@ -51,6 +51,7 @@ export default {
   name: 'uistringbrowse',
   data () {
     return {
+        loadedQuery: "",
         query: "",
         results: [],
         loading: false,
@@ -78,6 +79,7 @@ export default {
             okcb: (res) => {
                 this.results.push(...res.strings);
                 this.end = this.results.length >= res.estimatedSize;
+                this.loadedQuery = this.query;
                 //  Add a slight delay cuz otherwise its too fast
                 setTimeout(() => this.loading = false, 250);
             },
@@ -89,6 +91,10 @@ export default {
         });
     },
     search() {
+        if (this.query == this.loadedQuery) {
+            return;
+        }
+
         this.results = [];
         this.page = 0;
         this.end = false;
@@ -138,6 +144,12 @@ export default {
 
             &:focus {
                 border-bottom-color: @dv-c-foreground;
+            }
+
+            &::placeholder {
+                color: @dv-c-idle;
+                font-size: 0.75em;
+                letter-spacing: 0.3em;
             }
         }
     }
