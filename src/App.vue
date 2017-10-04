@@ -77,6 +77,7 @@ body {
         order: 1;
         padding-left: 14px;
         flex: 1;
+        margin-bottom: 70px;
     }
 }
 

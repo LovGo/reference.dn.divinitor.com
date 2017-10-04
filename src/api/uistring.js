@@ -29,6 +29,49 @@ export default {
                 okcb(res.body);
             }, 
             errcb);
+    },
+
+    getBulk({ page, size, query }, { vue, region, format, okcb, errcb }) {
+        if (query) {
+            vue.$http.get(`/api/server/${region}/uistring/search`,
+            {
+                params: {
+                    fmt: format,
+                    p: page,
+                    sz: size,
+                    q: query
+                }
+            }).then(
+            (res) => {
+                let cachedRegion = this.cache[region];
+                if (!cachedRegion) {
+                    cachedRegion = this.cache[region] = {};
+                }
+    
+                okcb(res.body);
+            }, 
+            errcb);
+        } else {
+            vue.$http.get(`/api/server/${region}/uistring/`,
+            {
+                params: {
+                    fmt: format,
+                    p: page,
+                    sz: size
+                }
+            }).then(
+            (res) => {
+                let cachedRegion = this.cache[region];
+                if (!cachedRegion) {
+                    cachedRegion = this.cache[region] = {};
+                }
+    
+                okcb(res.body);
+            }, 
+            errcb);
+        }
+
+        
     }
 
 

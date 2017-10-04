@@ -3,15 +3,15 @@
     <h1>Navigation</h1>
     <router-link to="/" class="home">Home</router-link>
     <ul>
-      <li class="disabled"><router-link to="/general">General</router-link></li>
-      <li class="disabled"><router-link to="/job">Classes</router-link></li>
-      <li class="disabled"><router-link to="/item">Items</router-link></li>
-      <li class="disabled"><router-link to="/npc">Maps</router-link></li>
-      <li class="disabled"><router-link to="/monster">Monsters</router-link></li>
-      <li class="disabled"><router-link to="/npc">NPCs</router-link></li>
-      <li class="disabled"><router-link to="/quest">Quests</router-link></li>
-      <li class="disabled"><router-link to="/skill">Skills</router-link></li>
-      <li class="disabled"><router-link to="/uistring">UI Strings</router-link></li>
+      <router-link to="/general" tag="li" class="disabled">General</router-link>
+      <router-link to="/job" tag="li" class="disabled">Classes</router-link>
+      <router-link to="/item" tag="li" class="disabled">Items</router-link>
+      <router-link to="/npc" tag="li" class="disabled">Maps</router-link>
+      <router-link to="/monster" tag="li" class="disabled">Monsters</router-link>
+      <router-link to="/npc" tag="li" class="disabled">NPCs</router-link>
+      <router-link to="/quest" tag="li" class="disabled">Quests</router-link>
+      <router-link to="/skill" tag="li" class="disabled">Skills</router-link>
+      <router-link to="/uistring" tag="li">UI Strings</router-link>
     </ul>
   </div>
 </template>
@@ -70,45 +70,28 @@ export default {
 
       margin-left: 0.25em;
       margin-top: 1em;
-      line-height: 1.25em;
-      
-      a {
-        padding-left: 0.5em;
-        border-left: @dv-c-accent-1 solid 2px;
-        transition: border ease-in 0.125s, color ease-in 0.125s;
-        font-weight: normal;
-        letter-spacing: 0.1em;
-        color: @dv-c-accent-1;
+    
+      padding-left: 0.5em;
+      border-left: @dv-c-accent-1 solid 2px;
+      transition: border ease-in 0.125s, color ease-in 0.125s;
+      font-weight: normal;
+      letter-spacing: 0.1em;
+      color: @dv-c-accent-1;
+      cursor: pointer;
 
-        &:hover {
-            color: @dv-c-foreground;
-        }
-
-        &.router-link-active {
-          border-left: @dv-c-accent-2 solid 2px;
+      &:hover {
           color: @dv-c-foreground;
-        }
+      }
+
+      &.router-link-active {
+        border-left: @dv-c-accent-2 solid 2px;
+        color: @dv-c-foreground;
       }
 
       &.disabled {
         pointer-events: none;
-        a {
-          color: @dv-c-disabled;
-          border-left: @dv-c-disabled solid 2px;
-        }
-      }
-
-      &.sub {
-        margin-top: 0;
-        padding-left: 2em;
-        line-height: 1.75em;
-        a {
-          color: @dv-c-idle;
-          
-          &:hover {
-            color: @dv-c-foreground;
-          }
-        }
+        color: @dv-c-disabled;
+        border-left: @dv-c-disabled solid 2px;
       }
     }
   }

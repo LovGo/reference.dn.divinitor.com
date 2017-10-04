@@ -12,6 +12,7 @@
   "dependencies": {
     "locale-code": "^1.1.1",
     "vue": "^2.4.2",
+    "vue-infinite-scroll": "^2.0.2",
     "vue-moment": "^2.0.2",
     "vue-router": "^2.7.0",
     "vuex": "^2.4.1"

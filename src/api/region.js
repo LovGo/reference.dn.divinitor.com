@@ -1,6 +1,6 @@
 const Regions = {
-    "na": {
-        id: "na",
+    "local": {
+        id: "local",
         name: "North America",
         localizedName: "North America",
         version: 636,
@@ -21,7 +21,7 @@ const Regions = {
 
 export default {
     getDefaultRegionCode() {
-        return "na";
+        return "local";
     },
 
     getRegion(id, okcb, errcb) {
