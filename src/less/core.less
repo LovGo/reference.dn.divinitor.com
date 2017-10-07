@@ -257,14 +257,20 @@ button {
         text-transform: uppercase;
         letter-spacing: 0.1em;
         font-size: 24px;
-        transition: border-color 0.125s ease-in, color 0.125s ease-in;
+        transition: border-color 0.125s ease-in, color 0.125s ease-in, background-color 0.125s ease-in;
+        background: rgba(0, 0, 0, 0);
 
         &:focus {
             border-bottom-color: @dv-c-foreground;
+            background: rgba(0, 0, 0, 0.75);
+        }
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.75);
         }
 
         &::placeholder {
-            color: @dv-c-idle;
+            color: @dv-c-accent-1;
             font-size: 0.75em;
             letter-spacing: 0.3em;
         }

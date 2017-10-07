@@ -1,6 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/components/Home';
+
+import General from '@/components/General';
+import GenStat from '@/components/GenStat';
+import GenDamage from '@/components/GenDamage';
+import GenGuild from '@/components/GenGuild';
+
+
 import Text from '@/components/Text';
 import UiStrings from '@/components/UiStrings';
 import UiStringBrowse from '@/components/UiStringBrowse';
@@ -18,7 +25,32 @@ export default new Router({
       name: 'Home',
       component: Home
     },
-
+    {
+      path: '/general',
+      component: General,
+      children: [
+        {
+          path: '',
+          redirect: 'stat'
+        },
+        {
+          path: 'stat/:statName?',
+          component: GenStat,
+        },
+        {
+          path: 'damage',
+          component: GenDamage,
+        },
+        {
+          path: 'guild',
+          component: GenGuild,
+        },
+        {
+          path: '*',
+          component: NotFound
+        }
+      ]
+    },
     {
       path: '/text',
       component: Text,
@@ -41,7 +73,6 @@ export default new Router({
             },
             {
               path: '*',
-              name: 'NotFound',
               component: NotFound
             }
           ]
@@ -60,14 +91,12 @@ export default new Router({
         },
         {
           path: '*',
-          name: 'NotFound',
           component: NotFound
         }
       ]
     },
     {
       path: '*',
-      name: 'NotFound',
       component: NotFound
     }
   ]

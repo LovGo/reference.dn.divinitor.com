@@ -3,7 +3,7 @@
     <h1>Navigation</h1>
     <router-link to="/" class="home">Home</router-link>
     <ul>
-      <router-link to="/general" tag="li" class="disabled">General</router-link>
+      <router-link to="/general" tag="li">General</router-link>
       <router-link to="/job" tag="li" class="disabled">Classes</router-link>
       <router-link to="/item" tag="li" class="disabled">Items</router-link>
       <router-link to="/npc" tag="li" class="disabled">Maps</router-link>
