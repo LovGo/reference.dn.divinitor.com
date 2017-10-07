@@ -1,11 +1,11 @@
 <template>
   <div class="gametext">
       <h1>Text</h1>
-      <div class="button-bar">
+      <!-- <div class="button-bar">
         <router-link to="/text/uistring/" tag="div" class="row-button">UIString</router-link>
         <router-link to="/text/server" tag="div" class="row-button disabled">Server Strings</router-link>
         <router-link to="/text/prohibit" tag="div" class="row-button disabled">Prohibited Words</router-link>
-      </div>
+      </div> -->
       <router-view></router-view>
   </div>
 </template>
@@ -34,7 +34,7 @@ export default {
 <style lang="less" scoped>
 @import "../less/core.less";
 
-.uistrings {
+.gametext {
 }
 
 </style>
