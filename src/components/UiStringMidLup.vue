@@ -6,26 +6,32 @@
         </div>
         
         <div class="result-wrapper">
-            <div v-if="loading" class="loading">
-                <div class="loader-box">
-                    <div class="loader"></div>
-                    <div class="label">Loading</div>
+            <transition name="fade">
+                <div v-if="loading" class="loading">
+                    <div class="loader-box">
+                        <div class="loader"></div>
+                        <div class="label">Loading</div>
+                    </div>
                 </div>
-            </div>
-            <div v-if="result">
-                <uistring-midresult :result="result"></uistring-midresult>
-            </div>
-            <div v-if="error" class="no-results">
-                <div class="icon">
-                    <i class="fa fa-exclamation-triangle"></i>
+            </transition>
+            <transition name="fade-item">
+                <div v-if="result">
+                    <uistring-midresult :result="result"></uistring-midresult>
                 </div>
-                <div class="head">
-                    Error: {{ error.statusText }}
+            </transition>
+            <transition name="fade-item">
+                <div v-if="error" class="no-results">
+                    <div class="icon">
+                        <i class="fa fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="head">
+                        Error: {{ error.statusText }}
+                    </div>
+                    <p>
+                        {{ error.bodyText }}
+                    </p>
                 </div>
-                <p>
-                    {{ error.bodyText }}
-                </p>
-            </div>
+            </transition>
         </div>
   </div>
 </template>
@@ -136,7 +142,6 @@ export default {
         .loading {
             width: 100%;
             position: absolute;
-            height: 100vh;
             padding-right: 16px;
             z-index: 10;
             

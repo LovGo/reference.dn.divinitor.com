@@ -27,6 +27,7 @@ export default {
     top: 14px;
     right: 20px;
     text-align: right;
+    cursor: not-allowed;
 
     .selector {
         color: @dv-c-accent-2;
@@ -36,7 +37,8 @@ export default {
         text-transform: uppercase;
         font-weight: normal;
         transition: color ease-in 0.125s;
-        cursor: pointer;
+        // cursor: pointer;
+        pointer-events: none;
 
         &:hover {
             color: @dv-c-foreground;

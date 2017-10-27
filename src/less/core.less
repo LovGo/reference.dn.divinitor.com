@@ -259,6 +259,7 @@ button {
         font-size: 24px;
         transition: border-color 0.125s ease-in, color 0.125s ease-in, background-color 0.125s ease-in;
         background: rgba(0, 0, 0, 0);
+        padding-left: 0.25em;
 
         &:focus {
             border-bottom-color: @dv-c-foreground;
@@ -295,3 +296,27 @@ button {
     }
 
 }
+
+.fade-enter-active {
+    transition: opacity ease-in 0.125s;
+}
+
+.fade-leave-active {
+    transition: opacity ease-in 0.5s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+
+.fade-item-enter-active {
+    transition: opacity ease-in 0.25s;
+}
+
+.fade-item-leave-active {
+    transition: opacity ease-in 0.125s;
+}
+.fade-item-enter, .fade-item-leave-to {
+    opacity: 0;
+}
+

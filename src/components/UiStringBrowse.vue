@@ -6,23 +6,27 @@
         </div>
         
         <div class="result-wrapper">
-            <div v-if="loading" class="loading">
-                <div class="loader-box">
-                    <div class="loader"></div>
-                    <div class="label">Loading</div>
+            <transition name="fade">
+                <div v-if="loading" class="loading">
+                    <div class="loader-box">
+                        <div class="loader"></div>
+                        <div class="label">Loading</div>
+                    </div>
                 </div>
-            </div>
+            </transition>
             <div class="results" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="0">
                 <div v-if="results.length">
-                    <div class="active-result" v-if="activeResultId">
-                        <div class="container">
-                            <h1>MID {{ activeResultId }}</h1>
-                            <uistring-midresult :result="activeResult"></uistring-midresult>
-                            <div class="buttonbox">
-                                <button v-on:click="closeActive">Close</button>
+                    <transition name="fade-item">
+                        <div class="active-result" v-if="activeResultId">
+                            <div class="container">
+                                <h1>MID {{ activeResultId }}</h1>
+                                <uistring-midresult :result="activeResult"></uistring-midresult>
+                                <div class="buttonbox">
+                                    <button v-on:click="closeActive">Close</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </transition>
                     <div class="count">Found <span class="val">{{ approxResultCount | thousands }} results</span></div>
                     <div v-for="item in results" :key="item.mid" class="midresult" v-on:click.self="setActiveResult" :data-id="item.mid">
                         <div class="mid">

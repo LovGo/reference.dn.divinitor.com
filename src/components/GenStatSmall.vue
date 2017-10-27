@@ -3,16 +3,16 @@
     <div class="data-entry">
         <div class="level">
             <label for="level">Lvl</label>
-            <input v-model="level" type="number" min="1" max="100" />
+            <input v-model="level" type="number" min="1" max="100" v-on:keyup.enter="unfocus"/>
         </div>
         <div class="container">
             <div class="left">
                 <input type="radio" id="stat" value="STAT" v-model="inputType" />
                 <label for="stat" value="STAT">
                     <div class="tag">Value</div>
-                    <input v-model="value" type="number" v-on:click="select" v-on:focus="select" v-on:input="capValue" ref="STAT"/>
+                    <input v-model="value" type="number" v-on:click="select" v-on:focus="select" v-on:blur="capValue" v-on:keyup.enter="unfocus" ref="STAT"/>
                 </label>
-                <div class="cap">{{ maxStat | thousands }}</div>
+                <div class="cap">{{ limits.maxStat | thousands }}</div>
             </div>
             <div class="center">
                 <div v-if="inputType == 'STAT'"  class="indicator stat">
@@ -30,19 +30,20 @@
                 <input type="radio" id="percent" value="PERCENT" v-model="inputType" />
                 <label for="percent" value="PERCENT">
                     <div class="tag">Percent</div>
-                    <input v-model="percent" type="number" v-on:click="select" v-on:focus="select" v-on:input="capPercent" ref="PERCENT"/>
+                    <input v-model="percent" type="number" v-on:click="select" v-on:focus="select" v-on:blur="capPercent" v-on:keyup.enter="unfocus" ref="PERCENT"/>
                 </label>
-                <div class="cap percent">{{ maxPercent | thousands }}</div>
+                <div class="cap percent">{{ limits.maxPercent | thousands }}</div>
             </div>
         </div>
     </div>
 
-    <router-link :to="stat" class="more">More Info<i class="fa fa-angle-double-right"></i></router-link>
+    <router-link :to="`/general/stat/${stat}`" class="more">More Info<i class="fa fa-angle-double-right"></i></router-link>
 </div>
 </template>
 
 <script>
 import StatName from '@/const/StatName';
+import StatCalc from '@/api/StatCalc';
 
 export default {
     name: 'genstats-small',
@@ -51,10 +52,12 @@ export default {
             level: 95,
             value: 0,
             percent: 0,
-            minPercent: 0,
-            maxPercent: 100,
-            minStat: 0,
-            maxStat: 9999999,
+            limits: {
+                minPercent: 0,
+                maxPercent: 100,
+                minStat: 0,
+                maxStat: 99999
+            },
             inputType: "STAT",
             caps: [],
         };
@@ -62,8 +65,8 @@ export default {
     props: ["stat"],
     created() {
         this.fetchData();
-        this.value = this.minStat;
-        this.percent = this.minPercent;
+        this.value = this.limits.minStat;
+        this.percent = this.limits.minPercent;
     },
     computed: {
         statName() {
@@ -72,82 +75,93 @@ export default {
     },
     watch: {
         percent: function(to, from) {
-            this.calculate();
+            if (this.inputType == "PERCENT") {
+                this.calculate();
+            }
         },
         value: function(to, from) {
+            if (this.inputType == "STAT") {
+                this.calculate();
+            }
+        },
+        level: function(to, from) {
+            this.fetchData();
             this.calculate();
         }
     },
     methods: {
         fetchData() {
             //  Load the stat caps
-
+            this.limits = StatCalc.getLimits(this.stat, this.level);
         },
         select(evt) {
             this.inputType = evt.target.parentNode.attributes.value.value;
             this.$refs[this.inputType].focus();
         },
+        unfocus(evt) {
+            evt.target.blur();
+        },
         calculate() {
             if (this.inputType == "STAT") {
-                this.percent = this[this.stat + this.inputType]();
+                let val = this[this.stat + this.inputType]();
+                //  Perform conversion and truncation
+                val = Math.round(val * 100);
+                this.percent = val;
             } else {
-                this.value = this[this.stat + this.inputType]();
+                this.value = Math.round(this[this.stat + this.inputType]());
             }
         },
         capPercent() {
             this.percent = Number(this.percent);
-            if (this.percent > this.maxPercent) {
-                this.percent = this.maxPercent;
+            if (this.percent > this.limits.maxPercent) {
+                this.percent = this.limits.maxPercent;
                 return false;
             }
-            if (this.percent < this.minPercent) {
-                this.percent = this.minPercent;
+            if (this.percent < this.limits.minPercent) {
+                this.percent = this.limits.minPercent;
                 return false;
             }
         },
         capValue() {
             this.value = Number(this.value);
-            if (this.value > this.maxStat) {
-                this.value = this.maxStat;
+            if (this.value > 9999999) {
+                this.value = 9999999;
                 return false;
             } 
-            if (this.value < this.minStat) {
-                this.value = this.minStat;
+            if (this.value < this.limits.minStat) {
+                this.value = this.limits.minStat;
                 return false;
             } 
         },
-        linearPERCENT() {
-            return 12;
+        getTruncatedValue() {
+            return Math.min(this.limits.maxStat, Math.max(this.limits.minStat, this.value));
         },
-        linearSTAT() {
-            return 420;
+        getTruncatedPercent() {
+            return Math.min(this.limits.maxPercent, Math.max(this.limits.minPercent, this.percent)) / 100;
         },
         critPERCENT() {
-            return linearPERCENT();
+            return StatCalc.getCriticalValue(this.getTruncatedPercent(), this.level).result;
         },
         critSTAT() {
-            return linearSTAT();
+            return StatCalc.getCriticalPercent(this.getTruncatedValue(), this.level).result;
         },
         critdmgPERCENT() {
-            return linearPERCENT();
+            return StatCalc.getCritDamageValue(this.getTruncatedPercent(), this.level).result;
         },
         critdmgSTAT() {
-            return linearSTAT();
+            return StatCalc.getCritDamagePercent(this.getTruncatedValue(), this.level).result + 2;
         },
         defPERCENT() {
-            return linearPERCENT();
+            return StatCalc.getDefenseValue(this.getTruncatedPercent(), this.level).result;
         },
         defSTAT() {
-            return linearSTAT();
-
+            return StatCalc.getDefensePercent(this.getTruncatedValue(), this.level).result;
         },
         fdPERCENT() {
-            return 0;
-
+            return StatCalc.getFinalDamageValue(this.getTruncatedPercent(), this.level).result;
         },
         fdSTAT() {
-            return 0;
-
+            return StatCalc.getFinalDamagePercent(this.getTruncatedValue(), this.level).result;
         }
     }
 }
@@ -185,9 +199,15 @@ export default {
             font-size: 24px;
             border-bottom: 1px solid transparent;
 
-            &:focus, &:hover {
+            &:focus,
+            &:hover:focus {
                 border-bottom: 1px solid @dv-c-foreground;
             }
+            
+            &:hover {
+                border-bottom: 1px solid fade(@dv-c-foreground, 60%);
+            }
+
             &::selection {
                 background: @dv-c-foreground;
                 color: @dv-c-background;
