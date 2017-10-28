@@ -7,10 +7,17 @@ import NavigationPane from '@/components/NavigationPane';
 import UiStringMidResult from '@/components/UiStringMidResult';
 import GenStatSmall from '@/components/GenStatSmall';
 import LocaleSelect from '@/components/LocaleSelect';
+import StatLineChart from '@/components/general/stat/StatLineChart';
+import StatEqualLineChart from '@/components/general/stat/StatEqualLineChart';
 import store from './store';
 import VueResource from 'vue-resource';
 import infiniteScroll from 'vue-infinite-scroll';
 import filters from './filters';
+import Chart from 'chart.js';
+
+Chart.defaults.global.defaultFontFamily = "Lato";
+Chart.defaults.global.defaultFontSize = 14;
+Chart.defaults.global.defaultFontColor = "#A6AEB3";
 
 Vue.config.productionTip = false;
 
@@ -23,6 +30,8 @@ Vue.component('navigation-pane', NavigationPane);
 Vue.component('uistring-midresult', UiStringMidResult);
 Vue.component('locale-select', LocaleSelect);
 Vue.component('gen-stat-small', GenStatSmall);
+Vue.component('stat-line-chart', StatLineChart);
+Vue.component('stat-equal-line-chart', StatEqualLineChart);
 
 /* eslint-disable no-new */
 new Vue({

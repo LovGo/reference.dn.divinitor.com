@@ -11,7 +11,7 @@
       <router-link to="/npc" tag="li" class="disabled">NPCs</router-link>
       <router-link to="/quest" tag="li" class="disabled">Quests</router-link>
       <router-link to="/skill" tag="li" class="disabled">Skills</router-link>
-      <router-link to="/text" tag="li" class="disabled">Text</router-link>
+      <router-link to="/text" tag="li" class="">Text</router-link>
     </ul>
   </div>
 </template>

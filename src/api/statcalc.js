@@ -204,8 +204,14 @@ const Constraints = {
 export default {
     getLimits(stat, level) {
         let ret = Object.assign({}, Constraints[stat]);
-        ret.maxStat = Math.round(this.getValue((ret.maxPercent - ret.minPercent) / 100, level, StatCalcTables[stat]).result);
+        if (level > 0) {
+            ret.maxStat = Math.round(this.getValue((ret.maxPercent - ret.minPercent) / 100, level, StatCalcTables[stat]).result);
+        }
         return ret;
+    },
+
+    getCapValues(stat) {
+        return StatCalcTables[stat].rawCapValues;
     },
 
     getPercent(rawStat, level, capInfo)
@@ -254,4 +260,11 @@ export default {
     {
         return this.getValue(percent, level, StatCalcTables.fd);
     },
+
+    getPercentByName(rawStat, level, stat) {
+        return this.getPercent(rawStat, level, StatCalcTables[stat]);
+    },
+    getValueByName(percent, level, stat) {
+        return this.getValue(percent, level, StatCalcTables[stat]);
+    }
 };

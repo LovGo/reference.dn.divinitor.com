@@ -179,13 +179,6 @@ export default {
     &:hover {
         background-color: rgba(0, 0, 0, 0.75);
     }
-    input[type="number"] {
-        -moz-appearance:textfield;
-    }
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-    }
 
     .data-entry {
 

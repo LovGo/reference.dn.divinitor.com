@@ -23,12 +23,26 @@
     </div>
     <div v-else>
         <h2>{{ statName }}</h2>
+
+        <h3>Amount to Cap by Level</h3>
+        <div class="chart-container">
+            <stat-line-chart :stat="stat"></stat-line-chart>
+        </div>
+
+        <h3>Percentage by Level</h3>
+        <label for="val">Enter stat amount:</label>
+        <input v-model="value" type="number" v-on:blur="updateChart" v-on:keyup.enter="unfocus" ref="STAT" id="val"/>
+        <div class="chart-container">
+            <stat-equal-line-chart :stat="stat" :value="value"></stat-equal-line-chart>
+        </div>
     </div>
 </div>
 </template>
 
 <script>
 import StatName from '@/const/StatName';
+import StatCalc from '@/api/StatCalc';
+import StatLineChart from '@/components/general/stat/StatLineChart';
 
 export default {
     name: 'genstats',
@@ -37,11 +51,13 @@ export default {
             globalLvl: 95,
             stat: '',
             multiview: true,
+            value: 0,
         };
     },
     watch: {
         '$route' (to, from) {
             if (to.params.statName !== from.params.statName) {
+                this.value = 0;
                 this.fetchData();
             }
         }
@@ -63,8 +79,11 @@ export default {
             this.stat = statName ? statName : '';
             this.multiview = this.stat === '';
         },
-        setLevel() {
+        updateChart() {
 
+        },
+        unfocus(evt) {
+            evt.target.blur();
         }
     },
     StatName: StatName
@@ -75,6 +94,39 @@ export default {
 @import "../less/core.less";
 
 .stats {
+    .chart-container {
+        margin-top: 10px;
+        height: 370px;
+    }
 
+    label {
+        display: inline-block;
+    }
+
+    input[type="number"] {
+        width: 5em;
+        margin: 0 auto;
+        text-align: left;
+        background: none;
+        border: none;
+        color: @dv-c-foreground;
+        font-size: 16px;
+        border-bottom: 1px solid transparent;
+        border-bottom: 1px solid fade(@dv-c-foreground, 20%);
+
+        &:focus,
+        &:hover:focus {
+            border-bottom: 1px solid @dv-c-foreground;
+        }
+        
+        &:hover {
+            border-bottom: 1px solid fade(@dv-c-foreground, 60%);
+        }
+
+        &::selection {
+            background: @dv-c-foreground;
+            color: @dv-c-background;
+        }
+    }
 }
 </style>

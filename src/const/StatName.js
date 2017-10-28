@@ -1,5 +1,5 @@
 export default {
-    'crit': "Critical Chance",
+    'crit': "Critical",
     'critdmg': "Critical Damage",
     'def': "Defense",
     'fd': "Final Damage"
