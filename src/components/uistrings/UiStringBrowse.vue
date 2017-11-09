@@ -42,26 +42,16 @@
                 <div v-else>
                     <div class="no-results" v-if="!loading">
                         <div class="error" v-if="error">
-                            <div class="icon">
-                                <i class="fa fa-exclamation-triangle"></i>
-                            </div>
-                            <div class="head">
-                                Error: {{ error.statusText }}
-                            </div>
-                            <p>
-                                {{ error.bodyText }}
-                            </p>
+                            <big-error-box 
+                                :errorTitle="'Error: ' + error.statusText" 
+                                :errorContent="error.bodyText" 
+                                iconClass="fa-exclamation-triangle"></big-error-box>
                         </div>
                         <div v-else>
-                            <div class="icon">
-                                <i class="fa fa-question-circle"></i>
-                            </div>
-                            <div class="head">
-                                No results
-                            </div>
-                            <p>
-                                Try searching something different.
-                            </p>
+                            <big-error-box 
+                                :errorTitle="'No Results'" 
+                                :errorContent="'Try searching something different.'" 
+                                iconClass="fa-question-circle"></big-error-box>
                         </div>
                     </div>
                 </div>
@@ -71,8 +61,12 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import region from '@/api/region';
 import uistring from '@/api/uistring';
+import BigErrorBox from '@/components/util/BigErrorBox'
+
+Vue.component('big-error-box', BigErrorBox);
 
 export default {
   name: 'uistringbrowse',
@@ -138,6 +132,17 @@ export default {
         this.page = 0;
         this.results = [];
         this.end = false;
+
+        if (this.query.length < 3 && this.query.length > 0) {
+            this.error = {
+                statusText: "Query too short",
+                bodyText: "Query must be at least 3 characters (or blank)"
+            };
+            this.loading = false;
+            this.end = true;
+            return;
+        }
+
         this.$router.push({ path: '/text/uistring/browse', query: {q: this.query }});
         this.fetchData();
     },
@@ -178,7 +183,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-@import "../less/core.less";
+@import "../../less/core.less";
 
 .uistrings.browse {
     .result-wrapper {
@@ -321,28 +326,6 @@ export default {
                 .text {
                     margin-top: 0.8em;
                     pointer-events: none;
-                }
-            }
-
-            .no-results {
-                margin-top: 2em;
-                text-align: center;
-                background: rgba(0, 0, 0, 0.75);
-                padding-bottom: 1em;
-                border: 1px solid @dv-c-red;
-                .icon {
-                    font-size: 144px;
-                    color: @dv-c-red;
-                }
-                .head {
-                    font-family: @dv-f-lato;
-                    text-transform: uppercase;
-                    letter-spacing: 0.1em;
-                    font-size: 24px;
-                    color: @dv-c-red;
-                }
-                p {
-                    font-size: 18px;
                 }
             }
 

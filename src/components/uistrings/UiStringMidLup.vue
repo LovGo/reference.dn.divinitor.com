@@ -132,7 +132,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-@import "../less/core.less";
+@import "../../less/core.less";
 
 .uistrings.midlup {
     .result-wrapper {

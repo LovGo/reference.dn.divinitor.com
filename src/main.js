@@ -3,10 +3,6 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-import NavigationPane from '@/components/NavigationPane';
-import UiStringMidResult from '@/components/UiStringMidResult';
-import GenStatSmall from '@/components/GenStatSmall';
-import LocaleSelect from '@/components/LocaleSelect';
 import StatLineChart from '@/components/general/stat/StatLineChart';
 import StatEqualLineChart from '@/components/general/stat/StatEqualLineChart';
 import store from './store';
@@ -26,10 +22,6 @@ Vue.use(VueResource);
 Vue.use(infiniteScroll);
 Vue.use(filters);
 
-Vue.component('navigation-pane', NavigationPane);
-Vue.component('uistring-midresult', UiStringMidResult);
-Vue.component('locale-select', LocaleSelect);
-Vue.component('gen-stat-small', GenStatSmall);
 Vue.component('stat-line-chart', StatLineChart);
 Vue.component('stat-equal-line-chart', StatEqualLineChart);
 

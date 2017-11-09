@@ -2,16 +2,16 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/components/Home';
 
-import General from '@/components/General';
-import GenStat from '@/components/GenStat';
-import GenDamage from '@/components/GenDamage';
-import GenGuild from '@/components/GenGuild';
+import General from '@/components/general/General';
+import GenStat from '@/components/general/stat/GenStat';
+import GenDamage from '@/components/general/damage/GenDamage';
+import GenGuild from '@/components/general/guild/GenGuild';
 
 
 import Text from '@/components/Text';
-import UiStrings from '@/components/UiStrings';
-import UiStringBrowse from '@/components/UiStringBrowse';
-import UiStringMidLup from '@/components/UiStringMidLup';
+import UiStrings from '@/components/uistrings/UiStrings';
+import UiStringBrowse from '@/components/uistrings/UiStringBrowse';
+import UiStringMidLup from '@/components/uistrings/UiStringMidLup';
 
 import NotFound from '@/components/NotFound';
 

@@ -9,8 +9,12 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import region from '@/api/region';
 import uistring from '@/api/uistring';
+import UiStringMidResult from '@/components/uistrings/UiStringMidResult';
+
+Vue.component('uistring-midresult', UiStringMidResult);
 
 export default {
   name: 'uistrings',
@@ -30,7 +34,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-@import "../less/core.less";
+@import "../../less/core.less";
 
 .uistrings {
 }

@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../less/core.less";
+@import "../../less/core.less";
 
 .general {
 

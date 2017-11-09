@@ -13,6 +13,13 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import NavigationPane from '@/components/NavigationPane';
+import LocaleSelect from '@/components/LocaleSelect';
+
+Vue.component('navigation-pane', NavigationPane);
+Vue.component('locale-select', LocaleSelect);
+
 export default {
     name: 'app'
 }

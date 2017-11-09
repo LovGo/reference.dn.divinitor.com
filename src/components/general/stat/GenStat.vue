@@ -40,9 +40,13 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import GenStatSmall from '@/components/general/stat/GenStatSmall';
 import StatName from '@/const/StatName';
 import StatCalc from '@/api/StatCalc';
 import StatLineChart from '@/components/general/stat/StatLineChart';
+
+Vue.component('gen-stat-small', GenStatSmall);
 
 export default {
     name: 'genstats',
@@ -91,7 +95,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../less/core.less";
+@import "../../../less/core.less";
 
 .stats {
     .chart-container {
