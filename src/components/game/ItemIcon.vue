@@ -1,5 +1,6 @@
 <<template>
     <div class="item-icon">
+        <div class="enhance" v-if="enhanceLvl > 0">{{ enhanceLvl }}</div>
         <div class="count" v-if="count > 1">{{ count | thousands}}</div>
         <div class="item"  
             :style="`background:url(${iconData.url}) -${iconData.x}px -${iconData.y}px`"></div>
@@ -13,7 +14,7 @@ import item from '@/api/item/item';
 import region from '@/api/region';
 
 export default {
-    props: ["iconIndex", "rank", "type", "count"],
+    props: ["iconIndex", "rank", "type", "count", "enhanceLvl"],
     computed: {
         iconData: function() {
             let ret = item.getIconCoordinates(this.iconIndex);
@@ -67,6 +68,28 @@ export default {
         right: 7px;
         bottom: 4px;
         text-align: right;
+    }
+
+    .enhance {
+        @text-shadow: #000;
+        @offset: 1px;
+        position: absolute;
+        z-index: 1;
+        font-size: 12px;
+        user-select: none;
+        text-shadow:
+            -@offset -@offset 0 @text-shadow,
+             @offset -@offset 0 @text-shadow,
+            -@offset  @offset 0 @text-shadow,
+             @offset  @offset 0 @text-shadow;
+        left: 1px;
+        top: 4px;
+        color: #F0F080;
+        text-align: right;
+
+        &::before {
+            content: "+";
+        }
     }
 }
 </style>

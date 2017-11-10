@@ -46,7 +46,7 @@ export default {
             y: 0,
         };
 
-        let isWeap = type === "WEAPON";
+        let isWeap = type === "WEAPON" || type === "PARTS";
 
         if (rank === "NORMAL" || rank === 0) {
             if (isWeap) {
