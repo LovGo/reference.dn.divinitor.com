@@ -7,6 +7,8 @@ import GenStat from '@/components/general/stat/GenStat';
 import GenDamage from '@/components/general/damage/GenDamage';
 import GenGuild from '@/components/general/guild/GenGuild';
 
+import Items from '@/components/items/Items';
+import SingleItemView from '@/components/items/SingleItemView';
 
 import Text from '@/components/Text';
 import UiStrings from '@/components/uistrings/UiStrings';
@@ -48,6 +50,16 @@ export default new Router({
         {
           path: '*',
           component: NotFound
+        }
+      ]
+    },
+    {
+      path: '/items',
+      component: Items,
+      children: [
+        {
+          path: ':itemId',
+          component: SingleItemView
         }
       ]
     },

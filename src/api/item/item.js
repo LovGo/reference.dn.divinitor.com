@@ -1,7 +1,15 @@
+import Vue from 'vue';
+
 export default {
 
-    getItem(itemId, region) {
-
+    getItem(itemId, region, okcb, errcb) {
+        Vue.http.get(`/api/server/${region}/items/${itemId}`,
+        {
+        }).then(
+        (res) => {
+            okcb(res.body);
+        }, 
+        errcb);
     },
 
     getIconCoordinates(itemIconIndex) {

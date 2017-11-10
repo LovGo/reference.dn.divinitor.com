@@ -1,5 +1,15 @@
 <template>
     <div id="app">
+        <div class="wip-overlay">
+            WORK IN PROGRESS<br/>
+            WORK IN PROGRESS<br/>
+            WORK IN PROGRESS<br/>
+            WORK IN PROGRESS<br/>
+            WORK IN PROGRESS<br/>
+            WORK IN PROGRESS<br/>
+            WORK IN PROGRESS<br/>
+            WORK IN PROGRESS<br/>
+        </div>
         <locale-select></locale-select>
         <div class="flex-box">
             <div class="left-pane mobile-hide">
@@ -165,6 +175,17 @@ body {
         margin-top: 20px;
         position: relative;
     }
+}
+
+.wip-overlay {
+    position: fixed;
+    text-align: center;
+    left: 0;
+    right: 0;
+    top: 0;
+    font-size: 100px;
+    opacity: 0.02;
+    pointer-events: none;
 }
 
 </style>
