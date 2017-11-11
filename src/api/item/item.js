@@ -3,6 +3,7 @@ import Vue from 'vue';
 export default {
 
     cache: {},
+    enhCache: {},
 
     getItem(itemId, region, okcb, errcb) {
         let cacheKey = `${itemId}:${region}`;
@@ -30,7 +31,7 @@ export default {
 
         let ret = {
             page: page,
-            x: UNIT_SIZE * column - (column / 5),
+            x: UNIT_SIZE * column - 1,
             y: UNIT_SIZE * row,
             size: UNIT_SIZE
         };
@@ -126,22 +127,35 @@ export default {
     },
 
     getEnhancementInfo(enhanceId, region, okcb, errcb) {
+        let cacheKey = `blacksmith:${enhanceId}:${region}`;
+        if (this.enhCache[cacheKey]) {
+            okcb(this.enhCache[cacheKey]);
+            return;
+        }
 
+        Vue.http.get(`/api/server/${region}/items/enhance/smith/${enhanceId}`,
+        {
+        }).then(
+        (res) => {
+            this.enhCache[cacheKey] = res.body;
+            okcb(res.body);
+        }, 
+        errcb);
     },
-
-    getStampMod(enhanceLevel) {
-        if (!enhanceLevel) {
-            return 0;
+    getMobileEnchantInfo(mobileEnchantId, region, okcb, errcb) {
+        let cacheKey = `mobile:${mobileEnchantId}:${region}`;
+        if (this.enhCache[cacheKey]) {
+            okcb(this.enhCache[cacheKey]);
+            return;
         }
 
-        if (enhanceLevel <= 6) {
-            return 1;
-        }
-
-        if (enhanceLevel <= 14) {
-            return 12;
-        }
-
-        return 20;
+        Vue.http.get(`/api/server/${region}/items/enhance/mobile/${mobileEnchantId}`,
+        {
+        }).then(
+        (res) => {
+            this.enhCache[cacheKey] = res.body;
+            okcb(res.body);
+        }, 
+        errcb);
     }
 };

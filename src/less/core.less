@@ -1,5 +1,8 @@
 @import "GLAZE.less";
 
+@min-desktop-wide-width: 1300px;
+
+
 ::selection {
     background: #AAA;
     color: #445;
@@ -97,6 +100,10 @@ body {
 p {
     font-size: 14px;
     letter-spacing: -0.005em;
+}
+
+strong {
+    color: #DDD;
 }
 
 .toast {
@@ -420,4 +427,26 @@ button {
     opacity: 1.0;
     display: inline;
     color: @dv-c-body;
+}
+
+
+@-webkit-keyframes load8 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes load8 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }

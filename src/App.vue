@@ -129,9 +129,9 @@ body {
   right: 20px;
 }
 
-@media only screen and (min-width:1300px) {
+@media only screen and (min-width:@min-desktop-wide-width) {
     body {
-        width: 1280px;
+        width: 1200px;
     }
 }
 

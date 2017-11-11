@@ -1,6 +1,7 @@
 <template>
 <div class="enhance">
-    +{{level}} {{enhanceId}}
+    <div class="enhance-id">#{{ enhanceId }}</div>
+    +{{level}}
     <button v-on:click="test">Test</button>
     <button v-on:click="reset">Reset</button>
     <transition name="fade">
@@ -10,6 +11,12 @@
     </transition>
     <transition name="fade">
         <div v-if="!loading">
+            Can be enhanced up to <b>+{{maxLevel }}</b>
+
+            <div class="options">
+                <input type="checkbox" v-model="useGoldenGoose" name="goldenGoose" />
+                <label for="goldenGoose">Use Golden Goose 50% benefit</label>
+            </div>
 
         </div>
     </transition>
@@ -31,6 +38,8 @@ export default {
         return {
             level: this.enhanceLevel,
             loading: true,
+            horizontal: false,
+            useGoldenGoose: true,
             enhanceData: null
         };
     },
@@ -48,6 +57,9 @@ export default {
         }
     },
     computed: {
+        maxLevel() {
+            return this.enhanceData[this.enhanceData.length - 1].level;
+        }
     },
     methods: {
         fetchData() {
@@ -77,5 +89,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "../../less/core.less";
 
+.enhance {
+    position: relative;
+    padding-top: 18px;
+
+    .enhance-id {
+        color: @dv-c-body;
+        position: absolute;
+        top: -4px;
+        font-size: 12px;
+        letter-spacing: 0.1em;
+    }
+}
 </style>

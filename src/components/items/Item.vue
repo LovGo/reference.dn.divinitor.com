@@ -51,43 +51,43 @@
                             {{ itemData.durationDays }} days
                         </div>
                         <div v-if="itemData.cashItem">
-                            <div class="attrib" v-if="itemData.canTrade">
+                            <div class="attrib yes" v-if="itemData.canTrade">
                                 <div class="icon"><i class="fa fa-exchange"></i></div>
                                 {{ itemData.listings }} listings
                             </div>
-                            <div class="attrib" v-else>
+                            <div class="attrib no" v-else>
                                 <div class="icon"><i class="fa fa-chain"></i></div>
                                 Untradable
                             </div>
                         </div>
                         <div v-else>
-                            <div class="attrib" v-if="itemData.canTrade && !forceBound">
+                            <div class="attrib yes" v-if="itemData.canTrade && !forceBound">
                                 <div class="icon"><i class="fa fa-exchange"></i></div>
                                 Tradable
                             </div>
                             <div class="" v-else>
-                                <div class="attrib tooltip" v-if="itemData.unstampCount > 0">
+                                <div class="attrib yes tooltip" v-if="itemData.unstampCount > 0">
                                     <div class="icon"><i class="fa fa-unlink"></i></div>
                                     Unbind {{ itemData.unstampCount }}x
                                     <div class="tooltext">
                                         <div class="content">Uses {{ unstampAmt }} stamps</div>
                                     </div>
                                 </div>
-                                <div class="attrib" v-else>
+                                <div class="attrib no" v-else>
                                     <div class="icon"><i class="fa fa-chain"></i></div>
                                     Untradable
                                 </div>
                             </div>
                         </div>
-                        <div class="attrib" v-if="itemData.canServerStorage && !forceBound">
+                        <div class="attrib yes" v-if="itemData.canServerStorage && !forceBound">
                             <div class="icon"><i class="fa fa-suitcase"></i></div>
                             Server Storagable
                         </div>
-                        <div class="attrib" v-else>
+                        <div class="attrib no" v-else>
                             <div class="icon"><i class="fa fa-lock"></i></div>
                             Character Bound
                         </div>
-                        <div class="attrib" v-if="!itemData.canDestroy && !itemData.cashItem">
+                        <div class="attrib no" v-if="!itemData.canDestroy && !itemData.cashItem">
                             <div class="icon"><i class="fa fa-minus-circle"></i></div>
                             Cannot be destroyed
                         </div>
@@ -149,10 +149,22 @@
                         <div v-if="itemData.desc" v-html="itemData.desc.desc" class="uistring"></div>
                         <div v-else>No description</div>
                     </div>
+                    
+                    <div class="extra-data" v-if="hasExtraData">
+                        <div class="color" v-if="itemType == 'HAIRDYE' || itemType == 'SKINDYE' || itemType == 'CONTACT_LENS'">
+                            colorId: {{ itemData.type.color }}
+
+                        </div>
+                    </div>
                 </div>
                 <div class="model-view" v-if="hasModel">
                     3D VIEW PLACEHOLDER
                 </div>
+            </div>
+
+            <div class="section" v-if="itemType == 'ENHANCEMENT_HAMMER'">
+                <div class="title">Enhancement Hammer</div>
+                <mobile-enhance :mobileEnchantId="itemData.type.mobileEnchantId"></mobile-enhance>
             </div>
 
             <div class="section" v-if="itemData.enchantId">
@@ -166,7 +178,7 @@
             <div class="section" v-if="itemData.extract && Object.keys(itemData.extract.results).length">
                 <div class="title">Extraction</div>
                 Extracting 
-                <span v-if="!isNaN(enhanceLevel)">at +{{enhanceLevel}}</span> 
+                <span v-if="itemData.enchantId">at +{{enhanceLevel}}</span> 
                 costs <b>{{ itemData.extract.cost | gold }}</b> and can give:
 
                 <div class="item-list" v-if="itemData.extract.results[effectiveEnhanceLevel]">
@@ -184,6 +196,7 @@ import Vue from 'vue';
 import ItemIcon from "@/components/game/ItemIcon";
 import ItemCard from "@/components/items/ItemCard";
 import ItemEnhance from "@/components/items/ItemEnhance";
+import MobileEnhance from "@/components/items/MobileEnhance";
 import ItemStat from "@/api/item/itemstat";
 
 import Item from "@/api/item/item";
@@ -191,6 +204,7 @@ import Item from "@/api/item/item";
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-card', ItemCard);
 Vue.component('item-enhance', ItemEnhance);
+Vue.component('mobile-enhance', MobileEnhance);
 
 export default {
     name: "item-page",
@@ -253,17 +267,31 @@ export default {
             return null;
         },
         category() {
+            let t = this.itemData.type.type;
+            
+            if (t === "QUEST") {
+                return "quest item";
+            }
+            if (t === "ENHANCEMENT_HAMMER") {
+                return "enhancement hammer";
+            }
+            if (t === "HAIRDYE") {
+                return "hair dye";
+            }
+            if (t === "SKINDYE") {
+                return "skin color";
+            }
+            if (t === "CONTACT_LENS") {
+                return "contact lens";
+            }
+            
             if (this.itemData.category && this.itemData.category.name) {
                 let ret = this.itemData.category.name;
-                let t = this.itemData.type.type;
-                if (t === "QUEST") {
-                    return "quest item";
+                if (t === "CREST") {
+                    return ret + " crest";
                 }
                 if (t === "CROP") {
                     return "harvested " + ret + " crop";
-                }
-                if (t === "CREST") {
-                    return ret + " crest";
                 }
 
                 return ret;
@@ -298,11 +326,27 @@ export default {
             return this.enhanceLevel;
         },
         unstampAmt() {
-            if (this.itemData.baseStampCost) {
-                return this.itemData.baseStampCost + Item.getStampMod(this.effectiveEnhanceLevel);
+            if (this.itemData.unstampCosts) {
+                return this.itemData.unstampCosts[this.effectiveEnhanceLevel];
             }
 
             return "unknown";
+        },
+        itemType() {
+            return this.itemData.type.type;
+        },
+        hasExtraData() {
+            let t = this.itemData.type.type;
+            switch(t) {
+                case "HAIRDYE":
+                case "ENCHANT_JELLY":
+                case "REVIVE_SCROLL":
+                case "SKINDYE":
+                case "CONTACT_LENS":
+                    return true;
+            }
+
+            return false;
         }
     },
     methods: {
@@ -412,6 +456,7 @@ export default {
             position: absolute;
             top: -1.3em;
             left: 0;
+            user-select: none;
         }
     }
 
@@ -424,6 +469,19 @@ export default {
         // &:last-child {
         //     margin-right: 0;
         // }
+
+        &.yes {
+            .fa {
+                color: saturate(@dv-c-green, -20%);
+            }
+        }
+
+        &.no {
+            .fa {
+                color: saturate(@dv-c-red, -20%);
+            }
+        }
+
         .icon {
             display: inline-block;
 
@@ -520,6 +578,11 @@ export default {
                     }
                 }
             }
+
+            .extra-data {
+                margin-top: 1em;
+                color: @dv-c-idle;
+            }
         }
 
         .model-view {
@@ -534,12 +597,37 @@ export default {
 
     .item-list {
         margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
 
         .entry {
+            flex: 1 1 400px;
             border: 1px solid @dv-c-foreground;
-            border-bottom-color: transparent;
-            &:last-child {
-                border-bottom-color: @dv-c-foreground;
+            border-top-color: transparent;
+
+            &:first-child {
+                border-top-color: @dv-c-foreground;
+            }
+
+            @media only screen and (min-width:@min-desktop-wide-width) {
+                flex: 0 1 480px;
+                border-right-color: transparent;
+                &:first-child,
+                &:nth-child(2) {
+                    border-top-color: @dv-c-foreground;
+                }
+                &:nth-child(2n) {
+                    border-right-color: @dv-c-foreground;
+                }
+                &:last-child {
+                    border-right-color: @dv-c-foreground;
+                    padding-right: 1px;
+                }
+                &:first-child:last-child {
+                    border-right-color: @dv-c-foreground;
+                }
+
             }
         }
     }
@@ -592,27 +680,6 @@ export default {
                 //   transform: translateZ(0);
                 -webkit-animation: load8 1.1s infinite linear;
                 animation: load8 1.1s infinite linear;
-            }
-
-            @-webkit-keyframes load8 {
-                0% {
-                    -webkit-transform: rotate(0deg);
-                    transform: rotate(0deg);
-                }
-                100% {
-                    -webkit-transform: rotate(360deg);
-                    transform: rotate(360deg);
-                }
-            }
-            @keyframes load8 {
-                0% {
-                    -webkit-transform: rotate(0deg);
-                    transform: rotate(0deg);
-                }
-                100% {
-                    -webkit-transform: rotate(360deg);
-                    transform: rotate(360deg);
-                }
             }
         }
     }
