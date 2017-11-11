@@ -8,7 +8,7 @@ import GenDamage from '@/components/general/damage/GenDamage';
 import GenGuild from '@/components/general/guild/GenGuild';
 
 import Items from '@/components/items/Items';
-import SingleItemView from '@/components/items/SingleItemView';
+import Item from '@/components/items/Item';
 
 import Text from '@/components/Text';
 import UiStrings from '@/components/uistrings/UiStrings';
@@ -59,7 +59,8 @@ export default new Router({
       children: [
         {
           path: ':itemId',
-          component: SingleItemView
+          name: 'item-view',
+          component: Item
         }
       ]
     },

@@ -2,11 +2,20 @@ import Vue from 'vue';
 
 export default {
 
+    cache: {},
+
     getItem(itemId, region, okcb, errcb) {
+        let cacheKey = `${itemId}:${region}`;
+        if (this.cache[cacheKey]) {
+            okcb(this.cache[cacheKey]);
+            return;
+        }
+
         Vue.http.get(`/api/server/${region}/items/${itemId}`,
         {
         }).then(
         (res) => {
+            this.cache[cacheKey] = res.body;
             okcb(res.body);
         }, 
         errcb);
@@ -21,7 +30,7 @@ export default {
 
         let ret = {
             page: page,
-            x: UNIT_SIZE * column,
+            x: UNIT_SIZE * column - (column / 5),
             y: UNIT_SIZE * row,
             size: UNIT_SIZE
         };
@@ -114,6 +123,25 @@ export default {
         }
 
         return ret;
-    }
+    },
 
-}
+    getEnhancementInfo(enhanceId, region, okcb, errcb) {
+
+    },
+
+    getStampMod(enhanceLevel) {
+        if (!enhanceLevel) {
+            return 0;
+        }
+
+        if (enhanceLevel <= 6) {
+            return 1;
+        }
+
+        if (enhanceLevel <= 14) {
+            return 12;
+        }
+
+        return 20;
+    }
+};

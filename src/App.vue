@@ -131,7 +131,7 @@ body {
 
 @media only screen and (min-width:1300px) {
     body {
-        width: 1050px;
+        width: 1280px;
     }
 }
 
@@ -185,6 +185,7 @@ body {
     top: 0;
     font-size: 100px;
     opacity: 0.02;
+    // opacity: 0.0;
     pointer-events: none;
 }
 

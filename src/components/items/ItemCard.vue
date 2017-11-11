@@ -1,13 +1,16 @@
 <template>
     <div class="item-card">
-        <router-link :to="`/items/${itemId}`" tag="div">
+        <router-link :to="`/items/${itemId}`">
+            <transition name="fade">
             <div v-if="loading" class="loading">
                 <div class="loader-box">
                     <div class="loader"></div>
-                    <div class="label">Loading</div>
+                    <div class="label">Loading #{{itemId}}</div>
                 </div>
             </div>
-            <div v-else class="entry">
+            </transition>
+            <transition name="fade">
+            <div v-if="!loading" class="entry">
                 <div class="icon">
                     <item-icon 
                         class="centering"
@@ -33,6 +36,7 @@
                     </div>
                 </div>
             </div>
+            </transition>
         </router-link>
     </div>
 </template>
@@ -118,6 +122,7 @@ export default {
 @import "../../less/core.less";
 
 .item-card {
+    position: relative;
     padding: 4px 0 4px 10px;
     min-height: 64px;
     cursor: pointer;
@@ -133,11 +138,12 @@ export default {
         padding-left: 0;
         display: flex;
         flex-direction: row;
+        color: @dv-c-body;
 
         .icon{ 
             flex: 0 1 50px;
             vertical-align: middle;
-            
+
             .centering {
                 position: absolute;
                 top: 50%;
@@ -187,6 +193,72 @@ export default {
 
                 .cash {
                     color: #10A020;
+                }
+            }
+        }
+    }
+
+    .loading {
+        .loader-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 16px 0 0 16px;
+            
+            .label {
+                display: inline-block;
+                text-transform: uppercase;
+                letter-spacing: 0.2em;
+                padding-top: 10px;
+                padding-left: 10px;
+                vertical-align: top;
+                color: @dv-c-foreground;
+            }
+
+            .loader,
+            .loader:after {
+                border-radius: 50%;
+                width: 2em;
+                height: 2em;
+            }
+            .loader {
+                display: inline-block;
+                line-height: 100%;
+                font-size: 16px;
+                text-indent: -9999em;
+                border-top: 0.2em solid rgba(0, 0, 0, 0.75);
+                border-right: 0.2em solid rgba(0, 0, 0, 0.75);
+                border-bottom: 0.2em solid rgba(0, 0, 0, 0.75);
+                border-left: 0.2em solid @dv-c-foreground;
+                background: rgba(0, 0, 0, 0.5);
+                //   -webkit-transform: translateZ(0);
+                //   -ms-transform: translateZ(0);
+                //   transform: translateZ(0);
+                -webkit-animation: load8 1.1s infinite linear;
+                animation: load8 1.1s infinite linear;
+            }
+
+            @-webkit-keyframes load8 {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+            }
+            @keyframes load8 {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
                 }
             }
         }

@@ -149,7 +149,9 @@ p {
         color: #4080f0;
     }
     .format-h {
-        color: #505050;
+        font-style: italic;
+        color: @dv-c-body;
+        // color: #505050;
     }
     .format-v {
         color: #a257a0;
@@ -353,4 +355,69 @@ button {
 }
 .rank-normal {
     color: #FFFFFF;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltext {
+    opacity: 0.0;
+    background-color: @dv-c-background;
+    color: transparent;
+    text-align: center;
+    padding: 4px 12px;
+    border-radius: 0;
+    border: @dv-c-foreground solid 1px;
+    position: absolute;
+    z-index: 1;
+    white-space: pre;
+
+    transition: opacity 0.125s ease-in, color 0.075s ease-in;
+    font-size: 14px;
+    font-family: @dv-f-lato;
+
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, -5px) translate(-2px, 0px);
+
+    box-shadow: 4px 4px 4px rgba(0.0, 0.0, 0.0, 0.75);
+
+    .content {
+        position: relative;
+    }
+
+    &.wide {
+        width: 300px;
+    }
+
+    &::after {
+        content: " ";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: @dv-c-foreground transparent transparent transparent;
+    }
+
+    &::before {
+        content: " ";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -6px;
+        border-width: 6px;
+        border-style: solid;
+        border-color: @dv-c-background transparent transparent transparent;
+        z-index: 2;
+    }
+}
+
+.tooltip:hover .tooltext {
+    opacity: 1.0;
+    display: inline;
+    color: @dv-c-body;
 }
