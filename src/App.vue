@@ -66,7 +66,7 @@ body {
     border-right: @dv-c-foreground solid 1px;
     margin: 0 auto;
 
-    background-image: linear-gradient(rgba(5, 10, 13, 0.5), rgba(5, 10, 13, 0.5)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
+    background-image: linear-gradient(rgba(5, 10, 13, 0.5), rgba(5, 10, 13, 0.9)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 62.5% 70%;

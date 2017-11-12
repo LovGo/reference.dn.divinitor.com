@@ -2,12 +2,18 @@ export default {
     install: function(Vue, opt) {
         Vue.filter("thousands", this.thousands);
         Vue.filter("gold", this.gold);
+        Vue.filter("goldG", this.goldG);
         Vue.filter("dec2hex", this.dec2hex);
         Vue.filter("dec2hexcolor", this.dec2hexcolor);
         Vue.filter("enhancePercent", this.enhancePercent);
+        Vue.filter("ordinal", this.ordinal);
+        Vue.filter("zeroDash", this.zeroDash);
     },
 
     thousands: function(value) {
+        if (value == null) {
+            return value;
+        }
         return value.toLocaleString();
     },
 
@@ -29,6 +35,13 @@ export default {
 
         return ret.reverse().join(" ");
     },
+    goldG: function(value) {
+        let amt = value;
+        let gold = Math.floor((amt * 100 / 10000)) / 100;
+        return `${gold.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+        })}g`;
+    },
     dec2hex: function(x) {
         return ("00000000" + x.toString(16)).substr(-8);
     },
@@ -37,10 +50,36 @@ export default {
     },
     enhancePercent: function(n) {
         let p = n * 100;
-        if (p < 10) {
-            return Math.floor(p * 100) / 100;
-        } else {
-            return Math.floor(p);
+        if (p === 0) {
+            return "‒";
         }
+        if (p < 10) {
+            return Math.floor(p * 100) / 100 + "%";
+        } else {
+            return Math.floor(p) + "%";
+        }
+    },
+    ordinal: function(n) {
+        if (n > 20) {
+            n = n % 10;
+        }
+
+        if (n == 1) {
+            return "1st";
+        }
+        if (n == 2) {
+            return "2nd";
+        }
+        if (n == 3) {
+            return "3rd";
+        }
+        return n + "th";
+    },
+    zeroDash: function(n) {
+        if (n === 0) {
+            return "‒";
+        }
+        
+        return n;
     }
 };

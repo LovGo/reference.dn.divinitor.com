@@ -21,7 +21,7 @@
                 <tr v-for="level in levelSet" :key="level">
                     <th>+{{level}}</th>
                     <td v-for="rank in rankSet" :key="rank">
-                        {{ getRate(level, rank) | enhancePercent }}%
+                        {{ getRate(level, rank) | enhancePercent }}
                     </td>
 
                 </tr>

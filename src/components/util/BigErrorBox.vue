@@ -9,12 +9,15 @@
     <p>
         {{ errorContent }}
     </p>
+    <p class="secondary" v-if="secondaryInfo">
+        {{ secondaryInfo }}
+    </p>
 </div>
 </template>
 
 <script>
 export default {
-  props: ["errorTitle", "errorContent", "iconClass"]
+  props: ["errorTitle", "errorContent", "iconClass", "secondaryInfo"]
 }
 </script>
 
@@ -43,6 +46,10 @@ export default {
         word-wrap: break-word;
         padding: 0;
         margin: 1em 0;
+    }
+
+    .secondary {
+        color: #555;
     }
 }
 </style>

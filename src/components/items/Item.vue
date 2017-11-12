@@ -1,5 +1,8 @@
 <template>
     <div class="itempage">
+        <!--
+            LOADING
+         -->
         <transition name="fade">
             <div v-if="loading" class="loading">
                 <div class="loader-box">
@@ -11,7 +14,22 @@
                 </div>
             </div>
         </transition>
-        <div v-if="!loading">
+        <!--
+            ERROR
+         -->
+        <transition name="fade">
+            <div class="error" v-if="error">
+                <big-error-box 
+                    :errorTitle="'Error: ' + error.statusText" 
+                    :errorContent="error.bodyText" 
+                    :secondaryInfo="`Item ID #${itemId}`"
+                    iconClass="fa-exclamation-triangle"></big-error-box>
+            </div>
+        </transition>
+        <!--
+            RESULT
+         -->
+        <div v-if="!loading && itemData">
             <div class="header">
                 <div class="icon">
                     <item-icon 
@@ -144,34 +162,158 @@
                             </div>
                         </div>
                     </div>
+                    <div class=""
+                        v-if="itemType == 'VEHICLE_MULTI_MOUNT' || itemType == 'VEHICLE'">
+                        Vehicle movement speed {{ itemData.type.movementSpeedPercent}}%
+                    </div>
 
                     <div class="desc">
                         <div v-if="itemData.desc" v-html="itemData.desc.desc" class="uistring"></div>
                         <div v-else>No description</div>
+                        <div v-if="itemData.gainText" v-html="itemData.gainText" class="gain uistring"></div>
                     </div>
                     
-                    <div class="extra-data" v-if="hasExtraData">
-                        <div class="color" v-if="itemType == 'HAIRDYE' || itemType == 'SKINDYE' || itemType == 'CONTACT_LENS'">
+                    <div class="extra-data">
+                        <div class="color" 
+                            v-if="itemType == 'HAIRDYE' || itemType == 'SKINDYE' || itemType == 'CONTACT_LENS' || itemType == 'TWO_TONE_HAIRDYE'">
                             colorId: {{ itemData.type.color }}
 
                         </div>
+                        <div class=""
+                            v-if="itemType == 'SKILL_RESET_SCROLL' || itemType == 'UNLIMITED_RESET_SCROLL'">
+                            Resets your <strong>{{ itemData.type.minSpec | ordinal}} 
+                            <span v-if="itemData.type.minSpec != itemData.type.maxSpec">
+                                through {{ itemData.type.maxSpec | ordinal }} 
+                            </span>
+                            </strong>
+                            specialization's skills.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'REVIVAL_SCROLL'">
+                            Adds <strong>{{ itemData.type.reviveIncrAmt }} cash revive(s)</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'PET_ALICORN'">
+                            Revives an ally for <strong>{{ itemData.type.reviveDurationDays }} day(s).</strong>
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'DNP_COUPON'">
+                            Credits <strong>{{ itemData.type.dnpAmount | thousands }} DNP</strong> to your account.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'EXP_SCROLL'">
+                            Increases EXP gained by <strong>{{ itemData.type.expBoostPercent }}%</strong> 
+                            for characters up to <strong>Level {{ itemData.type.maxLevel }}</strong>
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'PET_EXP_JUICE'">
+                            Increases ally's EXP by <strong>{{ itemData.type.expAmt | thousands }}</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'INVENTORY_SLOT_EXPANSION'">
+                            Expands your inventory by <strong>{{ itemData.type.slotIncrAmt | thousands }} slot(s)</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'STORAGE_SLOT_EXPANSION'">
+                            Expands your storage by <strong>{{ itemData.type.slotIncrAmt | thousands }} slot(s)</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'EXP_UP_ITEM'">
+                            Increases your EXP by <strong>{{ itemData.type.expIncrAmt | thousands }}</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'ULTIMATE_FTG_UP'">
+                            Can only be used by characters <strong>level {{ itemData.type.levelCap }} and below</strong>.
+                            <div v-if="itemData.type.isUnlimited"><strong>Unlimited</strong> uses (not consumed when used).</div>
+                            <div v-else><strong>One-time</strong> use.</div>
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'PVP_EXP_UP'">
+                            Increases your Arena EXP by <strong>{{ itemData.type.expIncrAmt | thousands }}</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'NEW_USER_EXP_INCREASE'">
+                            Increases your EXP by <strong>{{ itemData.type.expIncrAmtPercent }}%</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'TALISMAN_SLOT_EXPANSION'">
+                            EC Talisman slots last for <strong>{{ itemData.type.durationDays }} day(s)</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'MERCENARY_EXP_POTION'">
+                            Increases your active mercenary's EXP by <strong>{{ itemData.type.expBoostAmt | thousands}}</strong>.<br/>
+                            Can be used on mercenaries <strong>below Level {{ itemData.type.maxMercLevel }}</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'BONOUS_FISHING_SEA_FISH'">
+                            Worth <strong>{{ itemData.type.weight }} fishing point(s)</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'UNSEAL_INCR_AND_WARRANTY'">
+                            Usable on 
+                            <strong>
+                                <span v-if="itemData.type.isCash">cash items</span>
+                                <span v-else>unbindable items</span>
+                            </strong>
+                            only.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'JUMP_TO_LEVEL'">
+                            Jumps your character to <strong>Level {{ itemData.type.targetLevel }}</strong>.<br/>
+                            Cannot be used if over <strong>Level {{ itemData.type.targetLevel }}</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'MERC_EXPLORATION_AWAKENING_POTION'">
+                            Can only use <strong>{{ itemData.type.maxSimulUse }}</strong> at a time.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'HERO_LEVEL_EXP_POTION'">
+                            Increases your Hero EXP by <strong>{{ itemData.type.heroExpIncrAmt }}</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'HERO_LEVEL_JUMP_TO_LEVEL'">
+                            Jumps your Hero EXP to <strong>Hero Level {{ itemData.type.targetLevel }}</strong>.<br/>
+                            Cannot be used if at or over <strong>Hero Level {{ itemData.type.targetLevel }}</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'HERO_LEVEL_EXP_SCROLL'">
+                            Increases your Hero EXP gain by <strong>{{ itemData.type.heroExpIncrAmtPercent }}%</strong>.
+                        </div>
+                        <div class=""
+                            v-if="itemType == 'FORTUNE_COIN_POINTS'">
+                            <!-- TODO -->
+                            Gain <strong>{{ itemData.type.amount | thousands }} {{ itemData.type.coinType }}</strong>.
+                        </div>
+
+                        
                     </div>
+                    <br/>
                 </div>
                 <div class="model-view" v-if="hasModel">
                     3D VIEW PLACEHOLDER
                 </div>
             </div>
 
+            <!-- {{ itemData.type }} -->
+
             <div class="section" v-if="itemType == 'ENHANCEMENT_HAMMER'">
                 <div class="title">Enhancement Hammer</div>
                 <mobile-enhance :mobileEnchantId="itemData.type.mobileEnchantId"></mobile-enhance>
+            </div>
+
+            <div class="section" v-if="itemType == 'ITEM_TUNER'">
+                <div class="title">Item Tuner</div>
+            </div>
+
+            <div class="section" v-if="containerItem">
+                <div class="title">Box Contents</div>
             </div>
 
             <div class="section" v-if="itemData.enchantId">
                 <div class="title">Enhancement</div>
                 <item-enhance 
                     :enhanceLevel="enhanceLevel" 
-                    :enhanceId="itemData.enchantId" 
+                    :itemData="itemData" 
                     v-on:levelUpdate="onLevelUpdate">
                 </item-enhance>
             </div>
@@ -187,6 +329,12 @@
                     </div>
                 </div>
             </div>
+
+            
+            <div class="section">
+                <div class="title">Procurement</div>
+
+            </div>
         </div>
     </div>
 </template>
@@ -198,6 +346,8 @@ import ItemCard from "@/components/items/ItemCard";
 import ItemEnhance from "@/components/items/ItemEnhance";
 import MobileEnhance from "@/components/items/MobileEnhance";
 import ItemStat from "@/api/item/itemstat";
+import BigErrorBox from '@/components/util/BigErrorBox'
+
 
 import Item from "@/api/item/item";
 
@@ -205,6 +355,7 @@ Vue.component('item-icon', ItemIcon);
 Vue.component('item-card', ItemCard);
 Vue.component('item-enhance', ItemEnhance);
 Vue.component('mobile-enhance', MobileEnhance);
+Vue.component('big-error-box', BigErrorBox);
 
 export default {
     name: "item-page",
@@ -214,6 +365,7 @@ export default {
             loading: true,
             itemData: null,
             enhanceLevel: 0,
+            error: null,
         }
     },
     created() {
@@ -269,22 +421,52 @@ export default {
         category() {
             let t = this.itemData.type.type;
             
-            if (t === "QUEST") {
+            switch (t) {
+            case "QUEST":
                 return "quest item";
-            }
-            if (t === "ENHANCEMENT_HAMMER") {
+            case "ENHANCEMENT_HAMMER":
                 return "enhancement hammer";
-            }
-            if (t === "HAIRDYE") {
+            case "HAIRDYE":
                 return "hair dye";
-            }
-            if (t === "SKINDYE") {
+            case "SKINDYE":
                 return "skin color";
-            }
-            if (t === "CONTACT_LENS") {
+            case "CONTACT_LENS":
                 return "contact lens";
+            case "PET_ALICORN":
+                return "pet alicorn";
+            case "ENCHANT_JELLY":
+                return "protection jelly";
+            case "WORLD_BIRD":
+                return "bird";
+            case "DNP_COUPON":
+                return "DNP coupon";
+            case "SKILL_RESET_SCROLL":
+            case "UNLIMITED_RESET_SCROLL":
+                return "skill reset scroll";
+            case "EXP_SCROLL":
+                return "exp scroll";
+            case "VEHICLE":
+            case "VEHICLE_MULTI_MOUNT":
+                return "mount";
+            case "TALISMAN_SLOT_EXPANSION":
+                return "expansion";
+            case "UNSEAL_INCR_AND_WARRANTY":
+                return "warranty";
+            case "MERCENARY_EXP_POTION":
+            case "MERC_EXPLORATION_AWAKENING_POTION":
+                return "mercenary potion";
+            case "ITEM_TUNER":
+                return "item tuner";
+            case "HERO_LEVEL_EXP_POTION":
+                return "hero exp potion";
+            case "HERO_LEVEL_JUMP_TO_LEVEL":
+                return "hero level scroll";
+            case "HERO_LEVEL_EXP_SCROLL":
+                return "hero level scroll";
+            case "FORTUNE_COIN_POINTS":
+                return "point token";
             }
-            
+
             if (this.itemData.category && this.itemData.category.name) {
                 let ret = this.itemData.category.name;
                 if (t === "CREST") {
@@ -298,6 +480,11 @@ export default {
             }
 
             return "item";
+        },
+        containerItem() {
+            let t = this.itemData.type.type;
+            return t === "ITEM_DROP_POUCH" || t === "MULTI_ITEM_DROP_POUCH" || t === "ITEM_DROP_DUAL_POUCH" ||
+                t === "HERO_POUCH";
         },
         forceBound() {
             //  Certain items (COUGH QUEST) are untradable at all times
@@ -343,6 +530,8 @@ export default {
                 case "REVIVE_SCROLL":
                 case "SKINDYE":
                 case "CONTACT_LENS":
+
+                case "TWO_TONE_HAIRDYE":
                     return true;
             }
 
@@ -352,6 +541,7 @@ export default {
     methods: {
         fetchData() {
             this.loading = true;
+            this.error = null;
             this.enhanceLevel = Number(this.$route.query.enhance);
             if (isNaN(this.enhanceLevel)) {
                 this.enhanceLevel = 0;
@@ -364,7 +554,9 @@ export default {
                     this.loading = false;
                 },
                 (err) => {
-
+                    console.log(err);
+                    this.loading = false;
+                    this.error = err;
                 });
         },
         onLevelUpdate(newLevel)  {
@@ -540,6 +732,10 @@ export default {
                     top: -1.3em;
                     left: 0;
                 }
+
+                .gain {
+                    margin-top: 0.5em;
+                }
             }
 
             .stats {
@@ -581,7 +777,6 @@ export default {
 
             .extra-data {
                 margin-top: 1em;
-                color: @dv-c-idle;
             }
         }
 
