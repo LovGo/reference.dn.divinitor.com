@@ -1,6 +1,6 @@
 <template>
-    <div class="item-card">
-        <router-link :to="`/items/${itemId}`">
+    <div class="item-card" v-if="valid">
+        <router-link v-if="!noLink" :to="`/items/${itemId}`">
             <transition name="fade">
             <div v-if="loading" class="loading">
                 <div class="loader-box">
@@ -39,6 +39,45 @@
             </div>
             </transition>
         </router-link>
+        <div v-else v-on:click="onClick">
+            <transition name="fade">
+                <div v-if="loading" class="loading">
+                    <div class="loader-box">
+                        <div class="loader"></div>
+                        <div class="label">Loading #{{itemId}}</div>
+                    </div>
+                </div>
+            </transition>
+            <transition name="fade">
+                <div v-if="!loading" class="entry">
+                    <div class="icon">
+                        <item-icon 
+                            class="centering"
+                            :iconIndex="itemData.iconIndex" 
+                            :rank="itemData.rank"
+                            :count="stackSize"
+                            :type="itemData.type.type"
+                        ></item-icon>
+                    </div>
+                    <div class="title">
+                        <div class="remark">
+                            <span class="iid">#{{ itemId }}</span>
+                        </div>
+                        <div class="head">
+                            {{ name }}
+                        </div>
+                        <div class="remark">
+                            <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
+                            <span v-if="itemData.tier" class="tier" v-html="itemData.tier"></span>
+                            <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
+                            <span v-if="canUse" class="can-use">{{ canUse }}</span>
+                            <span v-if="itemData.cashItem" class="cash">Cash</span>
+                            {{ category }}
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </div>
     </div>
 </template>
 
@@ -52,13 +91,14 @@ import Item from "@/api/item/item";
 Vue.component('item-icon', ItemIcon);
 
 export default {
-    props: ["itemId", "count"],
+    props: ["itemId", "count", "itemStub", "noLink", "onClick"],
     name: "item-page",
     data: function() {
         return {
             stackSize: 0,
             loading: true,
             itemData: null,
+            valid: true,
         }
     },
     created() {
@@ -111,6 +151,18 @@ export default {
             this.loading = true;
             this.itemData = null;
             this.stackSize = this.count;
+            this.valid = true;
+
+            if (this.itemStub) {
+                this.itemData = this.itemStub;
+                if (!this.itemData.type) {
+                    this.valid = false;
+                    return;
+                }
+                this.loading = false;
+                return;
+            }
+
             Item.getItem(this.itemId, this.$store.state.regionCode,
                 (res) => {
                     this.itemData = res;
@@ -136,8 +188,13 @@ export default {
 
     transition: background-color ease-in 0.125s;
 
-    &:hover {
+    &:hover,
+    &.active:hover {
         background: fade(@dv-c-foreground, 30%);
+    }
+
+    &.active {
+        background: fade(@dv-c-foreground, 20%);
     }
 
     .entry {
@@ -180,9 +237,7 @@ export default {
                 text-transform: uppercase;
 
                 .tier {
-                    .uistring {
-                        display: inline-block;
-                    }
+                    display: inline-block;
                 }
 
                 .level {
