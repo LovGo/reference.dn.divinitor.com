@@ -22,8 +22,64 @@
     </transition>
     <transition name="fade" appear>
         <div v-if="!loading && !error">
-            Tuna
-            {{ tunerData }}
+            <div v-if="tunerData.techniqueConverter || tunerId == 1">
+                You can convert from one technique skill to another technique skill within the same base class.
+            </div>
+            <div v-else>
+                <p>
+                    The following items can be tuned using this item:
+                </p>
+                <form class="filter">
+                    <legend>Filter by</legend>
+                    <label for="filter-level-min">Level </label>
+                    <input id="filter-level-min" type="number" min="0" max="100" v-model="filter.minLevel" />
+                    <label> to </label>
+                    <input id="filter-level-max" type="number" :min="filter.minLevel" max="100" v-model="filter.maxLevel" />
+                    
+                    <label for="filter-name">Item Name</label>
+                    <input id="filter-name" type="text" v-model="filter.nameSearch" />
+
+                    <label for="filter-class">Class</label>
+                    <input id="filter-class" type="text" v-model="filter.selectClass" />
+                    <br/>
+                    <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.normal" />
+                    <label for="filter-grade-normal">Normal</label>
+                    <input id="filter-grade-magic" type="checkbox" v-model="filter.grades.magic" />
+                    <label for="filter-grade-magic">Magic</label>
+                    <input id="filter-grade-rare" type="checkbox" v-model="filter.grades.rare" />
+                    <label for="filter-grade-rare">Rare</label>
+                    <input id="filter-grade-epic" type="checkbox" v-model="filter.grades.epic" />
+                    <label for="filter-grade-epic">Epic</label>
+                    <input id="filter-grade-legendary" type="checkbox" v-model="filter.grades.legendary" />
+                    <label for="filter-grade-legendary">Legendary</label>
+                    <input id="filter-grade-divine" type="checkbox" v-model="filter.grades.divine" />
+                    <label for="filter-grade-divine">Divine</label>
+                    
+                </form>
+                <div class="flow-container">
+                    <div class="left-col item-list">
+                        <div class="result" 
+                            v-for="item in tunerData.items" 
+                            :key="item.originalItemId"
+                            >
+                            <item-card
+                                :itemStub="item.originalItem"
+                                :itemId="item.originalItem.id"
+                                noLink="true"
+                                :onClick="() => select(item)"
+                                :class="( item.originalItem.id == (selectedItem ? selectedItem.originalItem.id : undefined )? 'active' : '')"
+                                >
+                            </item-card>
+                        </div>
+                    </div>
+                    <div class="right-col">
+                        Selection
+                        <div v-if="selectedItem">
+                            {{ selectedItem.originalItem.id }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </transition>
 </div>
@@ -32,11 +88,15 @@
 <script>
 import Vue from 'vue';
 import ItemIcon from "@/components/game/ItemIcon";
+import ItemIconTooltip from "@/components/items/ItemIconTooltip";
+import ItemCard from "@/components/items/ItemCard";
 import ItemStat from "@/api/item/itemstat";
 
 import Item from "@/api/item/item";
 
 Vue.component('item-icon', ItemIcon);
+Vue.component('item-icon-tooltip', ItemIconTooltip);
+Vue.component('item-card', ItemCard);
 
 export default {
     props: ["tunerId"],
@@ -44,7 +104,22 @@ export default {
         return {
             loading: true,
             tunerData: null,
-            error: null
+            error: null,
+            selectedItem: null,
+            filter: {
+                minLevel: 0,
+                maxLevel: 100,
+                nameSearch: "",
+                selectClass: "",
+                grades: {
+                    normal: true,
+                    magic: true,
+                    rare: true,
+                    epic: true,
+                    legendary: true,
+                    divine: true
+                }
+            }
         }
     },
     created() {
@@ -66,6 +141,10 @@ export default {
                     this.error = err;
                 });
         },
+        select(item) {
+            console.log(item);
+            this.selectedItem = item;
+        }
     }
 }
 </script>
@@ -84,6 +163,45 @@ export default {
         top: -4px;
         font-size: 12px;
         letter-spacing: 0.1em;
+    }
+
+    .filter {
+        margin: 12px 0;
+    }
+
+    .flow-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        .item-list {
+            max-height: 500px;
+            overflow-y: scroll;
+            border-top: 2px solid @dv-c-accent-1;
+            border-bottom: 2px solid @dv-c-accent-1;
+
+            .result {
+                .item-card {
+                    border: 1px solid @dv-c-foreground;
+                    border-top-color: transparent;
+                }
+
+                &:first-child {
+                    .item-card {
+                        border-top-color: @dv-c-foreground;
+                    }
+                }
+            }
+        }
+
+        .left-col {
+            flex: 0 1 auto;
+            margin-right: 20px;
+        }
+
+        .right-col {
+            flex: 1 1 auto;
+        }
     }
 
 
