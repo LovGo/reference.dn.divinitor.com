@@ -4,6 +4,7 @@ export default {
 
     cache: {},
     enhCache: {},
+    tunerCache: {},
 
     getItem(itemId, region, okcb, errcb) {
         let cacheKey = `${itemId}:${region}`;
@@ -154,6 +155,22 @@ export default {
         }).then(
         (res) => {
             this.enhCache[cacheKey] = res.body;
+            okcb(res.body);
+        }, 
+        errcb);
+    },
+    getTunerInfo(tunerId, region, okcb, errcb) {
+        let cacheKey = `${tunerId}:${region}`;
+        if (this.tunerCache[cacheKey]) {
+            okcb(this.tunerCache[cacheKey]);
+            return;
+        }
+
+        Vue.http.get(`/api/server/${region}/items/tuner/${tunerId}`,
+        {
+        }).then(
+        (res) => {
+            this.tunerCache[cacheKey] = res.body;
             okcb(res.body);
         }, 
         errcb);

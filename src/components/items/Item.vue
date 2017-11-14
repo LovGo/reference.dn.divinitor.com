@@ -311,6 +311,7 @@
 
             <div class="section" v-if="itemType == 'ITEM_TUNER'">
                 <div class="title">Item Tuner</div>
+                <item-tuner :tunerId="itemData.type.changeMatchingId"></item-tuner>
             </div>
 
             <div class="section" v-if="containerItem">
@@ -356,6 +357,7 @@ import Vue from 'vue';
 import ItemIcon from "@/components/game/ItemIcon";
 import ItemCard from "@/components/items/ItemCard";
 import ItemEnhance from "@/components/items/ItemEnhance";
+import ItemTuner from "@/components/items/ItemTuner";
 import MobileEnhance from "@/components/items/MobileEnhance";
 import ItemStat from "@/api/item/itemstat";
 import BigErrorBox from '@/components/util/BigErrorBox'
@@ -366,6 +368,7 @@ import Item from "@/api/item/item";
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-card', ItemCard);
 Vue.component('item-enhance', ItemEnhance);
+Vue.component('item-tuner', ItemTuner);
 Vue.component('mobile-enhance', MobileEnhance);
 Vue.component('big-error-box', BigErrorBox);
 
