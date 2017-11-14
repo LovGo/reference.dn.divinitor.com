@@ -5,6 +5,8 @@ import App from './App';
 import router from './router';
 import StatLineChart from '@/components/general/stat/StatLineChart';
 import StatEqualLineChart from '@/components/general/stat/StatEqualLineChart';
+import BigErrorBox from '@/components/util/BigErrorBox';
+import SmallErrorBox from '@/components/util/SmallErrorBox';
 import store from './store';
 import VueResource from 'vue-resource';
 import infiniteScroll from 'vue-infinite-scroll';
@@ -24,6 +26,8 @@ Vue.use(filters);
 
 Vue.component('stat-line-chart', StatLineChart);
 Vue.component('stat-equal-line-chart', StatEqualLineChart);
+Vue.component('big-error-box', BigErrorBox);
+Vue.component('small-error-box', SmallErrorBox);
 
 /* eslint-disable no-new */
 new Vue({

@@ -9,7 +9,18 @@
         </div>
     </transition>
     <transition name="fade">
-        <div v-if="!loading" class="entry">
+        <div class="error" v-if="error">
+            <small-error-box 
+                :errorTitle="'Failed to load data'" 
+                :errorContent="error.statusText + ': ' + error.bodyText" 
+                :secondaryInfo="`Mobile Enchant ID #${mobileEnchantId}`"
+                canRetry="true"
+                v-on:retry="fetchData"
+                iconClass="fa-exclamation-triangle"></small-error-box>
+        </div>
+    </transition>
+    <transition name="fade">
+        <div v-if="!loading && !error" class="entry">
             You can enhance <strong>Lv 95</strong> equipment at the following rates:
             <table class="rates">
                 <thead>
@@ -48,6 +59,7 @@ export default {
         return {
             loading: true,
             enchantData: null,
+            error: null,
         }
     },
     created() {
@@ -83,13 +95,16 @@ export default {
         fetchData() {
             this.loading = true;
             this.enchantData = null;
+            this.error = null;
             Item.getMobileEnchantInfo(this.mobileEnchantId, this.$store.state.regionCode,
                 (res) => {
+                    this.error = null;
                     this.enchantData = res;
                     this.loading = false;
                 },
                 (err) => {
-
+                    this.loading = false;
+                    this.error = err;
                 });
         },
         getRate(level, rank) {

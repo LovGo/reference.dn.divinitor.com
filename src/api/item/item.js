@@ -24,7 +24,7 @@ export default {
     },
 
     getIconCoordinates(itemIconIndex) {
-        let page = Math.floor(itemIconIndex / 200) + 1;
+        let page = Math.floor(Number(itemIconIndex) / 200) + 1;
         let pageIdx = itemIconIndex % 200;
         let row = Math.floor(pageIdx / 10);
         let column = pageIdx % 10;
@@ -32,7 +32,7 @@ export default {
 
         let ret = {
             page: page,
-            x: UNIT_SIZE * column - 1,
+            x: Math.max(UNIT_SIZE * column, 0),
             y: UNIT_SIZE * row,
             size: UNIT_SIZE
         };

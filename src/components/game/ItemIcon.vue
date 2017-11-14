@@ -48,12 +48,11 @@ export default {
 
     .item {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 1px;
+        left: 1px;
         right: 0;
         bottom: 0;
     }
-
 
     .count {
         @text-shadow: #000;
