@@ -56,6 +56,17 @@ export default {
             font-size: 14px;
         }
     }
+
+    button {
+        padding: 0.25em 2em;
+        border-color: @dv-c-red;
+        color: @dv-c-red;
+
+        &:hover {
+            color: white;
+            background-color: fade(@dv-c-red, 30%);
+        }
+    }
 }
 </style>
 
