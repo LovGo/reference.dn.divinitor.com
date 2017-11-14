@@ -5,7 +5,6 @@
             <div v-if="loading" class="loading">
                 <div class="loader-box">
                     <div class="loader"></div>
-                    <div class="label">Loading #{{itemId}}</div>
                 </div>
             </div>
             </transition>
@@ -62,7 +61,7 @@ export default {
         }
     },
     created() {
-        this.fetchData();
+        // this.fetchData();
     },
     watch: {
         itemId(to, from) {
@@ -127,12 +126,12 @@ export default {
 <style lang="less" scoped>
 @import "../../less/core.less";
 
-.item-card {
+.item-icon-tip {
     position: relative;
-    padding: 4px 0 4px 10px;
-    min-height: 64px;
     cursor: pointer;
     background: rgba(0, 0, 0, 0.375);
+    width: 51px;
+    height: 51px;
 
     transition: background-color ease-in 0.125s;
 
@@ -150,12 +149,6 @@ export default {
         .icon{ 
             flex: 0 1 50px;
             vertical-align: middle;
-
-            .centering {
-                position: absolute;
-                top: 50%;
-                transform: translate(0px, -50%);
-            }
         }
         
         .title {
@@ -214,7 +207,7 @@ export default {
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.5);
-            padding: 16px 0 0 16px;
+            padding: 8px 0 0 8px;
             
             .label {
                 display: inline-block;
