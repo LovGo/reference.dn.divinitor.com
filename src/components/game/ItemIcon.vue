@@ -30,6 +30,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "../../less/core.less";
+
 .item-icon {
     width: 52px;
     height: 52px;
@@ -56,9 +58,10 @@ export default {
     .count {
         @text-shadow: #000;
         @offset: 1px;
+        font-family: @dv-f-lato;
         position: absolute;
         z-index: 1;
-        font-size: 12px;
+        font-size: 14px;
         user-select: none;
         text-shadow:
             -@offset -@offset 0 @text-shadow,
@@ -68,6 +71,7 @@ export default {
         right: 7px;
         bottom: 4px;
         text-align: right;
+        color: white;
     }
 
     .enhance {
@@ -75,7 +79,7 @@ export default {
         @offset: 1px;
         position: absolute;
         z-index: 1;
-        font-size: 12px;
+        font-size: 14px;
         user-select: none;
         text-shadow:
             -@offset -@offset 0 @text-shadow,
@@ -83,7 +87,7 @@ export default {
             -@offset  @offset 0 @text-shadow,
              @offset  @offset 0 @text-shadow;
         left: 1px;
-        top: 4px;
+        top: 2px;
         color: #F0F080;
         text-align: right;
 

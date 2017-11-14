@@ -125,6 +125,12 @@
                             <div class="stat-entry" v-for="(value, key) in statSet" :key="key">
                                 {{key}} {{value}}
                             </div>
+
+                            <div class="potential section" v-if="itemData.type.potentialId">
+                                <div class="title">Variations</div>
+                                {{ itemData.type.potentialId }}
+                            </div>
+
                             <div class="gems" v-if="itemData.gemslots">
                                 <div 
                                     class="skill gemslot tooltip" 
@@ -170,7 +176,9 @@
                     <div class="desc">
                         <div v-if="itemData.desc" v-html="itemData.desc.desc" class="uistring"></div>
                         <div v-else>No description</div>
-                        <div v-if="itemData.gainText" v-html="itemData.gainText" class="gain uistring"></div>
+                        <div v-if="itemData.gainText" class="game-tooltip">
+                            <div v-html="itemData.gainText" class="gain uistring"></div>
+                        </div>
                     </div>
                     
                     <div class="extra-data">
@@ -323,18 +331,22 @@
                 <span v-if="itemData.enchantId">at +{{enhanceLevel}}</span> 
                 costs <b>{{ itemData.extract.cost | gold }}</b> and can give:
 
-                <div class="item-list" v-if="itemData.extract.results[effectiveEnhanceLevel]">
+                <transition-group name="fade-item" tag="div" class="item-list" v-if="itemData.extract.results[effectiveEnhanceLevel]">
                     <div class="entry" v-for="(iid, key) in itemData.extract.results[effectiveEnhanceLevel]" :key="key">
                         <item-card :itemId="iid"></item-card>
                     </div>
-                </div>
+                </transition-group>
             </div>
 
             
-            <div class="section">
+            <!-- <div class="section">
                 <div class="title">Procurement</div>
+                <div v-if="itemData.gainText" class="game-tooltip">
+                    <div class="title">Game Tooltip</div>
+                    <div v-html="itemData.gainText" class="gain uistring"></div>
+                </div>
 
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -365,6 +377,7 @@ export default {
             loading: true,
             itemData: null,
             enhanceLevel: 0,
+            potential: 0,
             error: null,
         }
     },
@@ -382,17 +395,12 @@ export default {
         },
         enhanceLevel(to, from) {
             if (to != from) {
-                let query = {};
-                if (to > 0) {
-                    query.enhance = to;
-                }
-                this.$router.replace({ 
-                    name: 'item-view', 
-                    params: {
-                        itemId: this.itemId
-                    }, 
-                    query: query
-                });
+                this.updateQueryParams();
+            }
+        },
+        potential(to, from) {
+            if (to != from) {
+                this.updateQueryParams();
             }
         }
     },
@@ -543,6 +551,7 @@ export default {
             this.loading = true;
             this.error = null;
             this.enhanceLevel = Number(this.$route.query.enhance);
+            this.potential = Number(this.$route.query.potential);
             if (isNaN(this.enhanceLevel)) {
                 this.enhanceLevel = 0;
             }
@@ -561,6 +570,24 @@ export default {
         },
         onLevelUpdate(newLevel)  {
             this.enhanceLevel = newLevel;
+        },
+        updateQueryParams() {
+            let query = {};
+            if (this.enhanceLevel > 0) {
+                query.enhance = this.enhanceLevel;
+            }
+
+            if (this.potential > 0) {
+                query.potential = this.potential;
+            }
+
+            this.$router.replace({ 
+                name: 'item-view', 
+                params: {
+                    itemId: this.itemId
+                }, 
+                query: query
+            });
         }
     }
 }
@@ -754,8 +781,15 @@ export default {
                     left: 0;
                 }
 
+                .potential {
+                    margin-top: 20px;
+                    border-top: 1px solid fade(@dv-c-accent-1, 25%);
+                }
+
                 .gems {
                     margin-top: 12px;
+                    border-top: 1px solid fade(@dv-c-accent-1, 25%);
+                    padding-top: 6px;
                     display: flex;
                     flex-direction: row;
 
@@ -825,6 +859,12 @@ export default {
 
             }
         }
+
+    }
+     
+    .game-tooltip {
+        position: relative;
+        margin-top: 2em;
     }
 
     

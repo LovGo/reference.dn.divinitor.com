@@ -9,86 +9,107 @@
 
         </div>
     </transition>
-    <transition name="fade">
+    <transition name="fade" appear>
         <div v-if="!loading">
             <!-- Can be enhanced up to <b>+{{maxLevel }}</b> -->
 
-            <div class="options">
-                <input type="checkbox" v-model="useGoldenGoose" name="goldenGoose" />
+            <form class="options">
+                <input type="checkbox" v-model="useGoldenGoose" id="goldenGoose" />
                 <label for="goldenGoose">Use Golden Goose 50% discount</label>
-                <input type="checkbox" v-model="useJelly" name="jelly" v-if="canUseJelly"/>
+                <input type="checkbox" v-model="useJelly" id="jelly" v-if="canUseJelly"/>
                 <label for="jelly" v-if="canUseJelly">Use Item Protection Jelly</label>
-            </div>
+            </form>
 
-            <div class="ok toast" v-if="useJelly && dragonGem && canUseJelly">
-                <div class="heading">Jelly Dragon Gems</div>
-                Dragon Gem enhancing will always succeed when using <strong>Item Protection Jelly</strong>.
-            </div>
-
-            <div class="ok toast" v-if="!showFailDropAmount && !canUseJelly">
-                <div class="heading">Moving Forwards</div>
-                This item cannot drop in level when enhancement fails.
-            </div>
-
-            <div class="ok toast" v-if="!showFailDropAmount && canUseJelly">
-                <div class="heading">Moving Forwards</div>
-                This item cannot drop in level when enhancement fails.
-            </div>
-
-            <div class="warn toast" v-if="!canUseJelly && showBreakChance">
-                <div class="heading">May the Goddess be with you</div>
-                <strong>Item Protection Jelly</strong> cannot be used with this item.
-            </div>
-
-
-            <div class="flow-container">
-                <div class="left container">
-                    <div class="title">
-                        Enhancement Levels
-                    </div>
-                    <table class="rates">
-                        <thead>
-                            <th class="first">Level</th>
-                            <th class="fixed">Rate</th>
-                            <th class="fixed">Gold Cost</th>
-                            <th class="fixed" v-if="canUseJelly">Jelly Cost</th>
-                            <th class="fixed" v-if="showBreakChance">Break Chance</th>
-                            <th class="fixed" v-if="showFailDropAmount">Max Fail Lvl Drop</th>
-                        </thead>
-                        <tr
-                            v-on:click="updateLevel(0)" 
-                            :class="(level == 0 ? `active` : `` )">
-                            <th>+0</th>
-                            <td>&#8210;</td>
-                            <td>&#8210;</td>
-                            <td v-if="canUseJelly">&#8210;</td>
-                            <td v-if="showBreakChance">&#8210;</td>
-                            <td v-if="showFailDropAmount">&#8210;</td>
-                        </tr>
-                        <tr 
-                            v-for="e in enhanceData" 
-                            :key="e.level" 
-                            v-on:click="updateLevel(e.level)" 
-                            :class="(e.level == level ? `active` : `` )">
-                            <th>+{{e.level}}</th>
-                            <td>{{ rateMod(e.successRate, e.level) | enhancePercent}}</td>
-                            <td>{{ e.cost * (useGoldenGoose ? 0.5 : 1) | goldG }}</td>
-                            <td v-if="canUseJelly">{{ e.jellyUseCount | zeroDash }}</td>
-                            <td v-if="showBreakChance">{{ breakRateMod(e.breakRate, e.level) | enhancePercent}}</td>
-                            <td v-if="showFailDropAmount">{{ e.maxDown | zeroDash }}</td>
-                        </tr>
-                    </table>
+            <transition name="fadecollapse-item">
+                <div class="ok toast" v-if="useJelly && dragonGem && canUseJelly">
+                    <div class="heading">The Goddess protects those she loves</div>
+                    Dragon Gem enhancing will always succeed when using <strong>Item Protection Jelly</strong>.
                 </div>
-                <div class="right">
-                    <div class="top container">
-                    <div class="title">
-                        Required Materials to +{{ level }}
-                    </div>
-                    </div>
-                    <div class="bottom container">
+            </transition>
+
+            <transition name="fadecollapse-item">
+                <div class="ok toast" v-if="!showFailDropAmount">
+                    <div class="heading">Safety Net</div>
+                    This item cannot drop in level when enhancement fails.
+                </div>
+            </transition>
+
+            <transition name="fadecollapse-item">
+                <div class="warn toast" v-if="!canUseJelly && showBreakChance">
+                    <div class="heading">May the Goddess be with you</div>
+                    <strong>Item Protection Jelly</strong> cannot be used with this item.
+                </div>
+            </transition>
+
+            <div class="small button-bar">
+                <div class="row-button" :class="{active: activePage(0)}" v-on:click="selectPage(0)">Overview</div>
+                <div class="row-button" :class="{active: activePage(1)}" v-on:click="selectPage(1)">Material Grid</div>
+                <div class="row-button" :class="{active: activePage(2)}" v-on:click="selectPage(2)">Stat Grid</div>
+            </div>
+
+            <div v-if="page == 0">
+                <div class="flow-container">
+                    <div class="left container">
                         <div class="title">
-                            Stats at +{{ level }}
+                            Enhancement Levels
                         </div>
+                        <table class="rates">
+                            <thead>
+                                <th class="first">Level</th>
+                                <th class="fixed">Rate</th>
+                                <th class="fixed">Gold Cost</th>
+                                <th class="fixed" v-if="canUseJelly">Jelly Cost</th>
+                                <th class="fixed" v-if="showBreakChance">Break Chance</th>
+                                <th class="fixed" v-if="showFailDropAmount">Max Fail Lvl Drop</th>
+                            </thead>
+                            <tr
+                                v-on:click="updateLevel(0)" 
+                                :class="(level == 0 ? `active` : `` )">
+                                <th>+0</th>
+                                <td>&#8210;</td>
+                                <td>&#8210;</td>
+                                <td v-if="canUseJelly">&#8210;</td>
+                                <td v-if="showBreakChance">&#8210;</td>
+                                <td v-if="showFailDropAmount">&#8210;</td>
+                            </tr>
+                            <tr 
+                                v-for="e in enhanceData" 
+                                :key="e.level" 
+                                v-on:click="updateLevel(e.level)" 
+                                :class="(e.level == level ? `active` : `` )">
+                                <th>+{{e.level}}</th>
+                                <td>{{ rateMod(e.successRate, e.level) | enhancePercent}}</td>
+                                <td>{{ e.cost * (useGoldenGoose ? 0.5 : 1) | goldG }}</td>
+                                <td v-if="canUseJelly">{{ e.jellyUseCount | zeroDash }}</td>
+                                <td v-if="showBreakChance">{{ breakRateMod(e.breakRate, e.level) | enhancePercent}}</td>
+                                <td v-if="showFailDropAmount">{{ e.maxDown | zeroDash }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="right">
+                        <transition name="fade-item">
+                            <div class="top container" v-if="level > 0">
+                                <div class="title">
+                                    Required Materials to +{{ level }}
+                                </div>
+                                
+                                <div class="item-list" v-if="level > 0 && enhanceData[level - 1].materials">
+                                    <transition-group name="fadecollapse-item">
+                                        <div class="entry" v-for="(d, key) in enhanceData[level - 1].materials" :key="key">
+                                            <item-card :itemId="d.itemId" :count="d.count"></item-card>
+                                        </div>
+                                    </transition-group>
+                                </div>
+                            </div>
+                        </transition>
+                        <transition name="fade-item">
+                            <div class="bottom container" v-if="level > 0">
+                                <div class="title">
+                                    Stats at +{{ level }}
+                                </div>
+                                TODO
+                            </div>
+                        </transition>
                     </div>
                 </div>
             </div>
@@ -121,7 +142,8 @@ export default {
             horizontal: false,
             useGoldenGoose: true,
             useJelly: !isGem,
-            enhanceData: null
+            enhanceData: null,
+            page: 0
         };
     },
     created() {
@@ -224,6 +246,12 @@ export default {
             }
 
             return rate;
+        },
+        activePage(page) {
+            return this.page == page;
+        },
+        selectPage(page) {
+            this.page = page;
         }
     }
 }
@@ -235,6 +263,26 @@ export default {
 .enhance {
     position: relative;
     padding-top: 18px;
+
+    .options {
+        input[type="checkbox"] {
+            margin-left: 2em;
+            cursor: pointer;
+
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+
+        label {
+            cursor: pointer;
+            transition: color 0.125s ease-in;
+
+            &:hover {
+                color: @dv-c-accent-2;
+            }
+        }
+    }
 
     .enhance-id {
         color: @dv-c-body;
@@ -254,6 +302,7 @@ export default {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        margin-top: 1em;
 
         .left {
             flex: 0 1 auto;
@@ -261,7 +310,15 @@ export default {
         }
 
         .right {
-            flex: 1 1 auto;
+            flex: 1 1 250px;
+        }
+    }
+
+    .small.button-bar {
+        margin-top: 1em;
+
+        .row-button {
+            font-size: 12px;
         }
     }
 
@@ -288,6 +345,20 @@ export default {
     }
     
 
+    .item-list {
+        margin-top: 0.5em;
+        transition: height ease-in 0.25s;
+
+        .entry {
+            flex: 1 1 250px;
+            border: 1px solid @dv-c-foreground;
+            border-top-color: transparent;
+
+            &:first-child {
+                border-top-color: @dv-c-foreground;
+            }
+        }
+    }
 
     .rates {
         margin: 0.5em 0;
@@ -322,16 +393,17 @@ export default {
 
         tr {
             padding-left: 0.125em;
-            transition: background-color 0.25s ease-in, color 0.25s ease-in;
+            transition: background-color 0.125s ease-in, color 0.125s ease-in;
             cursor: pointer;
         }
 
-        tr:hover {
-            background-color: rgba(0, 0, 0, 0.75);
+        tr:hover,
+        tr.active:hover {
+            background: fade(@dv-c-foreground, 30%);
         }
 
         tr.active {
-            background-color: fade(@dv-c-foreground, 25%);
+            background: fade(@dv-c-foreground, 20%);
             color: @dv-c-foreground;
         }
 

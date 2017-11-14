@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Welcome from '@/components/Welcome';
 import Home from '@/components/Home';
+import Passthrough from '@/components/Passthrough';
 
 import General from '@/components/general/General';
 import GenStat from '@/components/general/stat/GenStat';
@@ -22,10 +24,24 @@ Vue.use(Router);
 export default new Router({
   mode: 'history',
   routes: [
+    // {
+    //   path: '/',
+    //   component: Passthrough,
+    //   children: [
+    //     {
+    //       path: '',
+    //       component: Welcome
+    //     },
+    //     {
+    //       path: '/:region',
+    //       component: Home,
+    //     }
+    //   ]
+    // },
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: Home,
     },
     {
       path: '/general',

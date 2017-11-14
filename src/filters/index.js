@@ -38,8 +38,13 @@ export default {
     goldG: function(value) {
         let amt = value;
         let gold = Math.floor((amt * 100 / 10000)) / 100;
+        if (gold > 100) {
+            gold = Math.floor(gold);
+            return gold.toLocaleString() + "g";
+        }
+
         return `${gold.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
+            minimumFractionDigits: 1,
         })}g`;
     },
     dec2hex: function(x) {

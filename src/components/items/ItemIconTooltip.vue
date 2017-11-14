@@ -1,5 +1,5 @@
 <template>
-    <div class="item-card">
+    <div class="item-icon-tip">
         <router-link :to="`/items/${itemId}`">
             <transition name="fade">
             <div v-if="loading" class="loading">
@@ -20,7 +20,7 @@
                         :type="itemData.type.type"
                     ></item-icon>
                 </div>
-                <div class="title">
+                <!-- <div class="title">
                     <div class="remark">
                         <span class="iid">#{{ itemId }}</span>
                     </div>
@@ -35,7 +35,7 @@
                         <span v-if="itemData.cashItem" class="cash">Cash</span>
                         {{ category }}
                     </div>
-                </div>
+                </div> -->
             </div>
             </transition>
         </router-link>
@@ -159,6 +159,7 @@ export default {
         }
         
         .title {
+            position: absolute;
             flex: 1 1 auto;
             padding-left: 12px;
             padding-top: 8px;

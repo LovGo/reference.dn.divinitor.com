@@ -3,15 +3,15 @@
     <h1>Navigation</h1>
     <router-link to="/" class="home">Home</router-link>
     <ul>
-      <router-link to="/general" tag="li">General</router-link>
-      <router-link to="/job" tag="li" class="disabled">Classes</router-link>
-      <router-link to="/item" tag="li" class="disabled">Items</router-link>
-      <router-link to="/npc" tag="li" class="disabled">Maps</router-link>
-      <router-link to="/monster" tag="li" class="disabled">Monsters</router-link>
-      <router-link to="/npc" tag="li" class="disabled">NPCs</router-link>
-      <router-link to="/quest" tag="li" class="disabled">Quests</router-link>
-      <router-link to="/skill" tag="li" class="disabled">Skills</router-link>
-      <router-link to="/text" tag="li" class="">Text</router-link>
+      <router-link to="/general" tag="a"><li>General</li></router-link>
+      <router-link to="/job" tag="a"><li class="disabled">Classes</li></router-link>
+      <router-link to="/item" tag="a"><li class="disabled">Items</li></router-link>
+      <router-link to="/npc" tag="a"><li class="disabled">Maps</li></router-link>
+      <router-link to="/monster" tag="a"><li class="disabled">Monsters</li></router-link>
+      <router-link to="/npc" tag="a"><li class="disabled">NPCs</li></router-link>
+      <router-link to="/quest" tag="a"><li class="disabled">Quests</li></router-link>
+      <router-link to="/skill" tag="a"><li class="disabled">Skills</li></router-link>
+      <router-link to="/text" tag="a" class=""><li>Text</li></router-link>
     </ul>
   </div>
 </template>
@@ -69,11 +69,13 @@ export default {
       font-size: 14px;
 
       margin-left: 0.25em;
-      margin-top: 1em;
+      margin-top: 0.6em;
     
       padding-left: 0.5em;
+      padding-top: 0.2em;
+      padding-bottom: 0.2em;
       border-left: @dv-c-accent-1 solid 2px;
-      transition: border ease-in 0.125s, color ease-in 0.125s;
+      transition: border ease-in 0.125s, color ease-in 0.125s, background-color ease-in 0.125s;
       font-weight: normal;
       letter-spacing: 0.1em;
       color: @dv-c-accent-1;
@@ -81,11 +83,7 @@ export default {
 
       &:hover {
           color: @dv-c-foreground;
-      }
-
-      &.router-link-active {
-        border-left: @dv-c-accent-2 solid 2px;
-        color: @dv-c-foreground;
+          background: fade(@dv-c-foreground, 20%);
       }
 
       &.disabled {
@@ -93,6 +91,14 @@ export default {
         color: @dv-c-disabled;
         border-left: @dv-c-disabled solid 2px;
       }
+    }
+    
+    .router-link-active li {
+      color: @dv-c-foreground;
+      background: fade(@dv-c-accent-2, 10%);
+    }
+    .router-link-active li:hover {
+      background: fade(@dv-c-foreground, 20%);
     }
   }
 }

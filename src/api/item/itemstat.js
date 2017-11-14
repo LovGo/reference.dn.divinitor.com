@@ -142,11 +142,14 @@ export default {
             };
         }
     },
-    joinStatSet(stats) {
+    joinStatSet(stats, statKey) {
+        if (!statKey) {
+            statKey = "min";
+        }
         let ret = {};
         for (let k in stats) {
             let stat = stats[k];
-            let val = Number(stat.min);
+            let val = Number(stat[statKey]);
             let state = stat.state;
             if (stat.state === "PHYSICAL_DAMAGE_MINMAX") {
                 if (ret.PHYSICAL_DAMAGE_MIN) {
