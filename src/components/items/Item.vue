@@ -3,6 +3,7 @@
         <!--
             LOADING
          -->
+        <div class="top">&nbsp; <!-- Prevent margin collapse --></div>
         <transition name="fade">
             <div v-if="loading" class="loading">
                 <div class="loader-box">
@@ -23,6 +24,8 @@
                     :errorTitle="'Error: ' + error.statusText" 
                     :errorContent="error.bodyText" 
                     :secondaryInfo="`Item ID #${itemId}`"
+                    canRetry="true"
+                    v-on:retry="fetchData"
                     iconClass="fa-exclamation-triangle"></big-error-box>
             </div>
         </transition>
@@ -601,6 +604,9 @@ export default {
 
 .itempage {
     position: relative;
+    min-height: 70px;
+    margin-top: 0;
+    padding-top: 0;
     width: 100%;
     .header {
         position: relative;
@@ -872,7 +878,11 @@ export default {
 
     
     .loading {
-        position: relative;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+
         // padding-top: 100px;
         .loader-box {
             position: absolute;
