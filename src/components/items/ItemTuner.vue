@@ -42,26 +42,42 @@
                     <label for="filter-class">Class</label>
                     <input id="filter-class" type="text" v-model="filter.selectClass" />
                     <br/>
-                    <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.normal" />
-                    <label for="filter-grade-normal">Normal</label>
-                    <input id="filter-grade-magic" type="checkbox" v-model="filter.grades.magic" />
-                    <label for="filter-grade-magic">Magic</label>
-                    <input id="filter-grade-rare" type="checkbox" v-model="filter.grades.rare" />
-                    <label for="filter-grade-rare">Rare</label>
-                    <input id="filter-grade-epic" type="checkbox" v-model="filter.grades.epic" />
-                    <label for="filter-grade-epic">Epic</label>
-                    <input id="filter-grade-legendary" type="checkbox" v-model="filter.grades.legendary" />
-                    <label for="filter-grade-legendary">Legendary</label>
-                    <input id="filter-grade-divine" type="checkbox" v-model="filter.grades.divine" />
-                    <label for="filter-grade-divine">Divine</label>
+                    <span v-if="hasGrade.normal">
+                        <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.normal" />
+                        <label for="filter-grade-normal">Normal</label>
+                    </span>
+                    <span v-if="hasGrade.magic">
+                        <input id="filter-grade-magic" type="checkbox" v-model="filter.grades.magic" />
+                        <label for="filter-grade-magic">Magic</label>
+                    </span>
+                    <span v-if="hasGrade.rare">
+                        <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.rare" />
+                        <label for="filter-grade-normal">Rare</label>
+                    </span>
+                    <span v-if="hasGrade.epic">
+                        <input id="filter-grade-epic" type="checkbox" v-model="filter.grades.epic" />
+                        <label for="filter-grade-epic">Epic</label>
+                    </span>
+                    <span v-if="hasGrade.unique">
+                        <input id="filter-grade-unique" type="checkbox" v-model="filter.grades.unique" />
+                        <label for="filter-grade-unique">Unique</label>
+                    </span>
+                    <span v-if="hasGrade.legendary">
+                        <input id="filter-grade-legendary" type="checkbox" v-model="filter.grades.legendary" />
+                        <label for="filter-grade-legendary">Legendary</label>
+                    </span>
+                    <span v-if="hasGrade.divine">
+                        <input id="filter-grade-divine" type="checkbox" v-model="filter.grades.divine" />
+                        <label for="filter-grade-divine">Divine</label>
+                    </span>
                     
                 </form>
                 <div class="flow-container">
-                    <div class="left-col item-list">
-                        <div class="result" 
+                    <transition-group name="fade-item" tag="div" class="left-col item-list">
+                        <div
                             v-for="item in tunerData.items" 
-                            :key="item.originalItemId"
-                            >
+                            :key="item.originalItem.id"
+                            class="result" v-if="shouldRender(item.originalItem)">
                             <item-card
                                 :itemStub="item.originalItem"
                                 :itemId="item.originalItem.id"
@@ -71,7 +87,15 @@
                                 >
                             </item-card>
                         </div>
-                    </div>
+                        
+                        <div class="no result" :key="'none'">
+                            <small-error-box
+                                errorTitle="No Results"
+                                iconClass="fa-question-circle"
+                                errorContent="Try searching something else">
+                            </small-error-box>
+                        </div>
+                    </transition-group>
                     <div class="right-col">
                         Selection
                         <div v-if="selectedItem">
@@ -116,6 +140,7 @@ export default {
                     magic: true,
                     rare: true,
                     epic: true,
+                    unique: true,
                     legendary: true,
                     divine: true
                 }
@@ -124,6 +149,52 @@ export default {
     },
     created() {
         this.fetchData();
+    },
+    computed: {
+        hasGrade() {
+            let ret = {
+                normal: false,
+                magic: false,
+                rare: false,
+                epic: false,
+                unique: false,
+                legendary: false,
+                divine: false
+            };
+            
+            if (!this.tunerData) {
+                return ret;
+            }
+
+            for (let k in this.tunerData.items) {
+                let item = this.tunerData.items[k].originalItem;
+                switch(item.rank) {
+                    case "NORMAL":
+                        ret.normal = true;
+                        break;
+                    case "MAGIC":
+                        ret.magic = true;
+                        break;
+                    case "RARE":
+                        ret.rare = true;
+                        break;
+                    case "EPIC":
+                        ret.epic = true;
+                        break;
+                    case "UNIQUE":
+                        ret.unique = true;
+                        break;
+                    case "LEGENDARY":
+                        ret.legendary = true;
+                        break;
+                    case "DIVINE":
+                        ret.divine = true;
+                        break;
+                }
+            }
+
+            return ret;
+        }
     },
     methods: {
         fetchData() {
@@ -142,8 +213,21 @@ export default {
                 });
         },
         select(item) {
-            console.log(item);
             this.selectedItem = item;
+        },
+        shouldRender(item) {
+            //  Check grade
+            let grade = item.rank.toLowerCase();
+            if (!this.filter.grades[grade]) {
+                return false;
+            }
+            //  Check level
+            let level = item.level;
+            if (level < this.filter.minLevel || level > this.filter.maxLevel) {
+                return false;
+            }
+
+            return true;
         }
     }
 }
@@ -181,6 +265,7 @@ export default {
             border-bottom: 2px solid @dv-c-accent-1;
 
             .result {
+                width: 380px;
                 .item-card {
                     border: 1px solid @dv-c-foreground;
                     border-top-color: transparent;
@@ -190,6 +275,14 @@ export default {
                     .item-card {
                         border-top-color: @dv-c-foreground;
                     }
+                }
+
+                &.no {
+                    display: none;
+                }
+
+                &:first-child.no {
+                    display: block;
                 }
             }
         }

@@ -119,9 +119,12 @@
                         <transition name="fade-item">
                             <div class="bottom container" v-if="level > 0">
                                 <div class="title">
-                                    Stats at +{{ level }}
+                                    Additional Stats at +{{ level }}
                                 </div>
-                                TODO
+                                <stat-grid
+                                    :statSet="currentStatSet"
+                                    :enhanceStatSet="null">
+                                </stat-grid>
                             </div>
                         </transition>
                     </div>
@@ -139,10 +142,12 @@
 import Vue from 'vue';
 import ItemIcon from "@/components/game/ItemIcon";
 import ItemStat from "@/api/item/itemstat";
+import StatGrid from "@/components/game/StatGrid";
 
 import Item from "@/api/item/item";
 
 Vue.component('item-icon', ItemIcon);
+Vue.component('stat-grid', StatGrid);
 
 export default {
     props: ["enhanceLevel", "itemData"],
@@ -221,6 +226,9 @@ export default {
             }
 
             return hasJelly;
+        },
+        currentStatSet() {
+            return this.statSet(this.level);
         }
     },
     methods: {
@@ -233,6 +241,7 @@ export default {
                     this.enhanceData = res;
                     this.loading = false;
                     this.error = null;
+                    this.updateLevel(this.level);
                 },
                 (err) => {
                     this.loading = false;
@@ -241,7 +250,7 @@ export default {
         },
         updateLevel(newLevel) {
             this.level = newLevel;
-            this.$emit("levelUpdate", this.level);
+            this.$emit("levelUpdate", this.level, this.currentStatSet);
         },
         test() {
             this.updateLevel(this.level + 1);
@@ -264,6 +273,13 @@ export default {
             }
 
             return rate;
+        },
+        statSet(level) {
+            if (level > 0) {
+                return ItemStat.joinStatSet(this.enhanceData[level - 1].statGains, "value");
+            }
+            
+            return null;
         },
         activePage(page) {
             return this.page == page;

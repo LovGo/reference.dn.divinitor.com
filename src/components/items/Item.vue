@@ -115,6 +115,7 @@
                         <div class="attrib" v-if="itemData.npcSellAmount">
                             <div class="icon">
                                 <i class="fa fa-dollar"></i>
+                                <!-- More dollars for more gold -->
                                 <i class="fa fa-dollar" v-if="itemData.npcSellAmount >= 10000000"></i>
                                 <i class="fa fa-dollar" v-if="itemData.npcSellAmount >= 100000000"></i>
                             </div>
@@ -125,9 +126,14 @@
 
                     <div class="stat-stack">
                         <div class="stats" v-if="itemData.stats.length">
-                            <div class="stat-entry" v-for="(value, key) in statSet" :key="key">
+                            <stat-grid
+                                :statSet="statSet"
+                                :enhanceStatSet="enhanceLevelStats"
+                                >
+                            </stat-grid>
+                            <!-- <div class="stat-entry" v-for="(value, key) in statSet" :key="key">
                                 {{key}} {{value}}
-                            </div>
+                            </div> -->
 
                             <div class="potential section" v-if="itemData.type.potentialId">
                                 <div class="title">Variations</div>
@@ -358,21 +364,24 @@
 <script>
 import Vue from 'vue';
 import ItemIcon from "@/components/game/ItemIcon";
+import StatGrid from "@/components/game/StatGrid";
 import ItemCard from "@/components/items/ItemCard";
 import ItemEnhance from "@/components/items/ItemEnhance";
 import ItemTuner from "@/components/items/ItemTuner";
 import MobileEnhance from "@/components/items/MobileEnhance";
-import ItemStat from "@/api/item/itemstat";
 import BigErrorBox from '@/components/util/BigErrorBox'
 
 
 import Item from "@/api/item/item";
+import ItemStat from "@/api/item/itemstat";
 
 Vue.component('item-icon', ItemIcon);
+Vue.component('stat-grid', StatGrid);
 Vue.component('item-card', ItemCard);
 Vue.component('item-enhance', ItemEnhance);
 Vue.component('item-tuner', ItemTuner);
 Vue.component('mobile-enhance', MobileEnhance);
+
 Vue.component('big-error-box', BigErrorBox);
 
 export default {
@@ -383,6 +392,7 @@ export default {
             loading: true,
             itemData: null,
             enhanceLevel: 0,
+            enhanceLevelStats: null,
             potential: 0,
             error: null,
         }
@@ -556,6 +566,7 @@ export default {
         fetchData() {
             this.loading = true;
             this.error = null;
+            this.enhanceLevelStats = null;
             this.enhanceLevel = Number(this.$route.query.enhance);
             this.potential = Number(this.$route.query.potential);
             if (isNaN(this.enhanceLevel)) {
@@ -574,8 +585,9 @@ export default {
                     this.error = err;
                 });
         },
-        onLevelUpdate(newLevel)  {
+        onLevelUpdate(newLevel, enhanceStatSet)  {
             this.enhanceLevel = newLevel;
+            this.enhanceLevelStats = enhanceStatSet;
         },
         updateQueryParams() {
             let query = {};

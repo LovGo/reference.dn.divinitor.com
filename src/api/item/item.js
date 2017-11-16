@@ -174,5 +174,14 @@ export default {
             okcb(res.body);
         }, 
         errcb);
+    },
+    getItemTunerInfo(itemId, region, okcb, errcb) {
+        Vue.http.get(`/api/server/${region}/items/${itemId}/tuning`,
+        {
+        }).then(
+        (res) => {
+            okcb(res.body);
+        }, 
+        errcb);
     }
 };

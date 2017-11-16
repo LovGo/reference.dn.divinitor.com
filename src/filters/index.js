@@ -8,6 +8,8 @@ export default {
         Vue.filter("enhancePercent", this.enhancePercent);
         Vue.filter("ordinal", this.ordinal);
         Vue.filter("zeroDash", this.zeroDash);
+        Vue.filter("stat", this.stat);
+        Vue.filter("statPercent", this.statPercent);
     },
 
     thousands: function(value) {
@@ -86,5 +88,13 @@ export default {
         }
         
         return n;
+    },
+    stat(s) {
+        return Math.floor(s).toLocaleString();
+    },
+    statPercent(s) {
+        return Math.floor(s * 100).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        }) + "%";
     }
 };
