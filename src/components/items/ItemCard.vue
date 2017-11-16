@@ -136,11 +136,7 @@ export default {
             return null;
         },
         category() {
-            if (this.itemData.category && this.itemData.category.name) {
-                return this.itemData.category.name;
-            }
-
-            return "item";
+            return Item.getItemDetailedCategory(this.itemData);
         },
         statSet() {
             return ItemStat.joinStatSet(this.itemData.stats);

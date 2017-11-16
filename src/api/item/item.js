@@ -183,5 +183,68 @@ export default {
             okcb(res.body);
         }, 
         errcb);
+    },
+    getItemDetailedCategory(itemData) {
+        let t = itemData.type.type;
+        
+        switch (t) {
+            case "QUEST":
+                return "quest item";
+            case "ENHANCEMENT_HAMMER":
+                return "enhancement hammer";
+            case "HAIRDYE":
+                return "hair dye";
+            case "SKINDYE":
+                return "skin color";
+            case "CONTACT_LENS":
+                return "contact lens";
+            case "PET_ALICORN":
+                return "pet alicorn";
+            case "ENCHANT_JELLY":
+                return "protection jelly";
+            case "WORLD_BIRD":
+                return "bird";
+            case "DNP_COUPON":
+                return "DNP coupon";
+            case "SKILL_RESET_SCROLL":
+            case "UNLIMITED_RESET_SCROLL":
+                return "skill reset scroll";
+            case "EXP_SCROLL":
+                return "exp scroll";
+            case "VEHICLE":
+            case "VEHICLE_MULTI_MOUNT":
+                return "mount";
+            case "TALISMAN_SLOT_EXPANSION":
+                return "expansion";
+            case "UNSEAL_INCR_AND_WARRANTY":
+                return "warranty";
+            case "MERCENARY_EXP_POTION":
+            case "MERC_EXPLORATION_AWAKENING_POTION":
+                return "mercenary potion";
+            case "ITEM_TUNER":
+                return "item tuner";
+            case "HERO_LEVEL_EXP_POTION":
+                return "hero exp potion";
+            case "HERO_LEVEL_JUMP_TO_LEVEL":
+                return "hero level scroll";
+            case "HERO_LEVEL_EXP_SCROLL":
+                return "hero level scroll";
+            case "FORTUNE_COIN_POINTS":
+                return "point token";
+        }
+
+        if (itemData.category && itemData.category.name) {
+            let ret = itemData.category.name;
+            if (t === "CREST") {
+                return ret + " crest";
+            }
+            if (t === "CROP") {
+                return "harvested " + ret + " crop";
+            }
+
+            return ret;
+        }
+
+        return "item";
     }
 };

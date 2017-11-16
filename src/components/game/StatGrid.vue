@@ -10,7 +10,7 @@
         
         <tr v-if="pdmgSet || pdmgESet">
             <th class="stat">{{ statList['PHYSICAL_DAMAGE_MINMAX'].abbv }}</th>
-            <td v-if="pdmgSet.min">
+            <td v-if="pdmgSet && pdmgSet.min">
                 <span v-if="pdmgSet.min == pdmgSet.max">
                     {{ pdmgSet.min | stat }}
                 </span>
@@ -21,8 +21,8 @@
             <td v-else>
                 &#8210;
             </td>
-            <td class="enhance" v-if="enhanceStatSet">
-                <span v-if="pdmgSet.min == pdmgSet.max">
+            <td class="enhance" v-if="pdmgESet && enhanceStatSet">
+                <span v-if="pdmgESet.min == pdmgESet.max">
                     +{{ pdmgESet.min | stat }}
                 </span>
                 <span v-else>
@@ -33,17 +33,17 @@
                 &#8210;
             </td>
             <td class="total" v-if="enhanceStatSet">
-                <span v-if="pdmgESet.min + pdmgSet.min == pdmgESet.max + pdmgSet.max">
-                    {{ pdmgESet.min + pdmgSet.min | stat }}
+                <span v-if="safeSum(pdmgESet, pdmgSet, 'min') == safeSum(pdmgESet, pdmgSet, 'max')">
+                    {{ safeSum(pdmgESet, pdmgSet, 'min') | stat }}
                 </span>
                 <span v-else>
-                    {{ pdmgESet.min + pdmgSet.min | stat }} - {{ pdmgESet.max + pdmgSet.max | stat }}
+                    {{ safeSum(pdmgESet, pdmgSet, 'min') | stat }} - {{ safeSum(pdmgESet, pdmgSet, 'max') | stat }}
                 </span>
             </td>
         </tr>
         <tr v-if="mdmgSet || mdmgESet">
             <th class="stat">{{ statList['MAGICAL_DAMAGE_MINMAX'].abbv }}</th>
-            <td v-if="mdmgSet.min">
+            <td v-if="mdmgSet && mdmgSet.min">
                 <span v-if="mdmgSet.min == mdmgSet.max">
                     {{ mdmgSet.min | stat }}
                 </span>
@@ -54,8 +54,8 @@
             <td v-else>
                 &#8210;
             </td>
-            <td class="enhance" v-if="enhanceStatSet">
-                <span v-if="mdmgSet.min == mdmgSet.max">
+            <td class="enhance" v-if="mdmgESet && enhanceStatSet">
+                <span v-if="mdmgESet.min == mdmgESet.max">
                     +{{ mdmgESet.min | stat }}
                 </span>
                 <span v-else>
@@ -66,11 +66,11 @@
                 &#8210;
             </td>
             <td class="total" v-if="enhanceStatSet">
-                <span v-if="mdmgESet.min + mdmgSet.min == mdmgESet.max + mdmgSet.max">
-                    {{ mdmgESet.min + mdmgSet.min | stat }}
+                <span v-if="safeSum(mdmgESet, mdmgSet, 'min') == safeSum(mdmgESet, mdmgSet, 'max')">
+                    {{ safeSum(mdmgESet, mdmgSet, 'min') | stat }}
                 </span>
                 <span v-else>
-                    {{ mdmgESet.min + mdmgSet.min | stat }} - {{ mdmgESet.max + mdmgSet.max | stat }}
+                    {{ safeSum(mdmgESet, mdmgSet, 'min') | stat }} - {{ safeSum(mdmgESet, mdmgSet, 'max') | stat }}
                 </span>
             </td>
         </tr>
@@ -390,6 +390,16 @@ export default {
             }
 
             return base + enh;
+        },
+        safeSum(a, b, key) {
+            if (!a || a[key] == undefined) {
+                return b[key];
+            }
+            if (!b || b[key] == undefined) {
+                return a[key];
+            }
+
+            return a[key] + b[key];
         }
     }
 }
