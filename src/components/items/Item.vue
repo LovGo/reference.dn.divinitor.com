@@ -121,6 +121,10 @@
                             </div>
                             NPC for {{ itemData.npcSellAmount | gold }}
                         </div>
+                        <div class="attrib" v-if="itemData.gearScore">
+                            <div class="icon"><i class="fa fa-balance-scale"></i></div>
+                            Requires <strong>{{ itemData.gearScore }}</strong> Gear Points
+                        </div>
                     </div>
                     <!-- {{ itemData.type.type }} -->
 
