@@ -93,8 +93,9 @@ export default {
         return Math.floor(s).toLocaleString();
     },
     statPercent(s) {
-        return Math.floor(s * 100).toLocaleString(undefined, {
-            minimumFractionDigits: 2
+        return (s * 100).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
         }) + "%";
     }
 };
