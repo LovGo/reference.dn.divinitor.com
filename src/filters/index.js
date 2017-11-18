@@ -10,6 +10,7 @@ export default {
         Vue.filter("zeroDash", this.zeroDash);
         Vue.filter("stat", this.stat);
         Vue.filter("statPercent", this.statPercent);
+        Vue.filter("rate", this.rate);
     },
 
     thousands: function(value) {
@@ -97,5 +98,17 @@ export default {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         }) + "%";
+    },
+    rate(v) {
+        let mult = v * 100;
+        if (mult > 1) {
+            return Math.round(mult);
+        }
+
+        if (mult >= 0.01) {
+            return Math.round(mult * 100) / 100;
+        }
+
+        return mult;
     }
 };

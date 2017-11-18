@@ -10,33 +10,39 @@
             </div>
             </transition>
             <transition name="fade">
-            <div v-if="!loading" class="entry">
-                <div class="icon">
-                    <item-icon 
-                        class="centering"
-                        :iconIndex="itemData.iconIndex" 
-                        :rank="itemData.rank"
-                        :count="stackSize"
-                        :type="itemData.type.type"
-                    ></item-icon>
+                <div v-if="!loading" class="entry">
+                    <div class="icon">
+                        <item-icon 
+                            class="centering"
+                            :iconIndex="itemData.iconIndex" 
+                            :rank="itemData.rank"
+                            :count="stackSize"
+                            :type="itemData.type.type"
+                        ></item-icon>
+                    </div>
+                    <div class="title">
+                        <div class="remark">
+                            <span class="iid">#{{ itemId }}</span>
+                        </div>
+                        <div class="head">
+                            <span v-if="goldAmt">{{ goldAmt | thousands }}</span>
+                            {{ name }}
+                        </div>
+                        <div class="remark">
+                            <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
+                            <span v-if="itemData.tier" class="tier" v-html="itemData.tier"></span>
+                            <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
+                            <span v-if="timeLimit">{{ timeLimit }}-day</span>
+                            <span v-else-if="itemData.durationDays">{{ itemData.durationDays }}-day</span>
+                            <span v-if="canUse" class="can-use">{{ canUse }}</span>
+                            <span v-if="itemData.cashItem" class="cash">Cash</span>
+                            {{ category }}
+                        </div>
+                    </div>
+                    <div class="rate" v-if="rate">
+                        {{ rate | rate}}%
+                    </div>
                 </div>
-                <div class="title">
-                    <div class="remark">
-                        <span class="iid">#{{ itemId }}</span>
-                    </div>
-                    <div class="head">
-                        {{ name }}
-                    </div>
-                    <div class="remark">
-                        <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
-                        <span v-if="itemData.tier" class="tier" v-html="itemData.tier"></span>
-                        <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
-                        <span v-if="canUse" class="can-use">{{ canUse }}</span>
-                        <span v-if="itemData.cashItem" class="cash">Cash</span>
-                        {{ category }}
-                    </div>
-                </div>
-            </div>
             </transition>
         </router-link>
         <div v-else v-on:click="onClick">
@@ -64,16 +70,22 @@
                             <span class="iid">#{{ itemId }}</span>
                         </div>
                         <div class="head">
+                            <span v-if="goldAmt">{{ goldAmt | thousands }}</span>
                             {{ name }}
                         </div>
                         <div class="remark">
                             <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
                             <span v-if="itemData.tier" class="tier" v-html="itemData.tier"></span>
                             <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
+                            <span v-if="timeLimit">{{ timeLimit }}-day</span>
+                            <span v-else-if="itemData.durationDays">{{ itemData.durationDays }}-day</span>
                             <span v-if="canUse" class="can-use">{{ canUse }}</span>
                             <span v-if="itemData.cashItem" class="cash">Cash</span>
                             {{ category }}
                         </div>
+                    </div>
+                    <div class="rate" v-if="rate">
+                        {{ rate | rate}}
                     </div>
                 </div>
             </transition>
@@ -91,7 +103,16 @@ import Item from "@/api/item/item";
 Vue.component('item-icon', ItemIcon);
 
 export default {
-    props: ["itemId", "count", "itemStub", "noLink", "onClick"],
+    props: [
+        "itemId", 
+        "count", 
+        "itemStub", 
+        "noLink", 
+        "onClick",
+        "timeLimit",
+        "goldAmt",
+        "rate"
+    ],
     name: "item-page",
     data: function() {
         return {
@@ -177,8 +198,9 @@ export default {
 
 .item-card {
     position: relative;
-    padding: 4px 0 4px 10px;
+    padding: 0 0 0 10px;
     min-height: 64px;
+    height: 100%;
     cursor: pointer;
     background: rgba(0, 0, 0, 0.375);
 
@@ -195,7 +217,7 @@ export default {
 
     .entry {
         position: relative;
-        padding-left: 0;
+        padding: 4px 0;
         display: flex;
         flex-direction: row;
         color: @dv-c-body;
@@ -216,6 +238,7 @@ export default {
             padding-left: 12px;
             padding-top: 8px;
             padding-bottom: 8px;
+            padding-right: 40px;
 
             .head {
                 margin: -2px 0;
@@ -253,6 +276,32 @@ export default {
                     color: #10A020;
                 }
             }
+        }
+
+        .rate {
+            position: absolute;
+            text-align: right;
+            right: 0.4em;
+            top: 50%;
+            color: @dv-c-accent-1;
+            transition: color ease-in 0.125s;
+            transform: translate(0%, -50%);
+            padding-bottom: 6px;
+
+            &::after {
+                content: "RATE";
+                position: absolute;
+                color: @dv-c-idle;
+                font-size: 10px;
+                bottom: -4px;
+                left: 0;
+                right: 0;
+                text-align: center;
+            }
+        }
+
+        &:hover .rate {
+            color: @dv-c-foreground;
         }
     }
 

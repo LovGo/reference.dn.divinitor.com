@@ -231,6 +231,17 @@ export default {
                 return "hero level scroll";
             case "FORTUNE_COIN_POINTS":
                 return "point token";
+            case "ITEM_DROP_POUCH":
+                return "random item pouch";
+            case "ITEM_DROP_DUAL_POUCH":
+                return "random 1-2 item pouch";
+            case "MULTI_ITEM_DROP_POUCH":
+                return "item pouch";
+            case "HERO_POUCH":
+                return "class item pouch";
+            case "RANDOM":
+                return "random item pouch";
+            
         }
 
         if (itemData.category && itemData.category.name) {
@@ -246,5 +257,23 @@ export default {
         }
 
         return "item";
-    }
+    },
+    getCharm(charmId, region, okcb, errcb) {
+        Vue.http.get(`/api/server/${region}/items/charm/${charmId}`,
+        {
+        }).then(
+        (res) => {
+            okcb(res.body);
+        }, 
+        errcb);
+    },
+    getRandom(randomId, region, okcb, errcb) {
+        Vue.http.get(`/api/server/${region}/items/random/${charmId}`,
+        {
+        }).then(
+        (res) => {
+            okcb(res.body);
+        }, 
+        errcb);
+    },
 };

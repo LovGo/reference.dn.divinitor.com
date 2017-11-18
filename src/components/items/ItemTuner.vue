@@ -14,7 +14,7 @@
             <small-error-box 
                 :errorTitle="'Failed to load data'" 
                 :errorContent="error.statusText + ': ' + error.bodyText" 
-                :secondaryInfo="`Mobile Enchant ID #${tunerId}`"
+                :secondaryInfo="`Tuner ID #${tunerId}`"
                 canRetry="true"
                 v-on:retry="fetchData"
                 iconClass="fa-exclamation-triangle"></small-error-box>

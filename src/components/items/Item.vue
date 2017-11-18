@@ -329,6 +329,11 @@
 
             <div class="section" v-if="containerItem">
                 <div class="title">Box Contents</div>
+                <item-charm
+                    :charmId="itemData.type.charmNum"
+                    :itemType="itemData.type"
+                >
+                </item-charm>
             </div>
 
             <div class="section" v-if="itemData.enchantId">
@@ -372,6 +377,7 @@ import StatGrid from "@/components/game/StatGrid";
 import ItemCard from "@/components/items/ItemCard";
 import ItemEnhance from "@/components/items/ItemEnhance";
 import ItemTuner from "@/components/items/ItemTuner";
+import ItemCharm from "@/components/items/ItemCharm";
 import MobileEnhance from "@/components/items/MobileEnhance";
 import BigErrorBox from '@/components/util/BigErrorBox'
 
@@ -384,6 +390,7 @@ Vue.component('stat-grid', StatGrid);
 Vue.component('item-card', ItemCard);
 Vue.component('item-enhance', ItemEnhance);
 Vue.component('item-tuner', ItemTuner);
+Vue.component('item-charm', ItemCharm);
 Vue.component('mobile-enhance', MobileEnhance);
 
 Vue.component('big-error-box', BigErrorBox);
