@@ -90,7 +90,7 @@
                         :count="e.count"
                         :timeLimit="e.durationDays"
                         :goldAmt="e.gold / 10000"
-                        :rate="e.rate"
+                        :rate="itemType.type == 'MULTI_ITEM_DROP_POUCH' ? 0 : e.rate"
                     ></item-card>
                 </div>
             </transition-group>
@@ -144,17 +144,13 @@ export default {
             let ret = this.charms.entries.slice();
             ret.sort((a, b) => {
                 let rate = a.rate - b.rate;
-                if (rate == 0) {
-                    let an = a.item.name;
-                    let bn = b.item.name;
-                    if (an < bn) {
-                        return -1;
-                    }
-                    if (an > bn) {
-                        return 1;
-                    }
+                if (a.rate == b.rate) {
+                    let an = a.item.name.name.toUpperCase();
+                    let bn = b.item.name.name.toUpperCase();
 
-                    return 0;
+                    let r = an < bn ? -1 : an > bn;
+
+                    return r;
                 }
 
                 if (rate < 0) {

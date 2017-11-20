@@ -29,7 +29,7 @@
                 <p>
                     The following items can be tuned using this item:
                 </p>
-                <form class="filter">
+                <form class="filter" v-if="tunerData.items.length > 10">
                     <legend>Filter by</legend>
                     <label for="filter-level-min">Level </label>
                     <input id="filter-level-min" type="number" min="0" max="100" v-model="filter.minLevel" />
@@ -96,10 +96,58 @@
                             </small-error-box>
                         </div>
                     </transition-group>
-                    <div class="right-col">
-                        Selection
+                    <div class="right-col option-list">
                         <div v-if="selectedItem">
-                            {{ selectedItem.originalItem.id }}
+                            <div class="all">
+                                <div class="title">Options</div>
+                                <div class="info">
+                                    <div class="info-entry" v-if="allOptionsEnhanceTransfer">
+                                        <i class="fa fa-check-circle ok"></i> Enhancement is transferred
+                                    </div>
+                                    <div class="info-entry" v-if="allOptionsEnhanceReset">
+                                        <i class="fa fa-ban nok"></i> Enhancement is reset
+                                    </div>
+                                    <div class="info-entry" v-if="allOptionsPotentialTransfer">
+                                        <i class="fa fa-check-circle ok"></i> Extra stats preserved
+                                    </div>
+                                    <div class="info-entry" v-if="allOptionsPotentialReroll">
+                                        <i class="fa fa-flask nok"></i> Extra stats re-rolled
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="option" v-for="(v, k) in sortedOptions(selectedItem.options)" :key="v.requiredLevel">
+                                <div class="enhance" v-if="v.requiredLevel">
+                                    +{{v.requiredLevel}} enhance result
+                                </div>
+                                <div class="top">
+                                    <div class="name" v-if="v.name">{{ v.name }}</div>
+                                    <div class="info">
+                                        <div class="info-entry" v-if="v.rewardItem.enchantId && !allOptionsEnhanceTransfer && !allOptionsEnhanceReset">
+                                            <span v-if="v.enchantTransfer == 'RESET'">
+                                                <i class="fa fa-ban nok"></i> Enhancement is reset
+                                            </span>
+                                            <span v-if="v.enchantTransfer == 'RETAIN'">
+                                                <i class="fa fa-check-circle ok"></i> Enhancement is transferred
+                                            </span>
+                                        </div>
+                                        <div class="info-entry" v-if="v.rewardItem.type.potentialId && !allOptionsPotentialTransfer && !allOptionsPotentialReroll">
+                                            <span v-if="!v.potentialTransfer">
+                                                <i class="fa fa-flask nok"></i> Extra stats re-rolled
+                                            </span>
+                                            <span v-else>
+                                                <i class="fa fa-check-circle ok"></i> Extra stats preserved
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="option-card">
+                                    <item-card
+                                        :itemId="v.rewardItem.id"
+                                        :itemStub="v.rewardItem">
+                                    </item-card>
+                                </div>
+                                <!-- {{v}} -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -194,7 +242,51 @@ export default {
             }
 
             return ret;
-        }
+        },
+        allOptionsEnhanceTransfer() {
+            let options = this.selectedItem.options;
+            for (let k in options) {
+                let v = options[k];
+                if (v.enchantTransfer == 'RESET' || !v.rewardItem.enchantId) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+        allOptionsEnhanceReset() {
+            let options = this.selectedItem.options;
+            for (let k in options) {
+                let v = options[k];
+                if (v.enchantTransfer == 'RETAIN' || !v.rewardItem.enchantId) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+        allOptionsPotentialTransfer() {
+            let options = this.selectedItem.options;
+            for (let k in options) {
+                let v = options[k];
+                if (!v.potentialTransfer || !v.rewardItem.type.potentialId) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+        allOptionsPotentialReroll() {
+            let options = this.selectedItem.options;
+            for (let k in options) {
+                let v = options[k];
+                if (v.potentialTransfer || !v.rewardItem.type.potentialId) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
     },
     methods: {
         fetchData() {
@@ -228,7 +320,22 @@ export default {
             }
 
             return true;
-        }
+        },
+        sortedOptions(options) {
+            let ret = options.slice();
+
+            ret.sort((a, b) => {
+                    let an = a.rewardItem.name.name.toUpperCase();
+                    let bn = b.rewardItem.name.name.toUpperCase();
+
+                    let r = an < bn ? -1 : an > bn;
+
+                    return r;
+                }
+            );
+
+            return ret;
+        },
     }
 }
 </script>
@@ -256,7 +363,10 @@ export default {
     .flow-container {
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
+        
+        @media only screen and (max-width:@min-desktop-wide-width) {
+            flex-wrap: wrap;
+        }
 
         .item-list {
             max-height: 500px;
@@ -265,7 +375,7 @@ export default {
             border-bottom: 2px solid @dv-c-accent-1;
 
             .result {
-                width: 380px;
+                // width: 380px;
                 .item-card {
                     border: 1px solid @dv-c-foreground;
                     border-top-color: transparent;
@@ -289,14 +399,94 @@ export default {
 
         .left-col {
             flex: 0 1 auto;
-            margin-right: 20px;
+            margin: 0 5px;
+            width: 50%;
+
+            @media only screen and (max-width:@min-desktop-wide-width) {
+                flex: 1 1 auto;
+                margin-bottom: 20px;
+            }
         }
 
         .right-col {
             flex: 1 1 auto;
+            margin: 0 5px;
+            width: 50%;
         }
     }
 
+    .option-list {
+        display: flex;
+        flex-direction: column;
+        
+        @media only screen and (min-width:@min-desktop-wide-width) {
+            // max-width: 540px;
+        }
+
+        .option {
+            flex: 1 1 auto;
+            border: 1px solid @dv-c-foreground;
+            border-bottom-color: transparent;
+
+            &:last-child {
+                border-bottom-color: @dv-c-foreground;
+            }
+
+            .enhance {
+                border-bottom: 1px solid fade(@dv-c-foreground, 50%);
+                color: @dv-c-accent-2;;
+                padding: 4px 8px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+            }
+
+            .top {
+                padding: 0 8px 0 8px;
+                line-height: 2em;
+                background: fade(@dv-c-red, 10%);
+            }
+
+            .option-card {
+                border-top: @dv-c-idle;
+            }
+        }
+
+        .all {
+            border: 1px solid @dv-c-foreground;
+            border-bottom-color: transparent;
+            padding: 8px;
+
+            .title {
+                font-family: @dv-f-geomanist;
+                font-size: 18px;
+                color: @dv-c-foreground;
+                text-transform: uppercase;
+                letter-spacing: 0.2em;
+            }
+        }
+
+        .info {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+
+            .info-entry {
+                flex: 1 1 auto;
+                text-align: left;
+            }
+
+            .fa.ok {
+                color: @dv-c-green;
+            }
+
+            .fa.nok {
+                color: @dv-c-red;
+            }
+        }
+    }
 
     .loading {
         .loader-box {

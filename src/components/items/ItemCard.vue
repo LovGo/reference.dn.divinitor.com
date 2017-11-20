@@ -1,6 +1,6 @@
 <template>
     <div class="item-card" v-if="valid">
-        <router-link v-if="!noLink" :to="`/items/${itemId}`">
+        <router-link v-if="!noLink" :to="{path: `/items/${itemId}`, query: itemQuery}">
             <transition name="fade">
             <div v-if="loading" class="loading">
                 <div class="loader-box">
@@ -111,6 +111,7 @@ export default {
         "onClick",
         "timeLimit",
         "goldAmt",
+        "potentialNum",
         "rate"
     ],
     name: "item-page",
@@ -161,6 +162,14 @@ export default {
         },
         statSet() {
             return ItemStat.joinStatSet(this.itemData.stats);
+        },
+        itemQuery() {
+            let ret = {};
+            if (this.potentialNum) {
+                ret.potential = this.potentialNum;
+            }
+
+            return ret;
         }
     },
     methods: {
