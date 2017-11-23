@@ -101,8 +101,12 @@ export default {
     },
     rate(v) {
         let mult = v * 100;
-        if (mult > 1) {
+        if (mult > 10) {
             return Math.round(mult);
+        }
+
+        if (mult >= 0.1) {
+            return Math.round(mult * 10) / 10;
         }
 
         if (mult >= 0.01) {

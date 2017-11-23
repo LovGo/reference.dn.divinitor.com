@@ -295,6 +295,12 @@ const STATES = {
         abbv: "% CRIT DMG",
         type: "percent",
     },
+    ONE_HUNDRED_SEVEN: {
+        name: "107",
+        abbv: "107",
+        type: "stat",
+        obsolete: true
+    },
 };
 
 export default {
@@ -323,6 +329,7 @@ export default {
             let stat = stats[k];
             let val = Number(stat[statKey]);
             let state = stat.state;
+            let info = this.getStateInfo(state);
             if (stat.state === "PHYSICAL_DAMAGE_MINMAX") {
                 if (ret.PHYSICAL_DAMAGE_MIN) {
                     ret.PHYSICAL_DAMAGE_MIN += val;
@@ -367,12 +374,27 @@ export default {
                 } else {
                     ret.MAGICAL_DAMAGE_MAX_PERCENT = val;
                 }
+            } else if (info.obsolete) {
+                continue;
             } else {
                 if (ret[state]) {
                     ret[state] += val;
                 } else {
                     ret[state] = val;
                 }
+            }
+        }
+
+        return ret;
+    },
+
+    zipStatSets(setA, setB) {
+        let ret = Object.assign({}, setA);
+        for (let k in setB) {
+            if (ret[k]) {
+                ret[k] += setB[k];
+            } else {
+                ret[k] = setB[k];
             }
         }
 

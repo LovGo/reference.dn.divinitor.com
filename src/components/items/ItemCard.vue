@@ -20,6 +20,9 @@
                             :type="itemData.type.type"
                         ></item-icon>
                     </div>
+                    <div class="rate" v-if="rate">
+                        {{ rate | rate}}%
+                    </div>
                     <div class="title">
                         <div class="remark">
                             <span class="iid">#{{ itemId }}</span>
@@ -39,8 +42,13 @@
                             {{ category }}
                         </div>
                     </div>
-                    <div class="rate" v-if="rate">
-                        {{ rate | rate}}%
+                    <div class="potential" v-if="potentialNum">
+                        <div class="wrapper">
+                            Option
+                            <div class="potential-entry" v-for="s in potentialStatList" :key="s.abbv">
+                                {{s.abbv}}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </transition>
@@ -55,7 +63,7 @@
                 </div>
             </transition>
             <transition name="fade">
-                <div v-if="!loading" class="entry">
+                                <div v-if="!loading" class="entry">
                     <div class="icon">
                         <item-icon 
                             class="centering"
@@ -64,6 +72,9 @@
                             :count="stackSize"
                             :type="itemData.type.type"
                         ></item-icon>
+                    </div>
+                    <div class="rate" v-if="rate">
+                        {{ rate | rate}}%
                     </div>
                     <div class="title">
                         <div class="remark">
@@ -84,8 +95,13 @@
                             {{ category }}
                         </div>
                     </div>
-                    <div class="rate" v-if="rate">
-                        {{ rate | rate}}
+                    <div class="potential" v-if="potentialNum">
+                        <div class="wrapper">
+                            Option
+                            <div class="potential-entry" v-for="s in potentialStatList" :key="s.abbv">
+                                {{s.abbv}}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </transition>
@@ -170,6 +186,25 @@ export default {
             }
 
             return ret;
+        },
+        potentialStatList() {
+            if (this.itemData.potentials && this.potentialNum) {
+                let potentials = this.itemData.potentials;
+                for (let k in potentials) {
+                    let v = potentials[k];
+                    if (v.potentialNumber == this.potentialNum) {
+                        let ret = [];
+                        let states = v.states;
+                        for (let k1 in states) {
+                            ret.push(ItemStat.getStateInfo(states[k1]));
+                        }
+
+                        return ret;
+                    }
+                }
+            } else {
+                return [];
+            }
         }
     },
     methods: {
@@ -247,7 +282,10 @@ export default {
             padding-left: 12px;
             padding-top: 8px;
             padding-bottom: 8px;
-            padding-right: 40px;
+
+            &:last-child {
+                padding-right: 40px;
+            }
 
             .head {
                 margin: -2px 0;
@@ -284,6 +322,29 @@ export default {
                 .cash {
                     color: #10A020;
                 }
+            }
+        }
+
+        .potential {
+            flex: 0 0 80px;
+            position: relative;
+            color: @dv-c-accent-1;
+            font-size: 10px;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: center;
+            .wrapper {
+                position: absolute;
+                right: 0;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .potential-entry {
+                font-size: 14px;
+                color: @dv-c-foreground;
             }
         }
 

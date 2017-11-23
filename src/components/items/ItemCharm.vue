@@ -45,8 +45,8 @@
                     <label for="filter-grade-magic">Magic</label>
                 </span>
                 <span>
-                    <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.rare" />
-                    <label for="filter-grade-normal">Rare</label>
+                    <input id="filter-grade-rare" type="checkbox" v-model="filter.grades.rare" />
+                    <label for="filter-grade-rare">Rare</label>
                 </span>
                 <span>
                     <input id="filter-grade-epic" type="checkbox" v-model="filter.grades.epic" />
@@ -83,7 +83,10 @@
             </div>
 
             <transition-group name="fade-item" tag="div" class="item-list">
-                <div class="entry" v-for="(e, key) in sorted" :key="key">
+                <div class="entry" 
+                    v-for="(e, key) in sorted" 
+                    :key="key"
+                    v-if="shouldRender(e.item)">
                     <item-card 
                         :itemId="e.item.id"
                         :itemStub="e.item"
@@ -92,6 +95,13 @@
                         :goldAmt="e.gold / 10000"
                         :rate="itemType.type == 'MULTI_ITEM_DROP_POUCH' ? 0 : e.rate"
                     ></item-card>
+                </div>
+                <div class="no result" :key="'none'">
+                    <small-error-box
+                        errorTitle="No Results"
+                        iconClass="fa-question-circle"
+                        errorContent="Try searching something else">
+                    </small-error-box>
                 </div>
             </transition-group>
         </div>
@@ -107,6 +117,7 @@ import ItemCard from "@/components/items/ItemCard";
 import ItemStat from "@/api/item/itemstat";
 
 import Item from "@/api/item/item";
+import ItemFilter from "@/api/item/itemfilter";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-icon-tooltip', ItemIconTooltip);
@@ -119,21 +130,7 @@ export default {
             loading: true,
             charms: null,
             error: null,
-            filter: {
-                minLevel: 0,
-                maxLevel: 100,
-                nameSearch: "",
-                selectClass: "",
-                grades: {
-                    normal: true,
-                    magic: true,
-                    rare: true,
-                    epic: true,
-                    unique: true,
-                    legendary: true,
-                    divine: true
-                }
-            },
+            filter: ItemFilter.defaultFilter(),
         }
     },
     created() {
@@ -181,6 +178,9 @@ export default {
                     this.error = err;
                 });
         },
+        shouldRender(item) {
+            return ItemFilter.shouldRender(this.filter, item);
+        },
     },
 }
 </script>
@@ -212,6 +212,16 @@ export default {
         flex-direction: row;
         flex-wrap: wrap;
 
+        .result {
+            &.no {
+                display: none;
+            }
+
+            &:first-child.no {
+                display: block;
+            }
+        }
+
         .entry {
             flex: 1 1 400px;
             border: 1px solid @dv-c-foreground;
@@ -223,19 +233,19 @@ export default {
 
             @media only screen and (min-width:@min-desktop-wide-width) {
                 flex: 0 1 480px;
-                border-right-color: transparent;
+                border-right: none;
                 &:first-child,
                 &:nth-child(2) {
                     border-top-color: @dv-c-foreground;
                 }
                 &:nth-child(2n) {
-                    border-right-color: @dv-c-foreground;
+                    border-right: 1px solid @dv-c-foreground;
                 }
                 &:last-child {
-                    border-right-color: @dv-c-foreground;
+                    border-right: 1px solid @dv-c-foreground;
                 }
                 &:first-child:last-child {
-                    border-right-color: @dv-c-foreground;
+                    border-right: 1px solid @dv-c-foreground;
                 }
 
             }

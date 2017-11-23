@@ -129,55 +129,21 @@
                     <!-- {{ itemData.type.type }} -->
 
                     <div class="stat-stack">
-                        <div class="stats" v-if="itemData.stats.length">
-                            <stat-grid
+                        <div class="stats">
+                            <stat-grid v-if="itemData.stats.length"
                                 :statSet="statSet"
                                 :enhanceStatSet="enhanceLevelStats"
                                 >
                             </stat-grid>
-                            <!-- <div class="stat-entry" v-for="(value, key) in statSet" :key="key">
-                                {{key}} {{value}}
-                            </div> -->
-
-                            <div class="potential section" v-if="itemData.type.potentialId">
+                            
+                            <div class="potential section" v-if="itemData.type.potentialId && itemData.potentials.length > 1">
                                 <div class="title">Variations</div>
-                                {{ itemData.type.potentialId }}
-                            </div>
-
-                            <div class="gems" v-if="itemData.gemslots">
-                                <div 
-                                    class="skill gemslot tooltip" 
-                                    v-if="itemData.gemslots.skill" 
-                                    :style="`background: url('/api/server/${region}/dds/uit_re_itemjewelslot03/png') 1px 0, url('/api/server/${region}/dds/uit_itemslot_re01_d/png') -4px -4px;`">
-                                    <div class="count" v-if="itemData.gemslots.skill > 1">
-                                        x{{itemData.gemslots.skill}}
-                                    </div>
-                                    <div class="tooltext">
-                                        <div class="content">Skill gem</div>
-                                    </div>
-                                </div>
-                                <div 
-                                    class="offensive gemslot tooltip" 
-                                    v-if="itemData.gemslots.offensive" 
-                                    :style="`background: url('/api/server/${region}/dds/uit_re_itemjewelslot02/png') 1px 0, url('/api/server/${region}/dds/uit_itemslot_re01_d/png') -4px -4px;`">
-                                    <div class="count" v-if="itemData.gemslots.offensive > 1">
-                                        x{{itemData.gemslots.offensive}}
-                                    </div>
-                                    <div class="tooltext">
-                                        <div class="content">Offensive gem</div>
-                                    </div>
-                                </div>
-                                <div 
-                                    class="defensive gemslot tooltip" 
-                                    v-if="itemData.gemslots.defensive" 
-                                    :style="`background: url('/api/server/${region}/dds/uit_re_itemjewelslot01/png') 1px 0, url('/api/server/${region}/dds/uit_itemslot_re01_d/png') -4px -4px;`">
-                                    <div class="count" v-if="itemData.gemslots.defensive > 1">
-                                        x{{itemData.gemslots.defensive}}
-                                    </div>
-                                    <div class="tooltext">
-                                        <div class="content">Defensive gem</div>
-                                    </div>
-                                </div>
+                                <item-potential
+                                    :potentialData="itemData.potentials"
+                                    :potentialNum="potentialNum"
+                                    :selection="potentialId"
+                                    v-on:potentialIdChange="onPotentialIdUpdate"
+                                ></item-potential>
                             </div>
                         </div>
                     </div>
@@ -191,6 +157,42 @@
                         <div v-else>No description</div>
                         <div v-if="itemData.gainText" class="game-tooltip">
                             <div v-html="itemData.gainText" class="gain uistring"></div>
+                        </div>
+                    
+                        <div class="gems" v-if="itemData.gemslots">
+                            <div 
+                                class="skill gemslot tooltip" 
+                                v-if="itemData.gemslots.skill" 
+                                :style="`background: url('/api/server/${region}/dds/uit_re_itemjewelslot03/png') 1px 0, url('/api/server/${region}/dds/uit_itemslot_re01_d/png') -4px -4px;`">
+                                <div class="count" v-if="itemData.gemslots.skill > 1">
+                                    x{{itemData.gemslots.skill}}
+                                </div>
+                                <div class="tooltext">
+                                    <div class="content">Skill gem</div>
+                                </div>
+                            </div>
+                            <div 
+                                class="offensive gemslot tooltip" 
+                                v-if="itemData.gemslots.offensive" 
+                                :style="`background: url('/api/server/${region}/dds/uit_re_itemjewelslot02/png') 1px 0, url('/api/server/${region}/dds/uit_itemslot_re01_d/png') -4px -4px;`">
+                                <div class="count" v-if="itemData.gemslots.offensive > 1">
+                                    x{{itemData.gemslots.offensive}}
+                                </div>
+                                <div class="tooltext">
+                                    <div class="content">Offensive gem</div>
+                                </div>
+                            </div>
+                            <div 
+                                class="defensive gemslot tooltip" 
+                                v-if="itemData.gemslots.defensive" 
+                                :style="`background: url('/api/server/${region}/dds/uit_re_itemjewelslot01/png') 1px 0, url('/api/server/${region}/dds/uit_itemslot_re01_d/png') -4px -4px;`">
+                                <div class="count" v-if="itemData.gemslots.defensive > 1">
+                                    x{{itemData.gemslots.defensive}}
+                                </div>
+                                <div class="tooltext">
+                                    <div class="content">Defensive gem</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -304,11 +306,8 @@
                             v-if="itemType == 'FORTUNE_COIN_POINTS'">
                             <!-- TODO -->
                             Gain <strong>{{ itemData.type.amount | thousands }} {{ itemData.type.coinType }}</strong>.
-                        </div>
-
-                        
+                        </div>                        
                     </div>
-                    <br/>
                 </div>
                 <div class="model-view" v-if="hasModel">
                     3D VIEW PLACEHOLDER
@@ -379,6 +378,7 @@ import ItemEnhance from "@/components/items/ItemEnhance";
 import ItemTuner from "@/components/items/ItemTuner";
 import ItemCharm from "@/components/items/ItemCharm";
 import MobileEnhance from "@/components/items/MobileEnhance";
+import ItemPotential from "@/components/items/ItemPotential";
 import BigErrorBox from '@/components/util/BigErrorBox'
 
 
@@ -391,6 +391,7 @@ Vue.component('item-card', ItemCard);
 Vue.component('item-enhance', ItemEnhance);
 Vue.component('item-tuner', ItemTuner);
 Vue.component('item-charm', ItemCharm);
+Vue.component('item-potential', ItemPotential);
 Vue.component('mobile-enhance', MobileEnhance);
 
 Vue.component('big-error-box', BigErrorBox);
@@ -404,7 +405,8 @@ export default {
             itemData: null,
             enhanceLevel: 0,
             enhanceLevelStats: null,
-            potential: 0,
+            potentialNum: 0,
+            potentialId: 0,
             error: null,
         }
     },
@@ -425,7 +427,12 @@ export default {
                 this.updateQueryParams();
             }
         },
-        potential(to, from) {
+        potentialNum(to, from) {
+            if (to != from) {
+                this.updateQueryParams();
+            }
+        },
+        potentialId(to, from) {
             if (to != from) {
                 this.updateQueryParams();
             }
@@ -472,13 +479,16 @@ export default {
             return t === "PARTS" || t === "WEAPON";
         },
         statSet() {
-            return ItemStat.joinStatSet(this.itemData.stats);
-        },
-        enhanceSet() {
-            return {};
-        },
-        combineSet() {
-            return ItemStat.joinStatSet(this.itemData.stats.concat([]));
+            let ret = ItemStat.joinStatSet(this.itemData.stats);
+            if (this.itemData.potentials) {
+                let potentials = this.itemData.potentials;
+                if (potentials.length == 1) {
+                    let potSet = ItemStat.joinStatSet(potentials[0].states, "value");
+                    ret = ItemStat.zipStatSets(ret, potSet);
+                }
+            }
+
+            return ret;
         },
         effectiveEnhanceLevel() {
             if (isNaN(this.enhanceLevel)) {
@@ -519,7 +529,8 @@ export default {
             this.error = null;
             this.enhanceLevelStats = null;
             this.enhanceLevel = Number(this.$route.query.enhance);
-            this.potential = Number(this.$route.query.potential);
+            this.potentialNum = Number(this.$route.query.potential);
+            this.potentialId = Number(this.$route.query.p);
             if (isNaN(this.enhanceLevel)) {
                 this.enhanceLevel = 0;
             }
@@ -540,14 +551,17 @@ export default {
             this.enhanceLevel = newLevel;
             this.enhanceLevelStats = enhanceStatSet;
         },
+        onPotentialIdUpdate(newPotentialId) {
+            this.potentialId = newPotentialId;
+        },
         updateQueryParams() {
             let query = {};
             if (this.enhanceLevel > 0) {
                 query.enhance = this.enhanceLevel;
             }
 
-            if (this.potential > 0) {
-                query.potential = this.potential;
+            if (this.potentialId > 0) {
+                query.p = this.potentialId;
             }
 
             this.$router.replace({ 
@@ -757,28 +771,6 @@ export default {
                     margin-top: 20px;
                     border-top: 1px solid fade(@dv-c-accent-1, 25%);
                 }
-
-                .gems {
-                    margin-top: 12px;
-                    border-top: 1px solid fade(@dv-c-accent-1, 25%);
-                    padding-top: 6px;
-                    display: flex;
-                    flex-direction: row;
-
-                    .gemslot {
-                        flex: 0 0 48px;
-                        width: 48px;
-                        height: 48px;
-                        position: relative;
-                        margin: 0 2px;
-
-                        .count {
-                            position: absolute;
-                            right: 0px;
-                            bottom: 0px;
-                        }
-                    }
-                }
             }
 
             .extra-data {
@@ -793,6 +785,29 @@ export default {
             vertical-align: middle;
             border: 1px solid @dv-c-accent-1;
             margin-left: 30px;
+        }
+    }
+
+
+    .gems {
+        margin-top: 12px;
+        border-top: 1px solid fade(@dv-c-accent-1, 25%);
+        padding-top: 6px;
+        display: flex;
+        flex-direction: row;
+
+        .gemslot {
+            flex: 0 0 48px;
+            width: 48px;
+            height: 48px;
+            position: relative;
+            margin: 0 2px;
+
+            .count {
+                position: absolute;
+                right: 0px;
+                bottom: 0px;
+            }
         }
     }
 

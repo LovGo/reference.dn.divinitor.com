@@ -115,38 +115,41 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="option" v-for="(v, k) in sortedOptions(selectedItem.options)" :key="v.requiredLevel">
-                                <div class="enhance" v-if="v.requiredLevel">
-                                    +{{v.requiredLevel}} enhance result
+                            <div class="option" v-for="(vv, ke) in collapseEnhance(sortedOptions(selectedItem.options))" :key="ke">
+                                <div class="enhance" v-if="ke != '0'">
+                                    +{{ke}} input
                                 </div>
-                                <div class="top">
-                                    <div class="name" v-if="v.name">{{ v.name }}</div>
-                                    <div class="info">
-                                        <div class="info-entry" v-if="v.rewardItem.enchantId && !allOptionsEnhanceTransfer && !allOptionsEnhanceReset">
-                                            <span v-if="v.enchantTransfer == 'RESET'">
-                                                <i class="fa fa-ban nok"></i> Enhancement is reset
-                                            </span>
-                                            <span v-if="v.enchantTransfer == 'RETAIN'">
-                                                <i class="fa fa-check-circle ok"></i> Enhancement is transferred
-                                            </span>
-                                        </div>
-                                        <div class="info-entry" v-if="v.rewardItem.type.potentialId && !allOptionsPotentialTransfer && !allOptionsPotentialReroll">
-                                            <span v-if="!v.potentialTransfer">
-                                                <i class="fa fa-flask nok"></i> Extra stats re-rolled
-                                            </span>
-                                            <span v-else>
-                                                <i class="fa fa-check-circle ok"></i> Extra stats preserved
-                                            </span>
+                                <div v-for="(v, k) in vv" :key="k">
+                                    <div class="top">
+                                        <div class="name" v-if="v.name">{{ v.name }}</div>
+                                        <div class="info">
+                                            <div class="info-entry" v-if="v.rewardItem.enchantId && !allOptionsEnhanceTransfer && !allOptionsEnhanceReset">
+                                                <span v-if="v.enchantTransfer == 'RESET'">
+                                                    <i class="fa fa-ban nok"></i> Enhancement is reset
+                                                </span>
+                                                <span v-if="v.enchantTransfer == 'RETAIN'">
+                                                    <i class="fa fa-check-circle ok"></i> Enhancement is transferred
+                                                </span>
+                                            </div>
+                                            <div class="info-entry" v-if="v.rewardItem.type.potentialId && !allOptionsPotentialTransfer && !allOptionsPotentialReroll">
+                                                <span v-if="!v.potentialTransfer">
+                                                    <i class="fa fa-flask nok"></i> Extra stats re-rolled
+                                                </span>
+                                                <span v-else>
+                                                    <i class="fa fa-check-circle ok"></i> Extra stats preserved
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="option-card">
+                                        <item-card
+                                            :itemId="v.rewardItem.id"
+                                            :itemStub="v.rewardItem"
+                                            :potentialNum="v.potentialOptionNumber">
+                                        </item-card>
+                                    </div>
+                                    <!-- {{v}} -->
                                 </div>
-                                <div class="option-card">
-                                    <item-card
-                                        :itemId="v.rewardItem.id"
-                                        :itemStub="v.rewardItem">
-                                    </item-card>
-                                </div>
-                                <!-- {{v}} -->
                             </div>
                         </div>
                     </div>
@@ -165,6 +168,7 @@ import ItemCard from "@/components/items/ItemCard";
 import ItemStat from "@/api/item/itemstat";
 
 import Item from "@/api/item/item";
+import ItemFilter from "@/api/item/itemfilter";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-icon-tooltip', ItemIconTooltip);
@@ -178,21 +182,7 @@ export default {
             tunerData: null,
             error: null,
             selectedItem: null,
-            filter: {
-                minLevel: 0,
-                maxLevel: 100,
-                nameSearch: "",
-                selectClass: "",
-                grades: {
-                    normal: true,
-                    magic: true,
-                    rare: true,
-                    epic: true,
-                    unique: true,
-                    legendary: true,
-                    divine: true
-                }
-            }
+            filter: ItemFilter.defaultFilter(),
         }
     },
     created() {
@@ -308,18 +298,7 @@ export default {
             this.selectedItem = item;
         },
         shouldRender(item) {
-            //  Check grade
-            let grade = item.rank.toLowerCase();
-            if (!this.filter.grades[grade]) {
-                return false;
-            }
-            //  Check level
-            let level = item.level;
-            if (level < this.filter.minLevel || level > this.filter.maxLevel) {
-                return false;
-            }
-
-            return true;
+            return ItemFilter.shouldRender(this.filter, item);
         },
         sortedOptions(options) {
             let ret = options.slice();
@@ -330,12 +309,31 @@ export default {
 
                     let r = an < bn ? -1 : an > bn;
 
+                    if (r == false) {
+                        r = a.potentialOptionNumber - b.potentialOptionNumber;
+                    }
+
                     return r;
                 }
             );
 
             return ret;
         },
+        collapseEnhance(options) {
+            let ret = {};
+            
+            for (let k in options) {
+                let v = options[k];
+                let eKey = String(v.requiredLevel);
+                if (!ret[eKey]) {
+                    ret[eKey] = [];
+                }
+
+                ret[eKey].push(v);
+            }
+
+            return ret;
+        }
     }
 }
 </script>
@@ -445,11 +443,16 @@ export default {
                 line-height: 2em;
                 background: fade(@dv-c-red, 10%);
             }
-
+            
             .option-card {
-                border-top: @dv-c-idle;
+                border-bottom: 1px solid @dv-c-idle;
+
+                &:first-child {
+                    border-bottom: none;
+                }
             }
         }
+
 
         .all {
             border: 1px solid @dv-c-foreground;

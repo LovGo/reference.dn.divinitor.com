@@ -1,7 +1,7 @@
 <template>
 <div class="stat-grid">
-    <table class="stat-table">
-        <thead>
+    <table class="stat-table" v-if="Object.keys(statSet).length">
+        <thead v-if="!hideHeader">
             <th class="first">Stat</th>
             <th>Base</th>
             <th v-if="enhanceStatSet">Enhancement</th>
@@ -179,6 +179,7 @@
         </tr>
 
     </table>
+    <div class="no-stats" v-else>No stats</div>
 </div>
 </template>
 
@@ -187,7 +188,7 @@
 import ItemStat from "@/api/item/itemstat";
 
 export default {
-    props: ["statSet", "enhanceStatSet"],
+    props: ["statSet", "enhanceStatSet", "hideHeader"],
     data: function() {
         return {
 
@@ -472,6 +473,7 @@ export default {
             font-size: 12px;
             font-weight: normal;
             text-transform: uppercase;
+            min-width: 68px;
 
         }
 
@@ -492,6 +494,17 @@ export default {
         tr:last-child td {
             border-bottom-color: transparent;
         }
+    }
+
+    .no-stats {
+        color: @dv-c-body;
+        padding: 4px 8px;
+        width: 130px;
+        margin: 6px 0 0 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        text-align: center;
+        background-color: fade(@dv-c-red, 40%);
     }
 
 }

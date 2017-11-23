@@ -72,7 +72,10 @@
             </div>
 
             <transition-group name="fade-item" tag="div" class="item-list">
-                <div class="entry" v-for="(e, key) in randoms.entries" :key="key">
+                <div class="entry" 
+                    v-for="(e, key) in randoms.entries" 
+                    :key="key"
+                    v-if="shouldRender(e.item)">
                     <item-card 
                         :itemId="e.item.id"
                         :itemStub="e.item"
@@ -80,6 +83,13 @@
                         :timeLimit="e.durationDays"
                         :goldAmt="e.gold / 10000"
                     ></item-card>
+                </div>
+                <div class="no result" :key="'none'">
+                    <small-error-box
+                        errorTitle="No Results"
+                        iconClass="fa-question-circle"
+                        errorContent="Try searching something else">
+                    </small-error-box>
                 </div>
             </transition-group>
         </div>
@@ -95,6 +105,7 @@ import ItemCard from "@/components/items/ItemCard";
 import ItemStat from "@/api/item/itemstat";
 
 import Item from "@/api/item/item";
+import ItemFilter from "@/api/item/itemfilter";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-icon-tooltip', ItemIconTooltip);
@@ -107,21 +118,7 @@ export default {
             loading: true,
             randoms: null,
             error: null,
-            filter: {
-                minLevel: 0,
-                maxLevel: 100,
-                nameSearch: "",
-                selectClass: "",
-                grades: {
-                    normal: true,
-                    magic: true,
-                    rare: true,
-                    epic: true,
-                    unique: true,
-                    legendary: true,
-                    divine: true
-                }
-            },
+            filter: ItemFilter.defaultFilter(),
         }
     },
     created() {
@@ -144,6 +141,9 @@ export default {
                     this.loading = false;
                     this.error = err;
                 });
+        },
+        shouldRender(item) {
+            return ItemFilter.shouldRender(this.filter, item);
         },
     },
 }
@@ -175,6 +175,16 @@ export default {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+
+        .result {
+            &.no {
+                display: none;
+            }
+
+            &:first-child.no {
+                display: block;
+            }
+        }
 
         .entry {
             flex: 1 1 400px;
