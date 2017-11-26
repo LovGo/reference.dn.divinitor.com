@@ -215,7 +215,10 @@ strong {
         &.active {
             background-color: @dv-c-foreground;
             color: @dv-c-background;
+            // animation: button-breathe 5s infinite linear;
         }
+
+        // .breathe("button-breathe", @dv-c-foreground, lighten(@dv-c-foreground, 40%));
 
         &.disabled {
             // pointer-events: none;
@@ -469,5 +472,43 @@ button {
     100% {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
+    }
+}
+
+
+.breathe(@name, @base, @pulse) {
+@keyframes @name {
+    0% {
+      background-color: @base;
+    }
+    50% {
+      background-color: @pulse;
+    }
+    100% {
+      background-color: @base;
+    }
+  }
+}
+
+
+.go-back {
+    margin: 10px 0;
+    font-size: 18px;
+    border: 1px solid @dv-c-foreground;
+    cursor: pointer;
+    width: 70px;
+    padding: 8px 10px 8px 6px;
+    text-align: center;
+    background: fade(@dv-c-background, 50%);
+    transition: background-color ease-in 0.125s, color ease-in 0.125s;
+
+    .fa {
+        margin-right: 0.5em;
+        color: @dv-c-accent-2;
+    }
+
+    &:hover {
+        background: fade(@dv-c-foreground, 50%);
+        color: white;
     }
 }

@@ -4,14 +4,14 @@
     <router-link to="/" class="home">Home</router-link>
     <ul>
       <router-link to="/general" tag="a"><li>General</li></router-link>
-      <router-link to="/job" tag="a"><li class="disabled">Classes</li></router-link>
-      <router-link to="/item" tag="a"><li class="disabled">Items</li></router-link>
-      <router-link to="/npc" tag="a"><li class="disabled">Maps</li></router-link>
-      <router-link to="/monster" tag="a"><li class="disabled">Monsters</li></router-link>
-      <router-link to="/npc" tag="a"><li class="disabled">NPCs</li></router-link>
-      <router-link to="/quest" tag="a"><li class="disabled">Quests</li></router-link>
-      <router-link to="/skill" tag="a"><li class="disabled">Skills</li></router-link>
-      <router-link to="/text" tag="a" class=""><li>Text</li></router-link>
+      <router-link to="/jobs" tag="a"><li class="disabled">Classes</li></router-link>
+      <router-link to="/items" tag="a"><li :class="authed ? '' : 'disabled'">Items</li></router-link>
+      <router-link to="/maps" tag="a"><li class="disabled">Maps</li></router-link>
+      <router-link to="/monsters" tag="a"><li class="disabled">Monsters</li></router-link>
+      <router-link to="/npcs" tag="a"><li class="disabled">NPCs</li></router-link>
+      <router-link to="/quests" tag="a"><li class="disabled">Quests</li></router-link>
+      <router-link to="/skills" tag="a"><li class="disabled">Skills</li></router-link>
+      <router-link to="/text" tag="a"><li :class="authed ? '' : 'disabled'">Text</li></router-link>
     </ul>
   </div>
 </template>
@@ -19,6 +19,11 @@
 <script>
 export default {
   name: 'navigation-pane',
+  computed: {
+      authed() {
+          return this.$store.getters.isAuthed;
+      },
+  },
   data () {
     return {
         

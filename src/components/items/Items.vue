@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="items-root">
       <router-view></router-view>
     </div>
 </template>
@@ -21,5 +21,8 @@ export default {
 
 <style lang="less" scoped>
 @import "../../less/core.less";
-
+.items-root {
+    position: relative;
+    width: 100%;
+}
 </style>

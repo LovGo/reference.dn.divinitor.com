@@ -1,5 +1,6 @@
 <template>
     <div class="itempage">
+
         <!--
             LOADING
          -->
@@ -15,6 +16,10 @@
                 </div>
             </div>
         </transition>
+        <!-- <div class="go-back"
+            v-on:click="goBack">
+            <i class="fa fa-angle-double-left"></i>Back
+        </div> -->
         <!--
             ERROR
          -->
@@ -305,7 +310,8 @@
                         <div class=""
                             v-if="itemType == 'FORTUNE_COIN_POINTS'">
                             <!-- TODO -->
-                            Gain <strong>{{ itemData.type.amount | thousands }} {{ itemData.type.coinType }}</strong>.
+                            Gain <point-tag :pointId="itemData.type.coinType" :amount="itemData.type.amount"></point-tag>
+                            upon acquisition or activation.
                         </div>                        
                     </div>
                 </div>
@@ -323,7 +329,7 @@
 
             <div class="section" v-if="itemType == 'ITEM_TUNER'">
                 <div class="title">Item Tuner</div>
-                <item-tuner :tunerId="itemData.type.changeMatchingId"></item-tuner>
+                <item-tuner :tunerId="itemData.type.changeMatchingId" :parentItemId="itemId"></item-tuner>
             </div>
 
             <div class="section" v-if="containerItem">
@@ -372,6 +378,7 @@
 <script>
 import Vue from 'vue';
 import ItemIcon from "@/components/game/ItemIcon";
+import Points from "@/components/game/Points";
 import StatGrid from "@/components/game/StatGrid";
 import ItemCard from "@/components/items/ItemCard";
 import ItemEnhance from "@/components/items/ItemEnhance";
@@ -386,6 +393,7 @@ import Item from "@/api/item/item";
 import ItemStat from "@/api/item/itemstat";
 
 Vue.component('item-icon', ItemIcon);
+Vue.component('point-tag', Points);
 Vue.component('stat-grid', StatGrid);
 Vue.component('item-card', ItemCard);
 Vue.component('item-enhance', ItemEnhance);
@@ -400,7 +408,7 @@ export default {
     name: "item-page",
     data: function() {
         return {
-            itemId: Number(this.$route.params.itemId),
+            itemId: this.extractItemId(this.$route.params.itemId),
             loading: true,
             itemData: null,
             enhanceLevel: 0,
@@ -415,7 +423,7 @@ export default {
     },
     watch: {
         '$route'(to, from) {
-            this.itemId = Number(this.$route.params.itemId);
+            this.itemId = this.extractItemId(this.$route.params.itemId);
         },
         itemId(to, from) {
             if (to != from) {
@@ -540,6 +548,7 @@ export default {
                 (res) => {
                     this.itemData = res;
                     this.loading = false;
+                    this.updateQueryParams();
                 },
                 (err) => {
                     console.log(err);
@@ -567,10 +576,20 @@ export default {
             this.$router.replace({ 
                 name: 'item-view', 
                 params: {
-                    itemId: this.itemId
+                    itemId: this.toEasyName(this.itemId, this.itemData)
                 }, 
                 query: query
             });
+        },
+        extractItemId(str) {
+            let split = str.split("-", 2);
+            return Number(split[0]);
+        },
+        toEasyName(itemId, itemData) {
+            return Item.itemEasyUrl(itemId, itemData);
+        },
+        goBack() {
+            this.$router.back();
         }
     }
 }

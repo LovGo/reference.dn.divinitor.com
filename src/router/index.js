@@ -11,6 +11,7 @@ import GenGuild from '@/components/general/guild/GenGuild';
 
 import Items from '@/components/items/Items';
 import Item from '@/components/items/Item';
+import ItemSearch from '@/components/items/ItemSearch';
 
 import Text from '@/components/Text';
 import UiStrings from '@/components/uistrings/UiStrings';
@@ -18,6 +19,9 @@ import UiStringBrowse from '@/components/uistrings/UiStringBrowse';
 import UiStringMidLup from '@/components/uistrings/UiStringMidLup';
 
 import NotFound from '@/components/NotFound';
+
+import Auth from '@/components/auth/Auth';
+import AuthCallback from '@/components/auth/AuthCallback';
 
 Vue.use(Router);
 
@@ -42,6 +46,16 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home,
+    },
+    {
+      path: '/auth',
+      name: 'Auth',
+      component: Auth
+    },
+    {
+      path: '/auth/discordcb',
+      name: 'DiscordAuthCb',
+      component: AuthCallback
     },
     {
       path: '/general',
@@ -72,7 +86,19 @@ export default new Router({
     {
       path: '/items',
       component: Items,
+      meta: {
+        auth: true
+      },
       children: [
+        {
+          path: '',
+          redirect: 'browse'
+        },
+        {
+          path: 'browse',
+          name: 'item-search',
+          component: ItemSearch
+        },
         {
           path: ':itemId',
           name: 'item-view',
@@ -83,6 +109,9 @@ export default new Router({
     {
       path: '/text',
       component: Text,
+      meta: {
+        auth: true
+      },
       children: [
         {
           path: 'uistring',

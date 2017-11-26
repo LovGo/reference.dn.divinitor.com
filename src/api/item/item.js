@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Store from '@/store';
 
 export default {
 
@@ -7,6 +8,7 @@ export default {
     tunerCache: {},
 
     getItem(itemId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
         let cacheKey = `${itemId}:${region}`;
         if (this.cache[cacheKey]) {
             okcb(this.cache[cacheKey]);
@@ -39,7 +41,9 @@ export default {
 
         return ret;
     },
+
     getItemIconPageUrl(page, region) {
+        if (!region) region = Store.state.regionCode;
         let pageStr;
         if (page < 10) {
             pageStr = "0" + page;
@@ -49,7 +53,9 @@ export default {
 
         return `/api/server/${region}/dds/itemicon${pageStr}/png`;
     },
+    
     getSlotOverlay(rank, type, region) {
+        if (!region) region = Store.state.regionCode;
         const UNIT_SIZE = 52;
         let ret = {
             url: `/api/server/${region}/dds/uit_itemslotbutton_o.dds/png`,
@@ -128,6 +134,7 @@ export default {
     },
 
     getEnhancementInfo(enhanceId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
         let cacheKey = `blacksmith:${enhanceId}:${region}`;
         if (this.enhCache[cacheKey]) {
             okcb(this.enhCache[cacheKey]);
@@ -144,6 +151,7 @@ export default {
         errcb);
     },
     getMobileEnchantInfo(mobileEnchantId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
         let cacheKey = `mobile:${mobileEnchantId}:${region}`;
         if (this.enhCache[cacheKey]) {
             okcb(this.enhCache[cacheKey]);
@@ -160,6 +168,7 @@ export default {
         errcb);
     },
     getTunerInfo(tunerId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
         let cacheKey = `${tunerId}:${region}`;
         if (this.tunerCache[cacheKey]) {
             okcb(this.tunerCache[cacheKey]);
@@ -176,6 +185,7 @@ export default {
         errcb);
     },
     getItemTunerInfo(itemId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
         Vue.http.get(`/api/server/${region}/items/${itemId}/tuning`,
         {
         }).then(
@@ -259,6 +269,7 @@ export default {
         return "item";
     },
     getCharm(charmId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
         Vue.http.get(`/api/server/${region}/items/charm/${charmId}`,
         {
         }).then(
@@ -268,6 +279,7 @@ export default {
         errcb);
     },
     getRandom(randomId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
         Vue.http.get(`/api/server/${region}/items/random/${charmId}`,
         {
         }).then(
@@ -276,4 +288,79 @@ export default {
         }, 
         errcb);
     },
+
+    getBulk({ page, size, query }, { region }, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
+
+        let hasQuery = false;
+        if (query) {
+            hasQuery = hasQuery || query.nameSearch;
+            hasQuery = hasQuery || query.minLevel > 0;
+            hasQuery = hasQuery || query.maxLevel != 100;
+        }
+
+        console.log(hasQuery);
+
+        if (hasQuery) {
+
+            let params = {
+                p: page,
+                sz: size,
+            };
+
+            if (query.nameSearch) {
+                params.name = query.nameSearch;
+            }
+            if (query.minLevel) {
+                params.lmin = query.minLevel;
+            }
+            if (query.maxLevel != 100) {
+                params.lmax = query.maxLevel;
+            }
+
+            Vue.http.get(`/api/server/${region}/items/search`,
+            {
+                params: params
+            }).then(
+            (res) => {
+                okcb(res.body);
+            }, 
+            errcb);
+        } else {
+            Vue.http.get(`/api/server/${region}/items/`,
+            {
+                params: {
+                    p: page,
+                    sz: size
+                }
+            }).then(
+            (res) => {
+                okcb(res.body);
+            }, 
+            errcb);
+        }   
+    },
+    itemEasyUrl(itemId, itemData) {
+        let ret = `${itemId}`;
+        if (itemData) {
+            if (itemData.level > 1) {
+                ret += `-L${itemData.level}`;
+            }
+            if (itemData.rank) {
+                ret += `-${itemData.rank.toUpperCase().substr(0, 1)}`;
+            }
+            if (itemData.tier) {
+                if (itemData.tier.indexOf(" 1") != -1) {
+                    ret += "-T1";
+                } else if (itemData.tier.indexOf(" 2") != -1) {
+                    ret += "-T2";
+                }
+            }
+            if (itemData.name.name) {
+                ret += (`-${itemData.name.name.substr(0, 40).trim().replace(/\s/g, "-")}`);
+            }
+        }
+
+        return ret;
+    }
 };

@@ -24,7 +24,7 @@
         </div>
     </transition>
     <transition name="fade" appear>
-        <div v-if="!loading && !error">
+        <div v-if="!loading && !error" class="state-wrapper">
             <!-- Can be enhanced up to <b>+{{maxLevel }}</b> -->
 
             <form class="options">
@@ -102,15 +102,23 @@
                     </div>
                     <div class="right">
                         <transition name="fade-item">
-                            <div class="top container" v-if="level > 0">
+                            <div class="top container">
                                 <div class="title">
                                     Required Materials to +{{ level }}
                                 </div>
                                 
+                                <div class="placeholder" v-if="level == 0">
+                                    Select an enhancement level to view required materials
+                                </div>
+
                                 <div class="item-list" v-if="level > 0 && enhanceData[level - 1].materials">
                                     <transition-group name="fadecollapse-item">
                                         <div class="entry" v-for="(d, key) in enhanceData[level - 1].materials" :key="key">
-                                            <item-card :itemId="d.itemId" :count="d.count"></item-card>
+                                            <item-card 
+                                                :itemId="d.itemId" 
+                                                :count="d.count"
+                                                :itemStub="d.stub"
+                                            ></item-card>
                                         </div>
                                     </transition-group>
                                 </div>
@@ -121,7 +129,10 @@
                                 <div class="title">
                                     Additional Stats at +{{ level }}
                                 </div>
-                                <stat-grid
+                                <div class="placeholder" v-if="level == 0">
+                                    Select an enhancement level to view additional stats
+                                </div>
+                                <stat-grid v-else
                                     :statSet="currentStatSet"
                                     :enhanceStatSet="null">
                                 </stat-grid>
@@ -129,6 +140,80 @@
                         </transition>
                     </div>
                 </div>
+            </div>
+
+            <div v-if="page == 1">
+                <table class="material-grid">
+                    <thead>
+                        <th class="first">Level</th>
+                        <th>
+                            <item-icon-tooltip
+                                itemId="1073750029">
+                            </item-icon-tooltip>
+                        </th>
+                        <th v-if="canUseJelly">
+                            <item-icon-tooltip
+                                itemId="1107302400">
+                            </item-icon-tooltip>
+                        </th>
+                        <th class="item-head" v-for="v in materialsSet" :key="v.item.id">
+                            <item-icon-tooltip
+                                :itemId="v.item.id"
+                                :itemStub="v.item.stub">
+                            </item-icon-tooltip>
+                        </th>
+                    </thead>
+                    <tr v-for="e in enhanceData" :key="e.level">
+                        <th>+{{e.level}}</th>
+                        <td>
+                            {{ e.cost * (useGoldenGoose ? 0.5 : 1) | goldG }}
+                        </td>
+                        <td v-if="canUseJelly">
+                            {{ e.jellyUseCount | zeroDash }}
+                        </td>
+                        <td v-for="v in materialsSet" :key="v.item.id">
+                            {{ v.amount[String(e.level)] | zeroDash }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="stat-grid-page" v-if="page == 2">
+                <table class="stat-grid">
+                    <thead>
+                        <th class="first">Level</th>
+                        <th v-for="(e, k) in statGridSet.minmax" :key="k">
+                            {{e.state.abbv}}
+                        </th>
+                        <th v-for="(e, k) in statGridSet.stats" :key="k">
+                            {{e.state.abbv}}
+                        </th>
+                    </thead>
+                    <tr v-for="e in enhanceData" :key="e.level">
+                        <th>+{{e.level}}</th>
+                        <td v-for="(v, k) in statGridSet.minmax" :key="k">
+                            <span v-if="v.amount[String(e.level)]">
+                                <span v-if="v.state.type == 'stat'">
+                                    {{ v.amount[String(e.level)].min | stat }} - {{ v.amount[String(e.level)].max | stat }}
+                                </span>
+                                <span v-else>
+                                    {{ v.amount[String(e.level)].min | statPercent }} - {{ v.amount[String(e.level)].max | statPercent }}
+                                </span>
+                            </span>
+                        </td>
+                        <td v-for="(v, k) in statGridSet.stats" :key="k">
+                            <span v-if="v.amount[String(e.level)]">
+                                <span v-if="v.state.type == 'stat'">
+                                    {{ v.amount[String(e.level)] | stat }}
+                                </span>
+                                <span v-else>
+                                    {{ v.amount[String(e.level)] | statPercent }}
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                <!-- {{ statGridSet }} -->
             </div>
 
             <!-- {{ enhanceData }} -->
@@ -141,12 +226,14 @@
 <script>
 import Vue from 'vue';
 import ItemIcon from "@/components/game/ItemIcon";
+import ItemIconTooltip from "@/components/items/ItemIconTooltip";
 import ItemStat from "@/api/item/itemstat";
 import StatGrid from "@/components/game/StatGrid";
 
 import Item from "@/api/item/item";
 
 Vue.component('item-icon', ItemIcon);
+Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('stat-grid', StatGrid);
 
 export default {
@@ -229,6 +316,92 @@ export default {
         },
         currentStatSet() {
             return this.statSet(this.level);
+        },
+        materialsSet() {
+            let ret = {};
+
+            for (let e in this.enhanceData) {
+                let v = this.enhanceData[e];
+                let mats = v.materials;
+                for (let k in mats) {
+                    let vv = mats[k];
+                    if (!ret[vv.itemId]) {
+                        ret[vv.itemId] = {
+                            item: vv.stub,
+                            amount: {}
+                        };
+                    }
+
+                    ret[vv.itemId].amount[String(Number(e) + 1)] = vv.count;
+                }
+            }
+
+            let rret = [];
+
+            for (let k in ret) {
+                rret.push(ret[k]);
+            }
+
+            rret.sort((a, b) => {
+                //  Sort by first min key
+                let ak = this.firstProperty(a.amount);
+                let bk = this.firstProperty(b.amount);
+
+                return ak - bk;
+            });
+
+            return rret;
+        },
+        statGridSet() {
+            let ret = {};
+
+            for (let e in this.enhanceData) {
+                let v = this.enhanceData[e];
+                let statSet = this.statSet(v.level);
+                for (let k in statSet) {
+                    let vv = statSet[k];
+                    let state = ItemStat.getStateInfo(k);
+                    if (state.minmax) {
+                        let kk = state.minmax;
+                        if (!ret[kk]) {
+                            ret[kk] = {
+                                state: ItemStat.getStateInfo(kk),
+                                amount: {}
+                            }
+                        }
+
+                        if (!ret[kk].amount[String(v.level)]) {
+                            ret[kk].amount[String(v.level)] = {min: 0, max: 0};
+                        }
+                        ret[kk].amount[String(v.level)][state.mxt] = vv;
+                    } else {
+                        if (!ret[k]) {
+                            ret[k] = {
+                                state: state,
+                                amount: {}
+                            };
+                        }
+
+                        ret[k].amount[String(v.level)] = vv;
+                    }
+
+                }
+            }
+
+            let rret = {
+                stats: [],
+                minmax: []
+            };
+
+            for (let k in ret) {
+                if (ret[k].state.combined) {
+                    rret.minmax.push(ret[k]);
+                } else {
+                    rret.stats.push(ret[k]);
+                }
+            }
+
+            return rret;
         }
     },
     methods: {
@@ -286,6 +459,15 @@ export default {
         },
         selectPage(page) {
             this.page = page;
+
+            this.$ga.event({
+                eventCategory: 'enhancement',
+                eventAction: 'change-page',
+                eventValue: page
+            });
+        },
+        firstProperty(obj) {
+            return Object.keys(obj)[0];
         }
     }
 }
@@ -298,6 +480,7 @@ export default {
     position: relative;
     padding-top: 18px;
     min-height: 70px;
+    // width: 100%;
 
     .options {
         input[type="checkbox"] {
@@ -395,7 +578,7 @@ export default {
         }
     }
 
-    .rates {
+    table {
         margin: 0.5em 0;
         border-collapse: collapse;
         text-align: center;
@@ -429,18 +612,8 @@ export default {
         tr {
             padding-left: 0.125em;
             transition: background-color 0.125s ease-in, color 0.125s ease-in;
-            cursor: pointer;
         }
 
-        tr:hover,
-        tr.active:hover {
-            background: fade(@dv-c-foreground, 30%);
-        }
-
-        tr.active {
-            background: fade(@dv-c-foreground, 20%);
-            color: @dv-c-foreground;
-        }
 
         tr th {
             border-right: 2px solid @dv-c-body;
@@ -467,6 +640,45 @@ export default {
             border-bottom-color: transparent;
         }
     }
+
+    .rates {
+        tr {
+            cursor: pointer;
+        }
+        
+        tr:hover,
+        tr.active:hover {
+            background: fade(@dv-c-foreground, 30%);
+        }
+
+        tr.active {
+            background: fade(@dv-c-foreground, 20%);
+            color: @dv-c-foreground;
+        }
+    }
+
+    .material-grid {
+        td {
+            min-width: 60px;
+        }
+    }
+
+    .state-wrapper {
+        width: 100%;
+        position: relative;
+    }
+
+    .stat-grid-page {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .stat-grid {
+        td {
+            padding: 0 20px;
+        }
+    }
+
     .loading {
         .loader-box {
             position: absolute;

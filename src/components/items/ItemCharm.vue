@@ -133,6 +133,13 @@ export default {
             filter: ItemFilter.defaultFilter(),
         }
     },
+    watch: {
+        charmId(to, from) {
+            if (to != from) {
+                this.fetchData();
+            }
+        }
+    },
     created() {
         this.fetchData();
     },

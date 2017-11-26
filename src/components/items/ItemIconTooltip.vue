@@ -1,41 +1,53 @@
 <template>
-    <div class="item-icon-tip">
-        <router-link :to="`/items/${itemId}`">
+    <div class="item-icon-tooltip" v-if="valid">
+        <router-link v-if="!noLink" :to="{path: `/items/${itemEasyUrl}`, query: itemQuery}">
             <transition name="fade">
             <div v-if="loading" class="loading">
                 <div class="loader-box">
                     <div class="loader"></div>
+                    <div class="label">Loading #{{itemId}}</div>
                 </div>
             </div>
             </transition>
             <transition name="fade">
-            <div v-if="!loading" class="entry">
-                <div class="icon">
-                    <item-icon 
-                        class="centering"
-                        :iconIndex="itemData.iconIndex" 
-                        :rank="itemData.rank"
-                        :count="stackSize"
-                        :type="itemData.type.type"
-                    ></item-icon>
+                <div v-if="!loading" class="entry">
+                    <div class="icon">
+                        <item-icon 
+                            class="centering"
+                            :iconIndex="itemData.iconIndex" 
+                            :rank="itemData.rank"
+                            :count="stackSize"
+                            :type="itemData.type.type"
+                        ></item-icon>
+                    </div>
+                    <div class="itemtip">
+                        <div class="remark">
+                            <span class="iid">#{{ itemId }}</span>
+                        </div>
+                        <div class="head">
+                            <span v-if="goldAmt">{{ goldAmt | thousands }}</span>
+                            {{ name }}
+                        </div>
+                        <div class="remark">
+                            <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
+                            <span v-if="itemData.tier" class="tier" v-html="itemData.tier"></span>
+                            <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
+                            <span v-if="timeLimit">{{ timeLimit }}-day</span>
+                            <span v-else-if="itemData.durationDays">{{ itemData.durationDays }}-day</span>
+                            <span v-if="canUse" class="can-use">{{ canUse }}</span>
+                            <span v-if="itemData.cashItem" class="cash">Cash</span>
+                            {{ category }}
+                        </div>
+                    </div>
+                    <div class="potential" v-if="potentialNum">
+                        <div class="wrapper">
+                            Option
+                            <div class="potential-entry" v-for="s in potentialStatList" :key="s.abbv">
+                                {{s.abbv}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- <div class="title">
-                    <div class="remark">
-                        <span class="iid">#{{ itemId }}</span>
-                    </div>
-                    <div class="head">
-                        {{ name }}
-                    </div>
-                    <div class="remark">
-                        <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
-                        <span v-if="itemData.tier" class="tier" v-html="itemData.tier"></span>
-                        <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
-                        <span v-if="canUse" class="can-use">{{ canUse }}</span>
-                        <span v-if="itemData.cashItem" class="cash">Cash</span>
-                        {{ category }}
-                    </div>
-                </div> -->
-            </div>
             </transition>
         </router-link>
     </div>
@@ -51,17 +63,28 @@ import Item from "@/api/item/item";
 Vue.component('item-icon', ItemIcon);
 
 export default {
-    props: ["itemId", "count"],
-    name: "item-page",
+    props: [
+        "itemId", 
+        "count", 
+        "itemStub", 
+        "noLink", 
+        "onClick",
+        "timeLimit",
+        "goldAmt",
+        "potentialNum",
+        "rate"
+    ],
+    name: "item-icon-tooltip",
     data: function() {
         return {
             stackSize: 0,
             loading: true,
             itemData: null,
+            valid: true,
         }
     },
     created() {
-        // this.fetchData();
+        this.fetchData();
     },
     watch: {
         itemId(to, from) {
@@ -81,7 +104,7 @@ export default {
                 if (this.itemData.name.name && this.itemData.name._NameID) {
                     return this.itemData.name.name;
                 } else if (this.itemData.name._NameID) {
-                    return "Item MID:" + this.itemData.name._NameID;
+                    return "Item MID: " + this.itemData.name._NameID;
                 }
             }
             
@@ -95,14 +118,40 @@ export default {
             return null;
         },
         category() {
-            if (this.itemData.category && this.itemData.category.name) {
-                return this.itemData.category.name;
-            }
-
-            return "item";
+            return Item.getItemDetailedCategory(this.itemData);
         },
         statSet() {
             return ItemStat.joinStatSet(this.itemData.stats);
+        },
+        itemQuery() {
+            let ret = {};
+            if (this.potentialNum) {
+                ret.potential = this.potentialNum;
+            }
+
+            return ret;
+        },
+        potentialStatList() {
+            if (this.itemData.potentials && this.potentialNum) {
+                let potentials = this.itemData.potentials;
+                for (let k in potentials) {
+                    let v = potentials[k];
+                    if (v.potentialNumber == this.potentialNum) {
+                        let ret = [];
+                        let states = v.states;
+                        for (let k1 in states) {
+                            ret.push(ItemStat.getStateInfo(states[k1]));
+                        }
+
+                        return ret;
+                    }
+                }
+            } else {
+                return [];
+            }
+        },
+        itemEasyUrl() {
+            return Item.itemEasyUrl(this.itemId, this.itemData ? this.itemData : this.itemStub);
         }
     },
     methods: {
@@ -110,6 +159,18 @@ export default {
             this.loading = true;
             this.itemData = null;
             this.stackSize = this.count;
+            this.valid = true;
+
+            if (this.itemStub) {
+                this.itemData = this.itemStub;
+                if (!this.itemData.type) {
+                    this.valid = false;
+                    return;
+                }
+                this.loading = false;
+                return;
+            }
+
             Item.getItem(this.itemId, this.$store.state.regionCode,
                 (res) => {
                     this.itemData = res;
@@ -126,57 +187,66 @@ export default {
 <style lang="less" scoped>
 @import "../../less/core.less";
 
-.item-icon-tip {
+.item-icon-tooltip {
     position: relative;
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.375);
-    width: 51px;
-    height: 51px;
-
-    transition: background-color ease-in 0.125s;
-
-    &:hover {
-        background: fade(@dv-c-foreground, 30%);
-    }
+    width: 54px;
+    height: 54px;
+    // border: 1px solid white;
 
     .entry {
         position: relative;
-        padding-left: 0;
-        display: flex;
-        flex-direction: row;
         color: @dv-c-body;
+        padding: 2px 4px 0 4px;
+        height: 100%;
+        width: 100%;
 
-        .icon{ 
-            flex: 0 1 50px;
-            vertical-align: middle;
+        .icon{
+            padding-top: 2px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        &:hover {
+            background-color: fade(white, 10%);
+            .icon {
+                filter: brightness(150%);
+            }
         }
         
-        .title {
+        .itemtip {
             position: absolute;
-            flex: 1 1 auto;
-            padding-left: 12px;
-            padding-top: 8px;
-            padding-bottom: 8px;
-
+            bottom: 100%;
+            left: 0;
+            // transform: translateX(-50%);
+            display: none;
+            text-align: left;
+            min-width: 100px;
+            background: @dv-c-background;
+            z-index: 10;
+            pointer-events: none;
+            padding: 10px 16px;
+            border: 1px solid @dv-c-foreground;
+            box-shadow: 0 0 20px fade(black, 80%);
+            
             .head {
-                margin: -2px 0;
                 padding: 0;
                 font-size: 16px;
                 text-transform: uppercase;
                 letter-spacing: 0.1em;
                 font-family: @dv-f-geomanist;
                 color: @dv-c-foreground;
+                white-space: nowrap;
             }
 
             .remark {
                 font-size: 12px;
                 letter-spacing: 0.2em;
                 text-transform: uppercase;
+                white-space: nowrap;
 
                 .tier {
-                    .uistring {
-                        display: inline-block;
-                    }
+                    display: inline-block;
                 }
 
                 .level {
@@ -197,6 +267,61 @@ export default {
                 }
             }
         }
+
+        &:hover {
+            .itemtip {
+                display: inline-block;
+            }
+        }
+
+        .potential {
+            flex: 0 0 80px;
+            position: relative;
+            color: @dv-c-accent-1;
+            font-size: 10px;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: center;
+            .wrapper {
+                position: absolute;
+                right: 0;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .potential-entry {
+                font-size: 14px;
+                color: @dv-c-foreground;
+            }
+        }
+
+        .rate {
+            position: absolute;
+            text-align: right;
+            right: 0.4em;
+            top: 50%;
+            color: @dv-c-accent-1;
+            transition: color ease-in 0.125s;
+            transform: translate(0%, -50%);
+            padding-bottom: 6px;
+
+            &::after {
+                content: "RATE";
+                position: absolute;
+                color: @dv-c-idle;
+                font-size: 10px;
+                bottom: -4px;
+                left: 0;
+                right: 0;
+                text-align: center;
+            }
+        }
+
+        &:hover .rate {
+            color: @dv-c-foreground;
+        }
     }
 
     .loading {
@@ -207,7 +332,7 @@ export default {
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.5);
-            padding: 8px 0 0 8px;
+            padding: 16px 0 0 16px;
             
             .label {
                 display: inline-block;

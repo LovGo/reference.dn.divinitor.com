@@ -10,7 +10,22 @@
             WORK IN PROGRESS<br/>
             WORK IN PROGRESS<br/>
         </div>
+        <update-toast v-if="authenticated"></update-toast>
         <locale-select></locale-select>
+        <div class="auth">
+            <div class="hello" v-if="authenticated">
+                Hello, {{authInfo.username}} 
+                <button class="small-button" v-on:click="logOut">Log Out</button>
+                <br/>
+                If you see 401 Unauthorized, relog.
+                <div class="test-overlay">
+                    AUTHORIZED TEST ACCOUNT
+                </div>
+            </div>
+            <div v-else>
+                <router-link to="/auth">DV-Testers log in here</router-link>
+            </div>
+        </div>
         <div class="flex-box">
             <div class="left-pane mobile-hide">
                 <navigation-pane></navigation-pane>
@@ -26,12 +41,29 @@
 import Vue from 'vue';
 import NavigationPane from '@/components/NavigationPane';
 import LocaleSelect from '@/components/LocaleSelect';
+import UpdateToast from '@/components/UpdateToast';
+import * as MT from '@/store/mutation-types';
 
 Vue.component('navigation-pane', NavigationPane);
 Vue.component('locale-select', LocaleSelect);
+Vue.component('update-toast', UpdateToast);
 
 export default {
-    name: 'app'
+    name: 'app',
+    computed: {
+        authenticated() {
+            return this.$store.getters.isAuthed;
+        },
+        authInfo() {
+            return this.$store.getters.authInfo;
+        }
+    },
+    methods: {
+        logOut() {
+            this.$store.commit(MT.AUTH_CLEAR);
+            this.$router.replace("/");
+        }
+    }
 }
 </script>
 
@@ -189,4 +221,29 @@ body {
     pointer-events: none;
 }
 
+.small-button {
+    padding: 4px 8px;
+    font-size: 12px;
+    height: auto;
+    margin: 4px 0;
+}
+
+.hello {
+    border: 1px solid @dv-c-foreground;
+    padding: 8px 12px;
+    position: relative;
+    margin-bottom: 20px;
+
+    .test-overlay {
+        position: absolute;
+        color: @dv-c-green;
+        font-size: 48px;
+        top: 0;
+        bottom: 0;
+        right: 14px;
+        text-align: right;
+        pointer-events: none;
+        opacity: 0.1;
+    }
+}
 </style>

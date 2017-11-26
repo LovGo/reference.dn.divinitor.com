@@ -1,8 +1,13 @@
+
+import Vue from 'vue';
+import Store from '@/store';
+
 export default {
 
     cache: {},
 
-    getString(mid, { vue, region, param, format, okcb, errcb }) {
+    getString(mid, { region, param, format, okcb, errcb }) {
+        if (!region) region = Store.state.regionCode;
         let cacheKey = `${mid}:${btoa(param)}//${format}`;
         let cachedRegion = this.cache[region];
         if (cachedRegion) {
@@ -13,7 +18,7 @@ export default {
             }
         }
 
-        vue.$http.get(`/api/server/${region}/uistring/${mid}`,
+        Vue.http.get(`/api/server/${region}/uistring/${mid}`,
             {
                 params: {
                     fmt: format,
@@ -32,8 +37,9 @@ export default {
             errcb);
     },
 
-    getVariant(mid, { vue, region, param, okcb, errcb }) {
-        vue.$http.get(`/api/server/${region}/uistring/${mid}/variant`,
+    getVariant(mid, { region, param, okcb, errcb }) {
+        if (!region) region = Store.state.regionCode;
+        Vue.http.get(`/api/server/${region}/uistring/${mid}/variant`,
             {
                 params: {
                     param: param
@@ -45,9 +51,10 @@ export default {
             errcb);
     },
 
-    getBulk({ page, size, query }, { vue, region, format, okcb, errcb }) {
+    getBulk({ page, size, query }, { region, format, okcb, errcb }) {
+        if (!region) region = Store.state.regionCode;
         if (query) {
-            vue.$http.get(`/api/server/${region}/uistring/search`,
+            Vue.http.get(`/api/server/${region}/uistring/search`,
             {
                 params: {
                     fmt: format,
@@ -66,7 +73,7 @@ export default {
             }, 
             errcb);
         } else {
-            vue.$http.get(`/api/server/${region}/uistring/`,
+            Vue.http.get(`/api/server/${region}/uistring/`,
             {
                 params: {
                     fmt: format,

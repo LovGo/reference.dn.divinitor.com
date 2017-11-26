@@ -12,6 +12,7 @@ import VueResource from 'vue-resource';
 import infiniteScroll from 'vue-infinite-scroll';
 import filters from './filters';
 import Chart from 'chart.js';
+import VueAnalytics from 'vue-analytics'
 
 Chart.defaults.global.defaultFontFamily = "Lato";
 Chart.defaults.global.defaultFontSize = 14;
@@ -23,6 +24,13 @@ Vue.use(require("vue-moment"));
 Vue.use(VueResource);
 Vue.use(infiniteScroll);
 Vue.use(filters);
+Vue.use(VueAnalytics, {
+  id: 'UA-83957964-4',
+  router,
+  autoTracking: {
+    exception: true
+  }
+});
 
 Vue.component('stat-line-chart', StatLineChart);
 Vue.component('stat-equal-line-chart', StatEqualLineChart);
@@ -38,6 +46,27 @@ new Vue({
   components: { App },
   created() {
     this.$store.dispatch('init');
+
+    //  Redirect on direct link if auth required
+    if (this.$route.matched.some((route) => route.meta.auth)) {
+      let isAuth = this.$store.getters.isAuthed;
+      if (!isAuth) {
+        this.$router.push('/auth');
+      }
+    }
+
+    //  Navigation guards
+    this.$router.beforeResolve((to, from, next) => {
+      let isAuth = this.$store.getters.isAuthed;
+      let needAuth = to.matched.some((route) => route.meta.auth);
+
+      if (needAuth && !isAuth) {
+        next('/auth');
+        return;
+      }
+
+      next();
+    })
   }
 });
 

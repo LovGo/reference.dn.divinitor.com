@@ -51,8 +51,8 @@
                         <label for="filter-grade-magic">Magic</label>
                     </span>
                     <span v-if="hasGrade.rare">
-                        <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.rare" />
-                        <label for="filter-grade-normal">Rare</label>
+                        <input id="filter-grade-rare" type="checkbox" v-model="filter.grades.rare" />
+                        <label for="filter-grade-rare">Rare</label>
                     </span>
                     <span v-if="hasGrade.epic">
                         <input id="filter-grade-epic" type="checkbox" v-model="filter.grades.epic" />
@@ -175,7 +175,7 @@ Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('item-card', ItemCard);
 
 export default {
-    props: ["tunerId"],
+    props: ["tunerId", "parentItemId"],
     data: function() {
         return {
             loading: true,
@@ -298,6 +298,20 @@ export default {
             this.selectedItem = item;
         },
         shouldRender(item) {
+            if (this.tunerId == 1026) {
+                if (this.parentItemId == 1073894675 && item.type.type === "TALISMAN") {
+                    return false;
+                }
+                if (this.parentItemId == 1073895685 && item.type.type !== "TALISMAN") {
+                    return false;
+                }
+                if (this.parentItemId == 1073894674 && item.type.type === "TALISMAN") {
+                    return false;
+                }
+                if (this.parentItemId == 1073895684 && item.type.type !== "TALISMAN") {
+                    return false;
+                }
+            }
             return ItemFilter.shouldRender(this.filter, item);
         },
         sortedOptions(options) {

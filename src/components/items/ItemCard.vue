@@ -1,6 +1,6 @@
 <template>
     <div class="item-card" v-if="valid">
-        <router-link v-if="!noLink" :to="{path: `/items/${itemId}`, query: itemQuery}">
+        <router-link v-if="!noLink" :to="{path: `/items/${itemEasyUrl}`, query: itemQuery}">
             <transition name="fade">
             <div v-if="loading" class="loading">
                 <div class="loader-box">
@@ -160,7 +160,7 @@ export default {
                 if (this.itemData.name.name && this.itemData.name._NameID) {
                     return this.itemData.name.name;
                 } else if (this.itemData.name._NameID) {
-                    return "Item MID:" + this.itemData.name._NameID;
+                    return "Item MID: " + this.itemData.name._NameID;
                 }
             }
             
@@ -205,6 +205,9 @@ export default {
             } else {
                 return [];
             }
+        },
+        itemEasyUrl() {
+            return Item.itemEasyUrl(this.itemId, this.itemData ? this.itemData : this.itemStub);
         }
     },
     methods: {

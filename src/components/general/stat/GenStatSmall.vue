@@ -105,10 +105,10 @@ export default {
             if (this.inputType == "STAT") {
                 let val = this[this.stat + this.inputType]();
                 //  Perform conversion and truncation
-                val = Math.round(val * 100);
+                val = Math.floor(val * 100);
                 this.percent = val;
             } else {
-                this.value = Math.round(this[this.stat + this.inputType]());
+                this.value = Math.floor(this[this.stat + this.inputType]());
             }
         },
         capPercent() {

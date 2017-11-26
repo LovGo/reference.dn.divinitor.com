@@ -45,12 +45,16 @@
                             <big-error-box 
                                 :errorTitle="'Error: ' + error.statusText" 
                                 :errorContent="error.bodyText" 
+                                v-on:retry="fetchData"
+                                canRetry="true"
                                 iconClass="fa-exclamation-triangle"></big-error-box>
                         </div>
                         <div v-else>
                             <big-error-box 
                                 :errorTitle="'No Results'" 
                                 :errorContent="'Try searching something different.'" 
+                                v-on:retry="fetchData"
+                                canRetry="true"
                                 iconClass="fa-question-circle"></big-error-box>
                         </div>
                     </div>

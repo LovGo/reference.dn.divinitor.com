@@ -7,6 +7,9 @@
         <button v-on:click="setLevel">
             Set all to Lvl {{ globalLvl }}
         </button> -->
+        
+        <h2>Final Damage</h2>
+        <gen-stat-small stat="fd"></gen-stat-small>
 
         <h2>Critical Chance</h2>
         <gen-stat-small stat="crit"></gen-stat-small>
@@ -17,11 +20,14 @@
         <h2>Defense</h2>
         <gen-stat-small stat="def"></gen-stat-small>
 
-        <h2>Final Damage</h2>
-        <gen-stat-small stat="fd"></gen-stat-small>
 
     </div>
     <div v-else>
+        <div class="go-back"
+            v-on:click="goBack">
+            <i class="fa fa-angle-double-left"></i>Back
+        </div>
+
         <h2>{{ statName }}</h2>
 
         <h3>Amount to Cap by Level</h3>
@@ -54,7 +60,6 @@ export default {
         return {
             globalLvl: 95,
             stat: '',
-            multiview: true,
             value: 0,
         };
     },
@@ -72,6 +77,9 @@ export default {
         },
         statName() {
             return StatName[this.stat];
+        },
+        multiview() {
+            return this.stat === '';
         }
     },
     created() {
@@ -81,13 +89,15 @@ export default {
         fetchData() {
             let statName = this.$route.params.statName;
             this.stat = statName ? statName : '';
-            this.multiview = this.stat === '';
         },
         updateChart() {
 
         },
         unfocus(evt) {
             evt.target.blur();
+        },
+        goBack() {
+            this.$router.back();
         }
     },
     StatName: StatName
@@ -105,18 +115,20 @@ export default {
 
     label {
         display: inline-block;
+        font-size: 18px;
     }
 
     input[type="number"] {
         width: 5em;
-        margin: 0 auto;
+        margin: 0 0 20px 10px;
         text-align: left;
         background: none;
         border: none;
         color: @dv-c-foreground;
-        font-size: 16px;
+        font-size: 24px;
         border-bottom: 1px solid transparent;
-        border-bottom: 1px solid fade(@dv-c-foreground, 20%);
+        border-bottom: 1px solid fade(@dv-c-foreground, 70%);
+        transition: border-color ease-in 0.125s;
 
         &:focus,
         &:hover:focus {
@@ -124,7 +136,7 @@ export default {
         }
         
         &:hover {
-            border-bottom: 1px solid fade(@dv-c-foreground, 60%);
+            border-bottom: 1px solid fade(@dv-c-foreground, 90%);
         }
 
         &::selection {
