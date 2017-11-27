@@ -360,6 +360,10 @@
                         <item-card :itemId="iid"></item-card>
                     </div>
                 </transition-group>
+                
+                <div class="side-remark">
+                    <i class="fa fa-exclamation-triangle"></i> 
+                    Extraction specifics (amount, rate) are not available in client data and cannot be displayed here</div>
             </div>
 
             
@@ -681,6 +685,18 @@ export default {
             top: -1.3em;
             left: 0;
             user-select: none;
+        }
+
+        .side-remark {
+            font-size: 14px;
+            color: @dv-c-body;
+            .fa {
+                color: @dv-c-foreground;
+            }
+            margin: 8px 0;
+            // font-family: @dv-f-geomanist;
+            // letter-spacing: 0.05em;
+            // text-transform: uppercase;
         }
     }
 

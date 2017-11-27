@@ -1,6 +1,11 @@
 <template>
 <div class="potential-info">
     This item has <strong>{{potentialData.length}}</strong> additional stat options:
+    <!-- TODO add filter by stat -->
+    <div class="filter" v-if="potentialData.length > 6">
+        Filter
+    </div>
+
     <div class="potential-list" :scrollable="potentialData.length > 30">
         <div class="potential-entry" 
             v-for="d in sortedData" 

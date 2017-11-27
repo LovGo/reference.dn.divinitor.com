@@ -2,13 +2,13 @@
     <div id="app">
         <div class="wip-overlay">
             WORK IN PROGRESS<br/>
+            <!-- WORK IN PROGRESS<br/>
             WORK IN PROGRESS<br/>
             WORK IN PROGRESS<br/>
             WORK IN PROGRESS<br/>
             WORK IN PROGRESS<br/>
             WORK IN PROGRESS<br/>
-            WORK IN PROGRESS<br/>
-            WORK IN PROGRESS<br/>
+            WORK IN PROGRESS<br/> -->
         </div>
         <update-toast v-if="authenticated"></update-toast>
         <locale-select></locale-select>
@@ -98,7 +98,8 @@ body {
     border-right: @dv-c-foreground solid 1px;
     margin: 0 auto;
 
-    background-image: linear-gradient(rgba(5, 10, 13, 0.5), rgba(5, 10, 13, 0.9)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
+    // background-image: linear-gradient(rgba(5, 10, 13, 0.5), rgba(5, 10, 13, 0.9)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
+    background-image: url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur-darkened.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 62.5% 70%;
@@ -214,9 +215,9 @@ body {
     text-align: center;
     left: 0;
     right: 0;
-    top: 0;
-    font-size: 100px;
-    opacity: 0.02;
+    top: 28px;
+    font-size: 60px;
+    opacity: 0.05;
     // opacity: 0.0;
     pointer-events: none;
 }

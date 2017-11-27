@@ -5,9 +5,14 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Let there be clarity",
+            "timestamp": "Nov 26 20:16 EST",
+            "body": "Adjusted background to be less icky and more pretty<br/>Some code cleanup in the back<br/>Added note about extraction rates"
+        },
+        {
             "title": "GomenaSIKE",
             "timestamp": "Nov 25 11:57 EST",
-            "body": "Tuners showing weird things wasn't a bug, reverted<br/>Added Stat Grid to Item Enhancement"
+            "body": "Tuners showing weird things wasn't a bug, reverted<br/>Added Stat Grid to Item Enhancement<br/>Point Items now have more information<br/>Blood Phantom items now no longer refuse to load"
         },
         {
             "title": "False Hope",
