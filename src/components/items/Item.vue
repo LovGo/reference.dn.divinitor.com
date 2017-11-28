@@ -375,6 +375,8 @@
                 </div>
 
             </div> -->
+
+            <item-tunings :itemId="itemId"></item-tunings>
         </div>
     </div>
 </template>
@@ -390,6 +392,7 @@ import ItemTuner from "@/components/items/ItemTuner";
 import ItemCharm from "@/components/items/ItemCharm";
 import MobileEnhance from "@/components/items/MobileEnhance";
 import ItemPotential from "@/components/items/ItemPotential";
+import ItemTunings from "@/components/items/ItemTunings";
 import BigErrorBox from '@/components/util/BigErrorBox'
 
 
@@ -404,6 +407,7 @@ Vue.component('item-enhance', ItemEnhance);
 Vue.component('item-tuner', ItemTuner);
 Vue.component('item-charm', ItemCharm);
 Vue.component('item-potential', ItemPotential);
+Vue.component('item-tunings', ItemTunings);
 Vue.component('mobile-enhance', MobileEnhance);
 
 Vue.component('big-error-box', BigErrorBox);

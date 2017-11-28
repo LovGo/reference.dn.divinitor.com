@@ -3,9 +3,14 @@ import Store from '@/store';
 
 export default {
 
+    //  Item data
     cache: {},
+    //  Enhancement data
     enhCache: {},
+    //  Tuner contents
     tunerCache: {},
+    //  Item can be tuned to
+    tuningCache: {},
 
     getItem(itemId, region, okcb, errcb) {
         if (!region) region = Store.state.regionCode;
@@ -20,6 +25,24 @@ export default {
         }).then(
         (res) => {
             this.cache[cacheKey] = res.body;
+            okcb(res.body);
+        }, 
+        errcb);
+    },
+    
+    getItemTunings(itemId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
+        let cacheKey = `${itemId}:${region}`;
+        if (this.tuningCache[cacheKey]) {
+            okcb(this.tuningCache[cacheKey]);
+            return;
+        }
+
+        Vue.http.get(`/api/server/${region}/items/${itemId}/tuning`,
+        {
+        }).then(
+        (res) => {
+            this.tuningCache[cacheKey] = res.body;
             okcb(res.body);
         }, 
         errcb);

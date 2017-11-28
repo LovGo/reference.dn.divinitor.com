@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "In Tune",
+            "timestamp": "",
+            "body": "Added seeing what an item can be tuned to using what tuner"
+        },
+        {
             "title": "Let there be clarity",
             "timestamp": "Nov 26 20:16 EST",
             "body": "Adjusted background to be less icky and more pretty<br/>Some code cleanup in the back<br/>Added note about extraction rates"
