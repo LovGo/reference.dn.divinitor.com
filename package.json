@@ -15,7 +15,7 @@
     "locale-code": "^1.1.1",
     "three": "^0.88.0",
     "vue": "^2.4.2",
-    "vue-analytics": "^5.4.0",
+    "vue-analytics": "^5.5.0",
     "vue-chartjs": "^3.0.0",
     "vue-infinite-scroll": "^2.0.2",
     "vue-moment": "^2.0.2",

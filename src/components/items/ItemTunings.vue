@@ -26,9 +26,8 @@
             <br/>
             <div class="tuning-list">
                 <div class="list-entry" v-for="v in data.tunings" :key="v.tunerId">
-                    <div class="tuning-id">#{{v.tunerId}}</div>
                     <div class="tuner" v-if="v.tuners.length">
-                        <div class="col-title">Tuner(s)</div>
+                        <div class="col-title">Tuner #{{v.tunerId}}</div>
                         <div class="item-entry" v-for="t in v.tuners" :key="t.id">
                             <item-card
                                 :itemId="t.id"
@@ -36,11 +35,11 @@
                         </div>
                     </div>
                     <div class="tuner" v-else>
-                        <div class="col-title">Tuner(s)</div>
+                        <div class="col-title">Tuner #{{v.tunerId}}</div>
                         No tuners exist for this tuning.
                     </div>
                     <div class="options">
-                        <div class="col-title">Options(s)</div>
+                        <div class="col-title">Options</div>
                         <div class="item-entry" v-for="t in v.options" :key="t.id">
                             <item-card
                                 :itemId="t.id"
@@ -73,6 +72,13 @@ export default {
     },
     created() {
         this.fetchData();
+    },
+    watch: {
+        itemId(to, from) {
+            if (to != from) {
+                this.fetchData();
+            }
+        }
     },
     methods: {
         fetchData() {
@@ -123,6 +129,13 @@ export default {
         position: relative;
         display: flex;
         flex-direction: column;
+
+        margin-top: 6px;
+
+        // border-left: 4px solid @dv-c-accent-3;
+        // padding-left: 10px;
+        // margin-left: 2px;
+
         .list-entry {
             flex: 0 0 auto;
 
@@ -130,19 +143,14 @@ export default {
             display: flex;
             flex-direction: row;
 
-            margin-top: 10px;
+            border-bottom: 1px solid @dv-c-idle;
+            // border: 1px solid @dv-c-accent-2;
+            padding: 8px 0 16px 0;
 
-            border: 1px solid @dv-c-accent-2;
-            padding: 20px 16px 16px 16px;
-            
-            .tuning-id {
-                color: @dv-c-body;
-                position: absolute;
-                top: 2px;
-                font-size: 12px;
-                letter-spacing: 0.1em;
+            &:last-child {
+                border-bottom: none;
             }
-
+            
             .col-title {
                 position: absolute;
                 top: -20px;
@@ -152,7 +160,7 @@ export default {
                 font-size: 14px;
                 color: @dv-c-accent-2;
                 text-transform: uppercase;
-                letter-spacing: 0.1em;
+                letter-spacing: 0.2em;
             }
 
             .tuner {
@@ -179,6 +187,11 @@ export default {
             .item-entry {
                 flex: 0 0 auto;
                 border: 1px solid @dv-c-foreground;
+                border-bottom: none;
+
+                &:last-child {
+                    border-bottom: 1px solid @dv-c-foreground;
+                }
             }
         }
     }
