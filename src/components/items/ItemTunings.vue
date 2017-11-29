@@ -27,9 +27,9 @@
             <div class="tuning-list">
                 <div class="list-entry" v-for="v in data.tunings" :key="v.tunerId">
                     <div class="tuning-id">#{{v.tunerId}}</div>
-                    <div class="tuner" v-if="v.tuners.length">
+                    <div class="tuner" v-if="trimTuners(v).length">
                         <div class="col-title">Tuner(s)</div>
-                        <div class="item-entry" v-for="t in v.tuners" :key="t.id">
+                        <div class="item-entry" v-for="t in trimTuners(v)" :key="t.id">
                             <item-card
                                 :itemId="t.id"
                                 :itemStub="t"></item-card>
@@ -63,13 +63,16 @@ import Item from "@/api/item/item";
 Vue.component('item-card', ItemCard);
 
 export default {
-    props: ["itemId"],
+    props: ["itemId", "parentItem"],
     data: function() {
         return {
             loading: true,
             data: null,
             error: null,
         };
+    },
+    computed: {
+
     },
     created() {
         this.fetchData();
@@ -89,8 +92,20 @@ export default {
                     this.loading = false;
                     this.error = err;
                 });
+        },
+        trimTuners(v) {
+            let ret = [];
+            for (let k in v.tuners) {
+                if (v[k].id == 1073895685 && this.parentItem.type.type == "WEAPON") {
+                    continue;
+                }
+
+                ret.push(v[k]);
+            }
+
+            return ret;
         }
-    }
+    },
 }
 </script>
 
