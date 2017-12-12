@@ -376,7 +376,7 @@
 
             </div> -->
 
-            <item-tunings :itemId="itemId"></item-tunings>
+            <item-tunings :itemId="itemId" :parentItem="itemData"></item-tunings>
         </div>
     </div>
 </template>
