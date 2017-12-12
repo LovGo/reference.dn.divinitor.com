@@ -380,7 +380,7 @@ export default {
                 }
             }
             if (itemData.name.name) {
-                ret += (`-${itemData.name.name.substr(0, 40).trim().replace(/\s/g, "-")}`);
+                ret += (`-${itemData.name.name.substr(0, 40).trim().replace(/\s|\.\?/g, "-")}`);
             }
         }
 
