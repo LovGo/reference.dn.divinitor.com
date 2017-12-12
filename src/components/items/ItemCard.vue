@@ -300,10 +300,21 @@ export default {
                 color: @dv-c-foreground;
             }
 
+            &:hover .remark {
+                .iid {
+                    color: @dv-c-body;
+                }
+            }
+
             .remark {
                 font-size: 12px;
                 letter-spacing: 0.2em;
                 text-transform: uppercase;
+
+                .iid {
+                    color: fade(@dv-c-body, 20%);
+                    transition: color ease-in 0.125s;
+                }
 
                 .tier {
                     display: inline-block;
