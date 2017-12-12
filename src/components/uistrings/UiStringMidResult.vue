@@ -1,15 +1,20 @@
 <template>
-<div class="results">
-    <div class="col rich">
-        <div v-html="result.html"></div>
-        <div class="foot" v-on:click="copyHtml">{{ copyText }}</div>
-        <textarea class="hidden" v-model="result.html" ref="htmltext"></textarea>
-    </div>
-    <!-- <div class="col strip" v-html="result.strip">
-    </div> -->
-    <div class="col raw">
-        <textarea v-model="result.raw" readonly onclick="this.focus();this.select()">
-        </textarea>
+<div>
+    <div class="results" v-if="result">
+        <div class="col rich">
+            <div v-html="result.html" ref="htmlArea"></div>
+            <div class="foot">
+                <span v-on:click="copyHtml">{{ copyText }}</span>
+                <!-- <span v-on:click="googleTranslate">Open in Google Translate</span> -->
+            </div>
+            <textarea class="hidden" v-model="result.html" ref="htmltext"></textarea>
+        </div>
+        <!-- <div class="col strip" v-html="result.strip">
+        </div> -->
+        <div class="col raw">
+            <textarea v-model="result.raw" readonly onclick="this.focus();this.select()">
+            </textarea>
+        </div>
     </div>
 </div>
 </template>
@@ -39,6 +44,13 @@ export default {
             } else {
                 console.log("KO");
             }
+        },
+        googleTranslate() {
+            //  TODO get working
+            let div = this.$refs.htmlArea;
+            let text = div.textContent;
+            let url = `https://translate.google.com/#ko/en/${(text)}`;
+            window.open(url);
         }
     }
 };
