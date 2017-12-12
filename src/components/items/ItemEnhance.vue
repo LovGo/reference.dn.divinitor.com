@@ -639,16 +639,17 @@ export default {
         tr:last-child td {
             border-bottom-color: transparent;
         }
+
+        tr:hover,
+        tr.active:hover {
+            background: fade(@dv-c-foreground, 30%);
+            color: @dv-c-foreground;
+        }
     }
 
     .rates {
         tr {
             cursor: pointer;
-        }
-        
-        tr:hover,
-        tr.active:hover {
-            background: fade(@dv-c-foreground, 30%);
         }
 
         tr.active {
