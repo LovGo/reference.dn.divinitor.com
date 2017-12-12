@@ -240,19 +240,19 @@ export default {
 
             @media only screen and (min-width:@min-desktop-wide-width) {
                 flex: 0 1 480px;
-                border-right: none;
+                border-left: none;
                 &:first-child,
                 &:nth-child(2) {
                     border-top-color: @dv-c-foreground;
                 }
-                &:nth-child(2n) {
-                    border-right: 1px solid @dv-c-foreground;
+                &:nth-child(2n + 1) {
+                    border-left: 1px solid @dv-c-foreground;
                 }
                 &:last-child {
-                    border-right: 1px solid @dv-c-foreground;
+                    // border-right: 1px solid @dv-c-foreground;
                 }
                 &:first-child:last-child {
-                    border-right: 1px solid @dv-c-foreground;
+                    // border-right: 1px solid @dv-c-foreground;
                 }
 
             }
