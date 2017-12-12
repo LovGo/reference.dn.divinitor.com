@@ -22,13 +22,13 @@
     <transition name="fade" appear>
         <div v-if="!loading && !error && Object.keys(data.tunings).length" class="wrapper">
             <div class="title">Tuning</div>
-            This item can be tuned into the following items using the given tuners:
+            This item can be tuned using these tuners to get:
             <br/>
             <div class="tuning-list">
                 <div class="list-entry" v-for="v in data.tunings" :key="v.tunerId">
-                    <div class="tuner" v-if="v.tuners.length">
+                    <div class="tuner" v-if="trimTuners(v).length">
                         <div class="col-title">Tuner #{{v.tunerId}}</div>
-                        <div class="item-entry" v-for="t in v.tuners" :key="t.id">
+                        <div class="item-entry" v-for="t in trimTuners(v)" :key="t.id">
                             <item-card
                                 :itemId="t.id"
                                 :itemStub="t"></item-card>
@@ -62,13 +62,16 @@ import Item from "@/api/item/item";
 Vue.component('item-card', ItemCard);
 
 export default {
-    props: ["itemId"],
+    props: ["itemId", "parentItem"],
     data: function() {
         return {
             loading: true,
             data: null,
             error: null,
         };
+    },
+    computed: {
+
     },
     created() {
         this.fetchData();
@@ -95,8 +98,23 @@ export default {
                     this.loading = false;
                     this.error = err;
                 });
+        },
+        trimTuners(v) {
+            let ret = [];
+            for (let k in v.tuners) {
+                if (v.tuners[k].id == 1073894675 && this.parentItem.type.type == "TALISMAN") {
+                    continue;
+                }
+                if (v.tuners[k].id == 1073895685 && this.parentItem.type.type == "WEAPON") {
+                    continue;
+                }
+
+                ret.push(v.tuners[k]);
+            }
+
+            return ret;
         }
-    }
+    },
 }
 </script>
 
@@ -109,7 +127,7 @@ export default {
 
     .wrapper {
         position: relative;
-        margin-top: 25px;
+        margin-top: 40px;
         border-top: 1px solid @dv-c-accent-1;
         padding-top: 4px;
         .title {
