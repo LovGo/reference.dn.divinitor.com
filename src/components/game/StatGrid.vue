@@ -457,6 +457,7 @@ export default {
         tr:hover,
         tr.active:hover {
             background: fade(@dv-c-foreground, 30%);
+            color: @dv-c-foreground;
         }
 
         tr.active {
