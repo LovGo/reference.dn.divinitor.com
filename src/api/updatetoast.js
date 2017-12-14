@@ -5,9 +5,14 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Ready, Set, Go",
+            "timestamp": "Dec 13 19:02 EST",
+            "body": "Added the ability to view set bonuses and items in sets"
+        },
+        {
             "title": "In Tune",
-            "timestamp": "",
-            "body": "Added seeing what an item can be tuned to using what tuner"
+            "timestamp": "Nov 29 09:12 EST",
+            "body": "Added seeing what an item can be tuned to using what tuner<br/>Reduced emphasis on item ID on item cards<br/>Added hover effects to Material and Stat Grids"
         },
         {
             "title": "Let there be clarity",

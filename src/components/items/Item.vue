@@ -320,6 +320,11 @@
                 </div>
             </div>
 
+            <div class="section" v-if="itemData.itemSet">
+                <div class="title">Item Set</div>
+                <item-set :setData="itemData.itemSet"></item-set>
+            </div>
+
             <!-- {{ itemData.type }} -->
 
             <div class="section" v-if="itemType == 'ENHANCEMENT_HAMMER'">
@@ -392,6 +397,7 @@ import ItemTuner from "@/components/items/ItemTuner";
 import ItemCharm from "@/components/items/ItemCharm";
 import MobileEnhance from "@/components/items/MobileEnhance";
 import ItemPotential from "@/components/items/ItemPotential";
+import ItemSet from "@/components/items/ItemSet";
 import ItemTunings from "@/components/items/ItemTunings";
 import BigErrorBox from '@/components/util/BigErrorBox'
 
@@ -407,6 +413,7 @@ Vue.component('item-enhance', ItemEnhance);
 Vue.component('item-tuner', ItemTuner);
 Vue.component('item-charm', ItemCharm);
 Vue.component('item-potential', ItemPotential);
+Vue.component('item-set', ItemSet);
 Vue.component('item-tunings', ItemTunings);
 Vue.component('mobile-enhance', MobileEnhance);
 
@@ -559,7 +566,6 @@ export default {
                     this.updateQueryParams();
                 },
                 (err) => {
-                    console.log(err);
                     this.loading = false;
                     this.error = err;
                 });
