@@ -7,7 +7,7 @@ export default {
         {
             "title": "Ready, Set, Go",
             "timestamp": "Dec 13 19:02 EST",
-            "body": "Added the ability to view set bonuses and items in sets"
+            "body": "Added the ability to view set bonuses and items in sets<br/>Fixed extremely low rates showing way too many decimal points"
         },
         {
             "title": "In Tune",

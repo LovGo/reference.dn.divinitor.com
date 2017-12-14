@@ -113,6 +113,6 @@ export default {
             return Math.round(mult * 100) / 100;
         }
 
-        return mult;
+        return Math.round(mult * 100000) / 100000;
     }
 };
