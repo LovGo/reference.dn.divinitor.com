@@ -5,6 +5,16 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Taxes Sux",
+            "timestamp": "Dec 20 23:42",
+            "body": "Added the taxes/fees page under General<br/>Reorganized General<br/>Gave other checkboxes the pretty treatment"
+        },
+        {
+            "title": "Activated Carbon Filtration",
+            "timestamp": "Dec 17 01:24",
+            "body": "Added the ability to filter by name in item lists (e.g. pouch items). Also made the filter panel pretty.<br/>Fixed item set list entries not being links"
+        },
+        {
             "title": "Ready, Set, Go",
             "timestamp": "Dec 13 19:02 EST",
             "body": "Added the ability to view set bonuses and items in sets<br/>Fixed extremely low rates showing way too many decimal points"

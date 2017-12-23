@@ -28,10 +28,14 @@
             <!-- Can be enhanced up to <b>+{{maxLevel }}</b> -->
 
             <form class="options">
-                <input type="checkbox" v-model="useGoldenGoose" id="goldenGoose" />
-                <label for="goldenGoose">Use Golden Goose 50% discount</label>
-                <input type="checkbox" v-model="useJelly" id="jelly" v-if="canUseJelly"/>
-                <label for="jelly" v-if="canUseJelly">Use Item Protection Jelly</label>
+                <div class="checkbox">
+                    <input type="checkbox" v-model="useGoldenGoose" id="goldenGoose" />
+                    <label for="goldenGoose">Use Golden Goose 50% discount</label>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" v-model="useJelly" id="jelly" v-if="canUseJelly"/>
+                    <label for="jelly" v-if="canUseJelly">Use Item Protection Jelly</label>
+                </div>
             </form>
 
             <transition name="fadecollapse-item">
@@ -489,15 +493,6 @@ export default {
 
             &:first-child {
                 margin-left: 0;
-            }
-        }
-
-        label {
-            cursor: pointer;
-            transition: color 0.125s ease-in;
-
-            &:hover {
-                color: @dv-c-accent-2;
             }
         }
     }

@@ -44,6 +44,10 @@ export default {
     .content {
         font-family: @dv-f-lato;
 
+        .heading {
+            white-space: nowrap;
+        }
+        
         p {
             font-size: 16px;
             word-wrap: break-word;

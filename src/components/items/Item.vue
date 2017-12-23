@@ -68,6 +68,22 @@
                 </div>
             </div>
 
+            <div class="share">
+                <a class="share-link" v-on:click.prevent="copyLink" href="">
+                    Link copied!
+                    <transition name="fade">
+                    <span class="ok" v-if="copyStatus == 'ok'" key="ok">
+                        <i class="fa fa-check"></i> Link copied!
+                    </span>
+                    <span class="err" v-else-if="copyStatus == 'err'" key="err">
+                        <i class="fa fa-exclamation-triangle"></i> Link copy failed
+                    </span><span v-else key="o3o">
+                        <i class="fa fa-share-square-o"></i> Copy link
+                    </span>
+                    </transition>
+                    <input class="hidden" type="text" ref="copyLink" />
+                </a>
+            </div>
 
             <div class="desc-model-container">
                 <div class="info-top">
@@ -79,7 +95,8 @@
                         <div v-if="itemData.cashItem">
                             <div class="attrib yes" v-if="itemData.canTrade">
                                 <div class="icon"><i class="fa fa-exchange"></i></div>
-                                {{ itemData.listings }} listings
+                                <span v-if="itemData.listings">{{ itemData.listings }} listings</span>
+                                <span v-else>Need warranty</span>
                             </div>
                             <div class="attrib no" v-else>
                                 <div class="icon"><i class="fa fa-chain"></i></div>
@@ -107,11 +124,11 @@
                         </div>
                         <div class="attrib yes" v-if="itemData.canServerStorage && !forceBound">
                             <div class="icon"><i class="fa fa-suitcase"></i></div>
-                            Server Storagable
+                            Server storagable
                         </div>
                         <div class="attrib no" v-else>
                             <div class="icon"><i class="fa fa-lock"></i></div>
-                            Character Bound
+                            Character bound
                         </div>
                         <div class="attrib no" v-if="!itemData.canDestroy && !itemData.cashItem">
                             <div class="icon"><i class="fa fa-minus-circle"></i></div>
@@ -128,7 +145,7 @@
                         </div>
                         <div class="attrib" v-if="itemData.gearScore">
                             <div class="icon"><i class="fa fa-balance-scale"></i></div>
-                            <strong>{{ itemData.gearScore | thousands }}</strong> Gear Points
+                            <strong>{{ itemData.gearScore | thousands }}</strong> Gear points
                         </div>
                     </div>
                     <!-- {{ itemData.type.type }} -->
@@ -371,15 +388,18 @@
                     Extraction specifics (amount, rate) are not available in client data and cannot be displayed here</div>
             </div>
 
-            
-            <!-- <div class="section">
+            <div class="section">
                 <div class="title">Procurement</div>
-                <div v-if="itemData.gainText" class="game-tooltip">
+                <!-- <div v-if="itemData.gainText" class="game-tooltip">
                     <div class="title">Game Tooltip</div>
                     <div v-html="itemData.gainText" class="gain uistring"></div>
-                </div>
+                </div> -->
+                <item-acquire
+                    :itemId="itemData.id"
+                    >
+                </item-acquire>
 
-            </div> -->
+            </div>
 
             <item-tunings :itemId="itemId" :parentItem="itemData"></item-tunings>
         </div>
@@ -397,9 +417,10 @@ import ItemTuner from "@/components/items/ItemTuner";
 import ItemCharm from "@/components/items/ItemCharm";
 import MobileEnhance from "@/components/items/MobileEnhance";
 import ItemPotential from "@/components/items/ItemPotential";
+import ItemAcquire from "@/components/items/ItemAcquire";
 import ItemSet from "@/components/items/ItemSet";
 import ItemTunings from "@/components/items/ItemTunings";
-import BigErrorBox from '@/components/util/BigErrorBox'
+import BigErrorBox from '@/components/util/BigErrorBox';
 
 
 import Item from "@/api/item/item";
@@ -416,6 +437,7 @@ Vue.component('item-potential', ItemPotential);
 Vue.component('item-set', ItemSet);
 Vue.component('item-tunings', ItemTunings);
 Vue.component('mobile-enhance', MobileEnhance);
+Vue.component('item-acquire', ItemAcquire);
 
 Vue.component('big-error-box', BigErrorBox);
 
@@ -431,6 +453,7 @@ export default {
             potentialNum: 0,
             potentialId: 0,
             error: null,
+            copyStatus: null,
         }
     },
     created() {
@@ -604,6 +627,20 @@ export default {
         },
         goBack() {
             this.$router.back();
+        },
+        copyLink() {
+            let box = this.$refs['copyLink'];
+            box.value = window.location.href;
+            box.focus();
+            box.select();
+            let success = document.execCommand('copy');
+            if (success) {
+                this.copyStatus = 'ok';
+            } else {
+                this.copyStatus = 'err';
+            }
+
+            setTimeout(() => this.copyStatus = null, 2000);
         }
     }
 }
@@ -622,6 +659,7 @@ export default {
         position: relative;
         width: 100%;
         padding-left: 0;
+        padding-bottom: 0;
         display: flex;
         flex-direction: row;
 
@@ -752,6 +790,41 @@ export default {
                     }
                 }
             }
+        }
+    }
+
+    .share {
+        margin-left: 8px;
+        margin-bottom: 4px;
+
+        .share-link {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: @dv-f-geomanist;
+            font-size: 12px;
+            position: relative;
+            color: transparent;
+            white-space: nowrap;
+
+            & > span {
+                position: absolute;
+                left: 0;
+                top: 0;
+                color: fade(@dv-c-foreground, 50%);
+
+                &:hover {
+                    color: @dv-c-foreground;
+                }
+
+                &.ok {
+                    color: @dv-c-green;
+                }
+
+                &.err {
+                    color: @dv-c-red;
+                }
+            }
+
         }
     }
 

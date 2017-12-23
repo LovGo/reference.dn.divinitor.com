@@ -2,6 +2,13 @@
 
 @min-desktop-wide-width: 1300px;
 
+@rank-divine: #D0A020;
+@rank-legendary: #F050A0;
+@rank-unique: #C080C0;
+@rank-epic: #F09000;
+@rank-rare: #4080F0;
+@rank-magic: #80C040;
+@rank-normal: #E0E0E0;
 
 ::selection {
     background: #AAA;
@@ -241,6 +248,14 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
+input.hidden {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
 button {
     background: @dv-c-background;
     color: @dv-c-foreground;
@@ -367,25 +382,25 @@ button {
 }
 
 .rank-divine {
-    color: #D0A020;
+    color: @rank-divine;
 }
 .rank-legendary {
-    color: #F050A0;
+    color: @rank-legendary;
 }
 .rank-unique {
-    color: #C080C0;
+    color: @rank-unique;
 }
 .rank-epic {
-    color: #F09000;
+    color: @rank-epic;
 }
 .rank-rare {
-    color: #4080F0;
+    color: @rank-rare;
 }
 .rank-magic {
-    color: #80C040;
+    color: @rank-magic;
 }
 .rank-normal {
-    color: #FFFFFF;
+    color: @rank-normal;
 }
 
 .tooltip {
@@ -510,5 +525,417 @@ button {
     &:hover {
         background: fade(@dv-c-foreground, 50%);
         color: white;
+    }
+}
+
+.filter {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 28px;
+
+    legend {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-family: @dv-f-geomanist;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin: 4px 0;
+        font-size: 18px;
+        color: @dv-c-foreground;
+    }
+
+    .level-filter {
+        flex: 0 1 auto;
+        white-space: nowrap;
+        margin: 0;
+        margin-right: 20px;
+        input[type="number"] {
+            background: none;
+            border: none;
+            color: @dv-c-foreground;
+            font-size: 14px;
+            font-family: @dv-f-geomanist;
+            width: 26px;
+            text-align: center;
+            border-bottom: 1px @dv-c-idle solid;
+            transition: border-color ease-in 0.125s;
+
+            &:hover,
+            &:focus {
+                border-bottom-color: @dv-c-foreground;
+            }
+        }
+
+        label {
+            color: @dv-c-accent-1;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 12px;
+        }
+    }
+
+    .name-class-filter {
+        flex: 1 1 auto;
+        white-space: nowrap;
+        
+        input[type="text"] {
+            background: none;
+            border: none;
+            color: @dv-c-foreground;
+            font-size: 14px;
+            text-align: left;
+            min-width: 200px;
+            border-bottom: 1px @dv-c-idle solid;
+            transition: border-color ease-in 0.125s;
+
+            &:hover,
+            &:focus {
+                border-bottom-color: @dv-c-foreground;
+            }
+
+            &::placeholder {
+                color: fade(@dv-c-foreground, 40%);
+                opacity: 1.0;
+                text-transform: uppercase;
+                letter-spacing: 0.2em;
+                font-family: @dv-f-geomanist;
+                transition: color ease-in 0.125s;
+            }
+        }
+
+        label {
+            color: @dv-c-accent-2;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 12px;
+        }
+    }
+
+    .grade-filter {
+        width: 100%;
+        flex: 1 0 auto;
+        padding: 4px 0;
+
+        span {
+            display: inline-block;
+            margin-right: 10px;
+            border-left: 2px white solid;
+            padding-left: 2px;
+
+            &.divine {
+                @ct: @rank-divine;
+                input:checked ~ label {
+                    color: @ct;
+                }
+
+                border-left-color: @ct;
+
+                &:hover {
+                    label {
+                        color: @ct;
+
+                        &:before {
+                            border-color: lighten(@ct, -20%);
+                            background-color: fade(@ct, 20%);
+                        }
+                    }
+                    
+                    input:checked ~ label:before {
+                        background-color: @ct;
+                    }
+                }
+
+                input:checked ~ label:before {
+                    border-color: @ct;
+                    background-color: fade(@ct, 50%);
+                }
+            }
+            &.legendary {
+                @ct: @rank-legendary;
+                input:checked ~ label {
+                    color: @ct;
+                }
+                
+                border-left-color: @ct;
+
+                &:hover {
+                    label {
+                        color: @ct;
+
+                        &:before {
+                            border-color: lighten(@ct, -20%);
+                            background-color: fade(@ct, 20%);
+                        }
+                    }
+                    
+                    input:checked ~ label:before {
+                        background-color: @ct;
+                    }
+                }
+
+                input:checked ~ label:before {
+                    border-color: @ct;
+                    background-color: fade(@ct, 50%);
+                }
+            }
+            &.unique {
+                @ct: @rank-unique;
+                input:checked ~ label {
+                    color: @ct;
+                }
+                
+                border-left-color: @ct;
+
+                &:hover {
+                    label {
+                        color: @ct;
+
+                        &:before {
+                            border-color: lighten(@ct, -20%);
+                            background-color: fade(@ct, 20%);
+                        }
+                    }
+                    
+                    input:checked ~ label:before {
+                        background-color: @ct;
+                    }
+                }
+
+                input:checked ~ label:before {
+                    border-color: @ct;
+                    background-color: fade(@ct, 50%);
+                }
+            }
+            &.epic {
+                @ct: @rank-epic;
+                input:checked ~ label {
+                    color: @ct;
+                }
+                
+                border-left-color: @ct;
+
+                &:hover {
+                    label {
+                        color: @ct;
+
+                        &:before {
+                            border-color: lighten(@ct, -20%);
+                            background-color: fade(@ct, 20%);
+                        }
+                    }
+                    
+                    input:checked ~ label:before {
+                        background-color: @ct;
+                    }
+                }
+                
+                input:checked ~ label:before {
+                    border-color: @ct;
+                    background-color: fade(@ct, 50%);
+                }
+            }
+            &.rare {
+                @ct: @rank-rare;
+                input:checked ~ label {
+                    color: @ct;
+                }
+                
+                border-left-color: @ct;
+
+                &:hover {
+                    label {
+                        color: @ct;
+
+                        &:before {
+                            border-color: lighten(@ct, -20%);
+                            background-color: fade(@ct, 20%);
+                        }
+                    }
+                    
+                    input:checked ~ label:before {
+                        background-color: @ct;
+                    }
+                }
+                
+                input:checked ~ label:before {
+                    border-color: @ct;
+                    background-color: fade(@ct, 50%);
+                }
+            }
+            &.magic {
+                @ct: @rank-magic;
+                input:checked ~ label {
+                    color: @ct;
+                }
+                
+                border-left-color: @ct;
+
+                &:hover {
+                    label {
+                        color: @ct;
+
+                        &:before {
+                            border-color: lighten(@ct, -20%);
+                            background-color: fade(@ct, 20%);
+                        }
+                    }
+                    
+                    input:checked ~ label:before {
+                        background-color: @ct;
+                    }
+                }
+                
+                input:checked ~ label:before {
+                    border-color: @ct;
+                    background-color: fade(@ct, 50%);
+                }
+            }
+            &.normal {
+                @ct: @rank-normal;
+                input:checked ~ label {
+                    color: @ct;
+                }
+                
+                border-left-color: @ct;
+
+                &:hover {
+                    label {
+                        color: @ct;
+
+                        &:before {
+                            border-color: lighten(@ct, -20%);
+                            background-color: fade(@ct, 20%);
+                        }
+                    }
+
+                    input:checked ~ label:before {
+                        background-color: @ct;
+                    }
+                }
+                
+                input:checked ~ label:before {
+                    border-color: @ct;
+                    background-color: fade(@ct, 50%);
+                }
+            }
+
+
+            input[type="checkbox"] {
+                opacity: 0;
+            }
+
+            label {
+                position: relative;
+                cursor: pointer;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                font-family: @dv-f-geomanist;
+                font-size: 14px;
+                color: @dv-c-idle;
+                transition: color ease-in 0.125s;
+
+                &:before {
+                    position: absolute;
+                    top: 50%;
+                    left: -18px;
+                    width: 10px;
+                    height: 10px;
+                    background: transparent;
+                    border: 1px solid @dv-c-idle;
+                    content: " ";
+                    transform: translateY(-50%);
+                    transition: border-color ease-in 0.125s, background-color ease-in 0.125s;
+                }
+            }
+
+            input:checked ~ label:before {
+                position: absolute;
+                top: 50%;
+                left: -18px;
+                width: 10px;
+                height: 10px;
+                background: white;
+                border: 1px solid white;
+                content: " ";
+                transform: translateY(-50%);
+            }
+
+        }
+
+    }
+
+}
+
+.checkbox {
+    display: inline-block;
+    margin-right: 10px;
+    border-left: 2px @dv-c-green solid;
+    padding-left: 6px;
+
+    input[type="checkbox"] {
+        opacity: 0;
+    }
+
+    label {
+        position: relative;
+        cursor: pointer;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-family: @dv-f-geomanist;
+        font-size: 14px;
+        color: @dv-c-body;
+        transition: color ease-in 0.125s;
+
+        &:before {
+            position: absolute;
+            top: 50%;
+            left: -18px;
+            width: 10px;
+            height: 10px;
+            background: transparent;
+            border: 1px solid @dv-c-idle;
+            content: " ";
+            transform: translateY(-50%);
+            transition: border-color ease-in 0.125s, background-color ease-in 0.125s;
+        }
+        
+    }
+    
+    &:hover {
+        label {
+            color: @dv-c-green;
+
+            &:before {
+                border-color: lighten(@dv-c-green, -20%);
+                background-color: fade(@dv-c-green, 20%);
+            }
+        }
+
+        input:checked ~ label {
+            color: @dv-c-green;
+        }
+
+        input:checked ~ label:before {
+            background-color: @dv-c-green;
+        }
+    }
+
+    input:checked ~ label:before {
+        position: absolute;
+        top: 50%;
+        left: -18px;
+        width: 10px;
+        height: 10px;
+        border-color: @dv-c-green;
+        background-color: fade(@dv-c-green, 50%);
+        content: " ";
+        transform: translateY(-50%);
+    }
+
+    input:checked ~ label {
+        color: @dv-c-green;
     }
 }

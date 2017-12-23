@@ -25,46 +25,50 @@
 
             <form class="filter" v-if="charms.entries.length > 20">
                 <legend>Filter by</legend>
-                <label for="filter-level-min">Level </label>
-                <input id="filter-level-min" type="number" min="0" max="100" v-model="filter.minLevel" />
-                <label> to </label>
-                <input id="filter-level-max" type="number" :min="filter.minLevel" max="100" v-model="filter.maxLevel" />
+                <div class="level-filter">
+                    <label for="filter-level-min">Level </label>
+                    <input id="filter-level-min" type="number" min="0" max="100" v-model="filter.minLevel" />
+                    <label> to </label>
+                    <input id="filter-level-max" type="number" :min="filter.minLevel" max="100" v-model="filter.maxLevel" />
+                </div>
                 
-                <label for="filter-name">Item Name</label>
-                <input id="filter-name" type="text" v-model="filter.nameSearch" />
+                <div class="name-class-filter">
+                    <input id="filter-name" type="text" v-model="filter.nameSearch" placeholder="Name Filter"/>
 
-                <label for="filter-class">Class</label>
-                <input id="filter-class" type="text" v-model="filter.selectClass" />
-                <br/>
-                <span>
-                    <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.normal" />
-                    <label for="filter-grade-normal">Normal</label>
-                </span>
-                <span>
-                    <input id="filter-grade-magic" type="checkbox" v-model="filter.grades.magic" />
-                    <label for="filter-grade-magic">Magic</label>
-                </span>
-                <span>
-                    <input id="filter-grade-rare" type="checkbox" v-model="filter.grades.rare" />
-                    <label for="filter-grade-rare">Rare</label>
-                </span>
-                <span>
-                    <input id="filter-grade-epic" type="checkbox" v-model="filter.grades.epic" />
-                    <label for="filter-grade-epic">Epic</label>
-                </span>
-                <span>
-                    <input id="filter-grade-unique" type="checkbox" v-model="filter.grades.unique" />
-                    <label for="filter-grade-unique">Unique</label>
-                </span>
-                <span>
-                    <input id="filter-grade-legendary" type="checkbox" v-model="filter.grades.legendary" />
-                    <label for="filter-grade-legendary">Legendary</label>
-                </span>
-                <span>
-                    <input id="filter-grade-divine" type="checkbox" v-model="filter.grades.divine" />
-                    <label for="filter-grade-divine">Divine</label>
-                </span>
-                
+                    <!-- <label for="filter-class">Class</label>
+                    <input id="filter-class" type="text" v-model="filter.selectClass" /> -->
+                </div>
+
+                <div class="grade-filter">
+                    <span class="normal" v-if="hasGrade.normal">
+                        <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.normal" />
+                        <label for="filter-grade-normal">Normal</label>
+                    </span>
+                    <span class="magic" v-if="hasGrade.magic">
+                        <input id="filter-grade-magic" type="checkbox" v-model="filter.grades.magic" />
+                        <label for="filter-grade-magic">Magic</label>
+                    </span>
+                    <span class="rare" v-if="hasGrade.rare">
+                        <input id="filter-grade-rare" type="checkbox" v-model="filter.grades.rare" />
+                        <label for="filter-grade-rare">Rare</label>
+                    </span>
+                    <span class="epic" v-if="hasGrade.epic">
+                        <input id="filter-grade-epic" type="checkbox" v-model="filter.grades.epic" />
+                        <label for="filter-grade-epic">Epic</label>
+                    </span>
+                    <span class="unique" v-if="hasGrade.unique">
+                        <input id="filter-grade-unique" type="checkbox" v-model="filter.grades.unique" />
+                        <label for="filter-grade-unique">Unique</label>
+                    </span>
+                    <span class="legendary" v-if="hasGrade.legendary">
+                        <input id="filter-grade-legendary" type="checkbox" v-model="filter.grades.legendary" />
+                        <label for="filter-grade-legendary">Legendary</label>
+                    </span>
+                    <span class="divine" v-if="hasGrade.divine">
+                        <input id="filter-grade-divine" type="checkbox" v-model="filter.grades.divine" />
+                        <label for="filter-grade-divine">Divine</label>
+                    </span>
+                </div>
             </form>
 
             <div class="head">
@@ -144,6 +148,50 @@ export default {
         this.fetchData();
     },
     computed: {
+        hasGrade() {
+            let ret = {
+                normal: false,
+                magic: false,
+                rare: false,
+                epic: false,
+                unique: false,
+                legendary: false,
+                divine: false
+            };
+            
+            if (!this.charms.entries) {
+                return ret;
+            }
+
+            for (let k in this.charms.entries) {
+                let item = this.charms.entries[k].item;
+                switch(item.rank) {
+                    case "NORMAL":
+                        ret.normal = true;
+                        break;
+                    case "MAGIC":
+                        ret.magic = true;
+                        break;
+                    case "RARE":
+                        ret.rare = true;
+                        break;
+                    case "EPIC":
+                        ret.epic = true;
+                        break;
+                    case "UNIQUE":
+                        ret.unique = true;
+                        break;
+                    case "LEGENDARY":
+                        ret.legendary = true;
+                        break;
+                    case "DIVINE":
+                        ret.divine = true;
+                        break;
+                }
+            }
+
+            return ret;
+        },
         sorted() {
             let ret = this.charms.entries.slice();
             ret.sort((a, b) => {

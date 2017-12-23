@@ -322,8 +322,6 @@ export default {
             hasQuery = hasQuery || query.maxLevel != 100;
         }
 
-        console.log(hasQuery);
-
         if (hasQuery) {
 
             let params = {

@@ -1,5 +1,10 @@
 <template>
 <div class="stats">
+    <h1>Stat Calculations</h1>
+    <div class="go-back"
+        v-on:click="goBack">
+        <i class="fa fa-angle-double-left"></i>Back
+    </div>
     <div v-if="multiview">
 
         <!-- <label>Lvl </label>
@@ -23,11 +28,6 @@
 
     </div>
     <div v-else>
-        <div class="go-back"
-            v-on:click="goBack">
-            <i class="fa fa-angle-double-left"></i>Back
-        </div>
-
         <h2>{{ statName }}</h2>
 
         <h3>Amount to Cap by Level</h3>

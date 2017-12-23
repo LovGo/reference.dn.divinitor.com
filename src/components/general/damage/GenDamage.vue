@@ -1,6 +1,13 @@
 <template>
 <div class="damage">
-    <h2>The Damage Formula</h2>
+    <h1>Calculating Damage</h1>
+    <div class="go-back"
+        v-on:click="goBack">
+        <i class="fa fa-angle-double-left"></i>Back
+    </div>
+    <div class="toast warn">
+      Coming soon
+    </div>
 </div>
 </template>
 
@@ -17,6 +24,9 @@ export default {
   },
   methods: {
     fetchData() {
+    },
+    goBack() {
+        this.$router.back();
     }
   }
 }

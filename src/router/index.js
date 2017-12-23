@@ -5,6 +5,8 @@ import Home from '@/components/Home';
 import Passthrough from '@/components/Passthrough';
 
 import General from '@/components/general/General';
+import GeneralIndex from '@/components/general/GeneralIndex';
+import GenTaxes from '@/components/general/GenTaxes';
 import GenStat from '@/components/general/stat/GenStat';
 import GenDamage from '@/components/general/damage/GenDamage';
 import GenGuild from '@/components/general/guild/GenGuild';
@@ -63,7 +65,7 @@ export default new Router({
       children: [
         {
           path: '',
-          redirect: 'stat'
+          component: GeneralIndex,
         },
         {
           path: 'stat/:statName?',
@@ -76,6 +78,10 @@ export default new Router({
         {
           path: 'guild',
           component: GenGuild,
+        },
+        {
+          path: 'taxes',
+          component: GenTaxes,
         },
         {
           path: '*',

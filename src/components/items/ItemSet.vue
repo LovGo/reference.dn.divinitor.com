@@ -39,8 +39,7 @@
                             class="result">
                             <item-card
                                 :itemStub="item"
-                                :itemId="item.id"
-                                noLink="true">
+                                :itemId="item.id">
                             </item-card>
                         </div>
             </div>
