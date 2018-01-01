@@ -8,6 +8,7 @@ export default {
 
     getString(mid, { region, param, format, okcb, errcb }) {
         if (!region) region = Store.state.regionCode;
+        if (!param) param = '';
         let cacheKey = `${mid}:${btoa(param)}//${format}`;
         let cachedRegion = this.cache[region];
         if (cachedRegion) {

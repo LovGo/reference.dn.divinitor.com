@@ -11,6 +11,8 @@ export default {
     tunerCache: {},
     //  Item can be tuned to
     tuningCache: {},
+    //  Item acquire
+    acquireCache: {},
 
     getItem(itemId, region, okcb, errcb) {
         if (!region) region = Store.state.regionCode;
@@ -43,6 +45,24 @@ export default {
         }).then(
         (res) => {
             this.tuningCache[cacheKey] = res.body;
+            okcb(res.body);
+        }, 
+        errcb);
+    },
+
+    getItemAcquire(itemId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
+        let cacheKey = `${itemId}:${region}`;
+        if (this.acquireCache[cacheKey]) {
+            okcb(this.acquireCache[cacheKey]);
+            return;
+        }
+
+        Vue.http.get(`/api/server/${region}/items/${itemId}/acquire`,
+        {
+        }).then(
+        (res) => {
+            this.acquireCache[cacheKey] = res.body;
             okcb(res.body);
         }, 
         errcb);
@@ -217,6 +237,19 @@ export default {
         }, 
         errcb);
     },
+    getItemSetForItem(itemId, jobIds, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
+        Vue.http.get(`/api/server/${region}/items/${itemId}/set`,
+        {
+            params: {
+                jobs: jobIds.join(",")
+            }
+        }).then(
+        (res) => {
+            okcb(res.body);
+        }, 
+        errcb);
+    },
     getItemDetailedCategory(itemData) {
         let t = itemData.type.type;
         
@@ -274,6 +307,8 @@ export default {
                 return "class item pouch";
             case "RANDOM":
                 return "random item pouch";
+            case "TITLE":
+                return "title";
             
         }
 
@@ -303,7 +338,7 @@ export default {
     },
     getRandom(randomId, region, okcb, errcb) {
         if (!region) region = Store.state.regionCode;
-        Vue.http.get(`/api/server/${region}/items/random/${charmId}`,
+        Vue.http.get(`/api/server/${region}/items/drop/${randomId}`,
         {
         }).then(
         (res) => {
@@ -378,7 +413,7 @@ export default {
                 }
             }
             if (itemData.name.name) {
-                ret += (`-${itemData.name.name.substr(0, 40).trim().replace(/\s|\.\?/g, "-")}`);
+                ret += (`-${itemData.name.name.substr(0, 40).trim().replace(/\s|\.|\/|\?/g, "-").replace(/[%]/g, "").replace(/--/g, "-")}`);
             }
         }
 

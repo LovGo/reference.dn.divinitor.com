@@ -27,6 +27,7 @@
                         <div class="head">
                             <span v-if="goldAmt">{{ goldAmt | thousands }}</span>
                             {{ name }}
+                            <span class="count" v-if="count && count > 1">{{count}}</span>
                         </div>
                         <div class="remark">
                             <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
@@ -218,6 +219,7 @@ export default {
             position: absolute;
             bottom: 100%;
             left: 0;
+            opacity: 0.0;
             // transform: translateX(-50%);
             display: none;
             text-align: left;
@@ -228,7 +230,8 @@ export default {
             padding: 10px 16px;
             border: 1px solid @dv-c-foreground;
             box-shadow: 0 0 20px fade(black, 80%);
-            
+            transition: opacity 0.125s ease-in;
+
             .head {
                 padding: 0;
                 font-size: 16px;
@@ -237,6 +240,15 @@ export default {
                 font-family: @dv-f-geomanist;
                 color: @dv-c-foreground;
                 white-space: nowrap;
+
+                .count{
+                    color: @dv-c-accent-2;
+                    &::before {
+                        content: "x";
+                        text-transform: none;
+                        color: @dv-c-idle;
+                    }
+                }
             }
 
             .remark {
@@ -271,6 +283,7 @@ export default {
         &:hover {
             .itemtip {
                 display: inline-block;
+                opacity: 1.0;
             }
         }
 

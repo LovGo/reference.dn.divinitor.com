@@ -339,7 +339,7 @@
 
             <div class="section" v-if="itemData.itemSet">
                 <div class="title">Item Set</div>
-                <item-set :setData="itemData.itemSet"></item-set>
+                <item-set :setData="itemData.itemSet" :jobs="itemData.canUse"></item-set>
             </div>
 
             <!-- {{ itemData.type }} -->
@@ -361,6 +361,14 @@
                     :itemType="itemData.type"
                 >
                 </item-charm>
+            </div>
+            <div class="section" v-if="itemType == 'RANDOM'">
+                <div class="title">Box Contents</div>
+                <item-random
+                    :randomId="itemData.type.itemDropTableId"
+                    :itemType="itemData.type"
+                >
+                </item-random>
             </div>
 
             <div class="section" v-if="itemData.enchantId">
@@ -415,6 +423,7 @@ import ItemCard from "@/components/items/ItemCard";
 import ItemEnhance from "@/components/items/ItemEnhance";
 import ItemTuner from "@/components/items/ItemTuner";
 import ItemCharm from "@/components/items/ItemCharm";
+import ItemRandom from "@/components/items/ItemRandom";
 import MobileEnhance from "@/components/items/MobileEnhance";
 import ItemPotential from "@/components/items/ItemPotential";
 import ItemAcquire from "@/components/items/ItemAcquire";
@@ -433,6 +442,7 @@ Vue.component('item-card', ItemCard);
 Vue.component('item-enhance', ItemEnhance);
 Vue.component('item-tuner', ItemTuner);
 Vue.component('item-charm', ItemCharm);
+Vue.component('item-random', ItemRandom);
 Vue.component('item-potential', ItemPotential);
 Vue.component('item-set', ItemSet);
 Vue.component('item-tunings', ItemTunings);

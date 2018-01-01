@@ -30,7 +30,7 @@
             <form class="options">
                 <div class="checkbox">
                     <input type="checkbox" v-model="useGoldenGoose" id="goldenGoose" />
-                    <label for="goldenGoose">Use Golden Goose 50% discount</label>
+                    <label for="goldenGoose">Use Golden Goose discount (50%)</label>
                 </div>
                 <div class="checkbox">
                     <input type="checkbox" v-model="useJelly" id="jelly" v-if="canUseJelly"/>

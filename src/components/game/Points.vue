@@ -3,7 +3,7 @@
     <div v-if="pointData">
         <div class="icon"  
             :style="`background:url(${url}) -${coords.x * 0.75 / 2}px -${coords.y * 0.75 / 2}px; background-size: 800% 800%;`"></div>
-        <span class="pts">{{ amount | thousands }} {{ pointData.name }}(s)</span>
+        <span class="pts">{{ amount | thousands }} {{ pointData.name }}</span>
         <div class="point-tooltip">
             <h2>
                 <div class="icon"  

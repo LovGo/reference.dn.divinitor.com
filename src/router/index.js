@@ -14,6 +14,10 @@ import GenGuild from '@/components/general/guild/GenGuild';
 import Items from '@/components/items/Items';
 import Item from '@/components/items/Item';
 import ItemSearch from '@/components/items/ItemSearch';
+import ItemHome from '@/components/items/ItemHome';
+import ItemCashShop from '@/components/items/ItemCashShop';
+import ItemNpcShops from '@/components/items/ItemNpcShops';
+import ItemCrafting from '@/components/items/ItemCrafting';
 
 import Text from '@/components/Text';
 import UiStrings from '@/components/uistrings/UiStrings';
@@ -98,10 +102,11 @@ export default new Router({
       children: [
         {
           path: '',
-          redirect: 'browse'
+          name: 'item-home',
+          component: ItemHome
         },
         {
-          path: 'browse',
+          path: 'search',
           name: 'item-search',
           component: ItemSearch
         },
@@ -109,6 +114,21 @@ export default new Router({
           path: ':itemId',
           name: 'item-view',
           component: Item
+        },
+        {
+          path: 'cash',
+          name: 'item-cash-shop',
+          component: ItemCashShop
+        },
+        {
+          path: 'npcshop',
+          name: 'item-npc-shop',
+          component: ItemNpcShops
+        },
+        {
+          path: 'crafting',
+          name: 'item-crafting',
+          component: ItemCrafting
         }
       ]
     },

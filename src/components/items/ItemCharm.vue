@@ -266,6 +266,10 @@ export default {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        max-height: 500px;
+        overflow-y: scroll;
+        border-top: 2px solid @dv-c-accent-1;
+        border-bottom: 2px solid @dv-c-accent-1;
 
         .result {
             &.no {
@@ -278,7 +282,7 @@ export default {
         }
 
         .entry {
-            flex: 1 1 400px;
+            flex: 1 1 380px;
             border: 1px solid @dv-c-foreground;
             border-top-color: transparent;
 
@@ -287,7 +291,7 @@ export default {
             }
 
             @media only screen and (min-width:@min-desktop-wide-width) {
-                flex: 0 1 480px;
+                flex: 0 1 470px;
                 border-left: none;
                 &:first-child,
                 &:nth-child(2) {

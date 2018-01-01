@@ -5,6 +5,16 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Blacksmith's Craftmanship",
+            "timestamp": "Dec 30 00:08",
+            "body": "Added crafting acquisition to items<br/>Adjusted some text<br/>Added Golden Goose support to shop acquisition<br/>Item stack tooltips now also list the number of items in the stack"
+        },
+        {
+            "title": "Shopping Spree",
+            "timestamp": "Dec 29 10:24",
+            "body": "Added shop acquisition to items<br/>Fixed missing contents list for random pouches<br/>Made certain item lists cap out in height"
+        },
+        {
             "title": "Taxes Sux",
             "timestamp": "Dec 20 23:42",
             "body": "Added the taxes/fees page under General<br/>Reorganized General<br/>Gave other checkboxes the pretty treatment"

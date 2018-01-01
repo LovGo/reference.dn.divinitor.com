@@ -1,6 +1,10 @@
 <template>
 <div class="item-search">
     <h1>Item Search</h1>
+    <div class="go-back"
+        v-on:click="goBack">
+        <i class="fa fa-angle-double-left"></i>Back
+    </div>
 
     Temporary search page (please no feedback here, this will all get torn out later). Search results are capped to 150 entries.
     <br/>
@@ -164,6 +168,9 @@ export default {
                     this.end = true;
                 }
             );
+        },
+        goBack() {
+            this.$router.back();
         },
         loadMore() {
             if (!this.end) {

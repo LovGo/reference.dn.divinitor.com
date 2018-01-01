@@ -1,3 +1,7 @@
+
+import PvPRank from '@/api/pvprank';
+import LadderRank from '@/api/ladderrank';
+
 export default {
     install: function(Vue, opt) {
         Vue.filter("thousands", this.thousands);
@@ -11,6 +15,8 @@ export default {
         Vue.filter("stat", this.stat);
         Vue.filter("statPercent", this.statPercent);
         Vue.filter("rate", this.rate);
+        Vue.filter("pvprank", this.pvpRank);
+        Vue.filter("ladderrank", this.ladderRank);
     },
 
     thousands: function(value) {
@@ -114,5 +120,13 @@ export default {
         }
 
         return Math.round(mult * 100000) / 100000;
+    },
+    pvpRank(v) {
+        let rank = Number(v);
+        return PvPRank.getRankName(rank);
+    },
+    ladderRank(v) {
+        let rank = Number(v);
+        return LadderRank.getRankName(rank);
     }
 };

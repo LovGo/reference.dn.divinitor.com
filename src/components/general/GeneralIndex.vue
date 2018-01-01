@@ -1,12 +1,34 @@
 <template>
 <div class="general-index">
     <h1>General</h1>
-    <ul>
-        <li><router-link to="/general/stat/">Stat Calc</router-link></li>
-        <li><router-link to="/general/taxes/">Taxes/Fees</router-link></li>
-        <li><router-link to="/general/damage/" class="disabled">Damage Calc</router-link></li>
-        <li><router-link to="/general/guild/" class="disabled">Guilds</router-link></li>
-    </ul>
+
+
+    <div class="options-grid">
+        <router-link to="/general/stat/" class="option">
+            <h2 class="heading">
+                Stat Calc
+                <div class="icon fa fa-hashtag"></div>
+            </h2>
+        </router-link>
+        <router-link to="/general/taxes/" class="option">
+            <h2 class="heading">
+                Taxes/Fees
+                <div class="icon fa fa-dollar"></div>
+            </h2>
+        </router-link>
+        <router-link to="/general/damage/" class="option">
+            <h2 class="heading">
+                Damage Calc
+                <div class="icon fa fa-arrow-up"></div>
+            </h2>
+        </router-link>
+        <router-link to="/general/guild/" class="option">
+            <h2 class="heading">
+                Guilds
+                <div class="icon fa fa-users"></div>
+            </h2>
+        </router-link>
+    </div>
 </div>
 </template>
 

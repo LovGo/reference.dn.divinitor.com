@@ -102,10 +102,11 @@ a {
 body {
     color: @dv-c-body;
     font-family: @dv-f-lato;
+    font-size: 16px;
 }
 
 p {
-    font-size: 14px;
+    // font-size: 14px;
     letter-spacing: -0.005em;
 }
 
@@ -409,6 +410,7 @@ button {
 }
 
 .tooltip .tooltext {
+    pointer-events: none;
     opacity: 0.0;
     background-color: @dv-c-background;
     color: transparent;
@@ -937,5 +939,56 @@ button {
 
     input:checked ~ label {
         color: @dv-c-green;
+    }
+}
+
+
+.options-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 20px auto;
+    text-align: center;
+
+    .option {
+        position: relative;
+        display: block;
+        flex: 1 1 auto;
+        width: 200px;
+        height: 200px;
+        
+        // @media only screen and (max-width: @min-desktop-wide-width) {
+        //     width: 300px;
+        //     height: 300px;
+        // }
+
+        text-align: center;
+        border: 1px solid @dv-c-accent-2;
+        background: fade(@dv-c-background, 40%);
+        cursor: pointer;
+        transition: color 0.125s ease-in, background-color 0.125s ease-in, border-color 0.125s ease-in;
+
+        .heading {
+            transition: color 0.125s ease-in;
+        }
+
+        .icon {
+            display: block;
+            margin: 20px 0;
+            font-size: 3em;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        &:hover {
+            border-color: @dv-c-foreground;
+            background: fade(@dv-c-foreground, 20%);
+            .heading {
+                color: lighten(@dv-c-foreground, 20%);
+            }
+        }
     }
 }

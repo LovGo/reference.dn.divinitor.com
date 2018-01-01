@@ -215,6 +215,7 @@ export default {
     }
 
     .loading {
+        position: relative;
         min-height: 70px;
         .loader-box {
             position: absolute;
@@ -224,6 +225,7 @@ export default {
             // bottom: 0;
             // background: rgba(0, 0, 0, 0.5);
             padding: 16px 0 0 16px;
+            min-height: 70px;
             
             .label {
                 display: inline-block;
