@@ -178,7 +178,7 @@
                     <small-error-box
                         errorTitle="No Results"
                         iconClass="fa-question-circle"
-                        errorContent="Item not acquirable from shops, crafting, tuning, or boxes">
+                        errorContent="Item not acquirable from NPC shops or crafting">
                     </small-error-box>
                 </div>
             </div>
