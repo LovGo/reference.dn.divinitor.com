@@ -75,7 +75,8 @@ export default {
         bottom: 100%;
         left: 0;
         // transform: translateX(-50%);
-        display: none;
+        display: block;
+        opacity: 0.0;
         text-align: left;
         min-width: 100px;
         background: @dv-c-background;
@@ -86,6 +87,7 @@ export default {
         box-shadow: 0 0 20px fade(black, 80%);
         max-width: 400px;
         min-width: 400px;
+        transition: opacity 0.125s ease-in;
 
         h2 {
             font-size: 18px;
@@ -97,6 +99,7 @@ export default {
     &:hover {
         .point-tooltip {
             display: block;
+            opacity: 1.0;
         }
     }
 }

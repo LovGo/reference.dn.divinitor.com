@@ -503,7 +503,7 @@ export default {
                     top: 0;
                     left: 0;
                     right: 0;
-                    padding: 4px;
+                    padding: 6px 8px 2px 8px;
                     border-bottom: 1px solid @dv-c-idle;
                     
                     font-size: 12px;
@@ -554,7 +554,7 @@ export default {
                     top: 0;
                     left: 0;
                     right: 0;
-                    padding: 4px;
+                    padding: 6px 8px 2px 8px;
                     border-bottom: 1px solid @dv-c-idle;
                     
                     font-size: 12px;

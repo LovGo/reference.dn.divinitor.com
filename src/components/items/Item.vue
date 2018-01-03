@@ -73,12 +73,12 @@
                     Link copied!
                     <transition name="fade">
                     <span class="ok" v-if="copyStatus == 'ok'" key="ok">
-                        <i class="fa fa-check"></i> Link copied!
+                        <i class="fa fa-check"></i> <span class="label">Link copied!</span>
                     </span>
                     <span class="err" v-else-if="copyStatus == 'err'" key="err">
-                        <i class="fa fa-exclamation-triangle"></i> Link copy failed
+                        <i class="fa fa-exclamation-triangle"></i> <span class="label">Link copy failed</span>
                     </span><span v-else key="o3o">
-                        <i class="fa fa-share-square-o"></i> Copy link
+                        <i class="fa fa-share-square-o"></i> <span class="label">Copy link</span>
                     </span>
                     </transition>
                     <input class="hidden" type="text" ref="copyLink" />
@@ -339,7 +339,7 @@
 
             <div class="section" v-if="itemData.itemSet">
                 <div class="title">Item Set</div>
-                <item-set :setData="itemData.itemSet" :jobs="itemData.canUse"></item-set>
+                <item-set :setData="itemData.itemSet" :itemId="itemData.id" :jobs="itemData.needClass"></item-set>
             </div>
 
             <!-- {{ itemData.type }} -->
@@ -821,6 +821,10 @@ export default {
                 left: 0;
                 top: 0;
                 color: fade(@dv-c-foreground, 50%);
+
+                .label, .fa {
+                    transition: color 0.125s ease-in;
+                }
 
                 &:hover {
                     color: @dv-c-foreground;

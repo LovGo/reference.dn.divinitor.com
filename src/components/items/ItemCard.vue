@@ -280,6 +280,18 @@ export default {
             }
         }
         
+        &:hover .title {
+            .remark {
+                .iid {
+                    color: @dv-c-body;
+                }
+
+                .level::before {
+                    color: @dv-c-body;
+                }
+            }
+        }
+        
         .title {
             flex: 1 1 auto;
             padding-left: 12px;
@@ -300,11 +312,6 @@ export default {
                 color: @dv-c-foreground;
             }
 
-            &:hover .remark {
-                .iid {
-                    color: @dv-c-body;
-                }
-            }
 
             .remark {
                 font-size: 12px;
@@ -326,6 +333,7 @@ export default {
                         content: "LV ";
                         font-size: 0.625em;
                         color: @dv-c-accent-1;
+                        transition: color ease-in 0.125s;
                     }
                 }
 

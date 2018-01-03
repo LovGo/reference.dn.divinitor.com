@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Minerva",
+            "timestamp": "Jan 03 00:31",
+            "body": "We have a name!<br/>Item sets have been optimized, now only shows items of the same class, and can now be filtered<br/>Tweaked some animations and styles to be prettier<br/>Added new index pages for General and Items"
+        },
+        {
             "title": "Blacksmith's Craftmanship",
             "timestamp": "Dec 30 00:08",
             "body": "Added crafting acquisition to items<br/>Adjusted some text<br/>Added Golden Goose support to shop acquisition<br/>Item stack tooltips now also list the number of items in the stack"

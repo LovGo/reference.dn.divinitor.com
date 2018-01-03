@@ -190,7 +190,7 @@ export default {
 
 .item-icon-tooltip {
     position: relative;
-    width: 54px;
+    width: 58px;
     height: 54px;
     // border: 1px solid white;
 
@@ -198,8 +198,9 @@ export default {
         position: relative;
         color: @dv-c-body;
         padding: 2px 4px 0 4px;
-        height: 100%;
-        width: 100%;
+        width: 50px;
+        height: 50px;
+        transition: background-color 0.125s ease-in;
 
         .icon{
             padding-top: 2px;
@@ -221,7 +222,7 @@ export default {
             left: 0;
             opacity: 0.0;
             // transform: translateX(-50%);
-            display: none;
+            display: inline-block;
             text-align: left;
             min-width: 100px;
             background: @dv-c-background;

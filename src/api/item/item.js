@@ -5,6 +5,8 @@ export default {
 
     //  Item data
     cache: {},
+    //  Set cache
+    setCache: {},
     //  Enhancement data
     enhCache: {},
     //  Tuner contents
@@ -63,6 +65,27 @@ export default {
         }).then(
         (res) => {
             this.acquireCache[cacheKey] = res.body;
+            okcb(res.body);
+        }, 
+        errcb);
+    },
+
+    getItemSet(itemId, jobs, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
+        let cacheKey = `${itemId}:${region}`;
+        if (this.setCache[cacheKey]) {
+            okcb(this.setCache[cacheKey]);
+            return;
+        }
+
+        Vue.http.get(`/api/server/${region}/items/${itemId}/set`,
+        {
+            params: {
+                'jobs': jobs.join(",")
+            }
+        }).then(
+        (res) => {
+            this.setCache[cacheKey] = res.body;
             okcb(res.body);
         }, 
         errcb);
@@ -418,5 +441,22 @@ export default {
         }
 
         return ret;
+    },
+
+    rarityCompare(a, b) {
+        let mapping = {
+            NORMAL: 0,
+            MAGIC: 1,
+            RARE: 2,
+            EPIC: 3,
+            UNIQUE: 4,
+            LEGENDARY: 5,
+            DIVINE: 6
+        };
+
+        let ai = mapping[a.rank];
+        let bi = mapping[b.rank];
+
+        return ai - bi;
     }
 };

@@ -1,8 +1,8 @@
 <template>
   <div class="nav">
     <h1>Navigation</h1>
-    <router-link to="/" class="home">Home</router-link>
     <ul>
+      <router-link to="/" tag="a" exact><li>Home</li></router-link>
       <router-link to="/general" tag="a"><li>General</li></router-link>
       <router-link to="/jobs" tag="a"><li class="disabled">Classes</li></router-link>
       <router-link to="/items" tag="a"><li :class="authed ? '' : 'disabled'">Items</li></router-link>
