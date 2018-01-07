@@ -43,7 +43,8 @@
                         <div class="item-entry" v-for="t in v.options" :key="t.id">
                             <item-card
                                 :itemId="t.id"
-                                :itemStub="t"></item-card>
+                                :itemStub="t"
+                                :potentialNum="t.potentialNum"></item-card>
                         </div>
                     </div>
                 </div>

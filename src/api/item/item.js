@@ -329,7 +329,7 @@ export default {
             case "HERO_POUCH":
                 return "class item pouch";
             case "RANDOM":
-                return "random item pouch";
+                return "random item drop pouch";
             case "TITLE":
                 return "title";
             

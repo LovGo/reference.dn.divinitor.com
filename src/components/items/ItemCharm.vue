@@ -23,6 +23,21 @@
     <transition name="fade" appear>
         <div v-if="!loading && !error">
 
+            <div class="head">
+                <div v-if="itemType.type == 'ITEM_DROP_POUCH'">
+                    This item gives one of the following items when opened:
+                </div>
+                <div v-else-if="itemType.type == 'MULTI_ITEM_DROP_POUCH'">
+                    This item gives the following items when opened:
+                </div>
+                <div v-else-if="itemType.type == 'ITEM_DROP_DUAL_POUCH'">
+                    This item gives 1-2 items when opened:
+                </div>
+                <div v-else-if="itemType.type == 'HERO_POUCH'">
+                    This item gives the corresponding item for your class:
+                </div>
+            </div>
+
             <form class="filter" v-if="charms.entries.length > 20">
                 <legend>Filter by</legend>
                 <div class="level-filter">
@@ -70,21 +85,6 @@
                     </span>
                 </div>
             </form>
-
-            <div class="head">
-                <div v-if="itemType.type == 'ITEM_DROP_POUCH'">
-                    This item gives one of the following items when opened:
-                </div>
-                <div v-else-if="itemType.type == 'MULTI_ITEM_DROP_POUCH'">
-                    This item gives the following items when opened:
-                </div>
-                <div v-else-if="itemType.type == 'ITEM_DROP_DUAL_POUCH'">
-                    This item gives 1-2 items when opened:
-                </div>
-                <div v-else-if="itemType.type == 'HERO_POUCH'">
-                    This item gives the corresponding item for your class:
-                </div>
-            </div>
 
             <transition-group name="fade-item" tag="div" class="item-list">
                 <div class="entry" 

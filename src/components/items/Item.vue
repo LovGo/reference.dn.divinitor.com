@@ -38,6 +38,7 @@
             RESULT
          -->
         <div v-if="!loading && itemData">
+
             <div class="header">
                 <div class="icon">
                     <item-icon 
@@ -158,7 +159,7 @@
                                 >
                             </stat-grid>
                             
-                            <div class="potential section" v-if="itemData.type.potentialId && itemData.potentials.length > 1">
+                            <div class="potential section" v-if="itemData.type.potentialId && itemData.potentials && itemData.potentials.length > 1">
                                 <div class="title">Variations</div>
                                 <item-potential
                                     :potentialData="itemData.potentials"
@@ -403,7 +404,7 @@
                     <div v-html="itemData.gainText" class="gain uistring"></div>
                 </div> -->
                 <item-acquire
-                    :itemId="itemData.id"
+                    :item="itemData"
                     >
                 </item-acquire>
 

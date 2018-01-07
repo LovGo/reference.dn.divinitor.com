@@ -23,6 +23,10 @@
     <transition name="fade" appear>
         <div v-if="!loading && !error">
 
+            <div class="head">
+                This item gives one of the following items when opened:
+            </div>
+
             <form class="filter" v-if="randoms.length > 20">
                 <legend>Filter by</legend>
                 <div class="level-filter">
@@ -70,10 +74,6 @@
                     </span>
                 </div>
             </form>
-
-            <div class="head">
-                This item gives one of the following items when opened:
-            </div>
 
             <transition-group name="fade-item" tag="div" class="item-list">
                 <div class="entry" 
@@ -175,7 +175,7 @@ export default {
             return ret;
         },
         sorted() {
-            let ret = this.randoms.slice();
+            let ret = this.randoms.slice().filter(a => a.item.name != "NO_SUCH_ITEM");
             ret.sort((a, b) => {
                 let rate = a.rate - b.rate;
                 if (a.rate == b.rate) {

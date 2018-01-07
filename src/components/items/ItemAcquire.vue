@@ -18,13 +18,13 @@
             <div class="acq-list">
                 <div class="subsection" v-if="acqData.shop && acqData.shop.length">
                     <h4>Shops</h4>
+                    <p>Can be purchased from the following NPC shops:</p>
                     <form class="options">
                         <div class="checkbox">
                             <input type="checkbox" v-model="useGoldenGoose" id="goldenGoose" />
                             <label for="goldenGoose">Use Golden Goose discount (30%)</label>
                         </div>
                     </form>
-                    <p>Purchase from the following NPC shops:</p>
                     <div class="shop-list">
                         <div class="shop-entry" v-for="v in acqData.shop" :key="v.shopId">
                             <div class="shop-name">
@@ -92,9 +92,12 @@
                                                 <point-tag pointId="16" :amount="f.value"></point-tag>
                                             </span>
 
-                                            <span v-else>
-                                                Unknown {{f.typeId}} {{f.type}}: {{f.value}}
+                                            <span class="gold" v-else>
+                                                {{f.type}} {{f.typeId}}: {{f.value}}
                                             </span>
+                                        </div>
+                                        <div class="exchange-rate">
+                                            <i class="fa fa-long-arrow-right"></i>x{{e.count}}
                                         </div>
                                     </div>
 
@@ -169,16 +172,77 @@
                     <p>Obtain as a result of using the following item tuners:</p>
                 </div>
 
-                <div class="subsection" v-if="acqData.box">
+                <div class="subsection" v-if="acqData.box && acqData.box.length">
                     <h4>Item Pouch</h4>
-                    <p>Can be obtained from the following item pouches:</p>
+                    <p>Can be obtained by opening:</p>
+
+                    <form class="filter" v-if="acqData.box.length > 20">
+                        <legend>Filter by</legend>
+                        <div class="level-filter">
+                            <label for="filter-level-min">Level </label>
+                            <input id="filter-level-min" type="number" min="0" max="100" v-model="boxFilter.minLevel" />
+                            <label> to </label>
+                            <input id="filter-level-max" type="number" :min="boxFilter.minLevel" max="100" v-model="boxFilter.maxLevel" />
+                        </div>
+                        
+                        <div class="name-class-filter">
+                            <input id="filter-name" type="text" v-model="boxFilter.nameSearch" placeholder="Name Filter"/>
+
+                            <!-- <label for="filter-class">Class</label>
+                            <input id="filter-class" type="text" v-model="filter.selectClass" /> -->
+                        </div>
+
+                        <div class="grade-filter">
+                            <span class="normal" v-if="hasBoxGrade.normal">
+                                <input id="filter-grade-normal" type="checkbox" v-model="boxFilter.grades.normal" />
+                                <label for="filter-grade-normal">Normal</label>
+                            </span>
+                            <span class="magic" v-if="hasBoxGrade.magic">
+                                <input id="filter-grade-magic" type="checkbox" v-model="boxFilter.grades.magic" />
+                                <label for="filter-grade-magic">Magic</label>
+                            </span>
+                            <span class="rare" v-if="hasBoxGrade.rare">
+                                <input id="filter-grade-rare" type="checkbox" v-model="boxFilter.grades.rare" />
+                                <label for="filter-grade-rare">Rare</label>
+                            </span>
+                            <span class="epic" v-if="hasBoxGrade.epic">
+                                <input id="filter-grade-epic" type="checkbox" v-model="boxFilter.grades.epic" />
+                                <label for="filter-grade-epic">Epic</label>
+                            </span>
+                            <span class="unique" v-if="hasBoxGrade.unique">
+                                <input id="filter-grade-unique" type="checkbox" v-model="boxFilter.grades.unique" />
+                                <label for="filter-grade-unique">Unique</label>
+                            </span>
+                            <span class="legendary" v-if="hasBoxGrade.legendary">
+                                <input id="filter-grade-legendary" type="checkbox" v-model="boxFilter.grades.legendary" />
+                                <label for="filter-grade-legendary">Legendary</label>
+                            </span>
+                            <span class="divine" v-if="hasBoxGrade.divine">
+                                <input id="filter-grade-divine" type="checkbox" v-model="boxFilter.grades.divine" />
+                                <label for="filter-grade-divine">Divine</label>
+                            </span>
+                        </div>
+                    </form>
+
+
+                    <div class="box-list">
+                        <div class="entry" 
+                            v-for="e in acqData.box" 
+                            :key="e.boxItemId"
+                            v-if="shouldBoxRender(e.boxItem)">
+                            <item-card 
+                                :itemId="e.boxItem.id"
+                                :itemStub="e.boxItem"
+                            ></item-card>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="no-results">
                     <small-error-box
                         errorTitle="No Results"
                         iconClass="fa-question-circle"
-                        errorContent="Item not acquirable from NPC shops or crafting">
+                        errorContent="Item not acquirable from NPC shops, crafting, or item pouches/boxes">
                     </small-error-box>
                 </div>
             </div>
@@ -193,13 +257,14 @@ import Points from "@/components/game/Points";
 import ItemIconTooltip from "@/components/items/ItemIconTooltip";
 
 import Item from "@/api/item/item";
+import ItemFilter from "@/api/item/itemfilter";
 import Shop from "@/api/shop";
 
 Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('point-tag', Points);
 
 export default {
-    props: ["itemId"],
+    props: ["item"],
     data: function() {
         return {
             loading: true,
@@ -207,6 +272,7 @@ export default {
             error: null,
             activeCraftGroup: 0,
             useGoldenGoose: true,
+            boxFilter: ItemFilter.defaultFilter(),
        }
     },
     created() {
@@ -220,9 +286,56 @@ export default {
         }
     },
     computed: {
+        itemId() {
+            return this.item.id;
+        },
         activeCraftSet() {
             return this.acqData.craft[this.activeCraftGroup].entries;
-        }
+        },
+        hasBoxGrade() {
+            let ret = {
+                normal: false,
+                magic: false,
+                rare: false,
+                epic: false,
+                unique: false,
+                legendary: false,
+                divine: false
+            };
+            
+            if (!this.acqData.box) {
+                return ret;
+            }
+
+            for (let k in this.acqData.box) {
+                let item = this.acqData.box[k].boxItem;
+                switch(item.rank) {
+                    case "NORMAL":
+                        ret.normal = true;
+                        break;
+                    case "MAGIC":
+                        ret.magic = true;
+                        break;
+                    case "RARE":
+                        ret.rare = true;
+                        break;
+                    case "EPIC":
+                        ret.epic = true;
+                        break;
+                    case "UNIQUE":
+                        ret.unique = true;
+                        break;
+                    case "LEGENDARY":
+                        ret.legendary = true;
+                        break;
+                    case "DIVINE":
+                        ret.divine = true;
+                        break;
+                }
+            }
+
+            return ret;
+        },
     },
     methods: {
         fetchData() {
@@ -305,10 +418,37 @@ export default {
                 return true;
             };
 
+            function craftEntryEquals(a, b) {
+                if (a.nameId != b.nameId) {
+                    return false;
+                }
+                if (a.descId != b.descId) {
+                    return false;
+                }
+                if (a.cost != b.cost) {
+                    return false;
+                }
+                if (a.materials.length != b.materials.length) {
+                    return false;
+                }
+                for (let k in a.materials) {
+                    let av = a.materials[k];
+                    let bv = b.materials[k];
+                    console.log(av.itemId, bv.itemId);
+                    if (av.itemId != bv.itemId) {
+                        return false;
+                    }
+                    if (av.count != bv.count) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
             if (data.craft && data.craft.length > 0) {
                 let dcraft = [];
                 let cset = data.craft.slice(0);
-                console.log(cset);
                 //  Coalesce items that differ only in job
                 for (let k in cset) {
                     let v = cset[k];
@@ -329,13 +469,50 @@ export default {
                     if (!v.dup) {
                         dcraft.push(v);
                     }
+
+                    //  Coalesce options too
+                    for (let k1 in v.entries) {
+                        let v1 = v.entries[k1];
+                        if (v1.dup) {
+                            continue;
+                        }
+
+                        for (let k2 = Number(k1) + 1; k2 < v.entries.length; ++k2) {
+                            let v2 = v.entries[k2];
+                            if (craftEntryEquals(v1, v2)) {
+                                v2.dup = true;
+                            }
+                        }
+                    }
+
+                    let edup = v.entries.slice(0);
+                    v.entries = [];
+                    for (let k1 in edup) {
+                        let v1 = edup[k1];
+                        if (v1.dup) {
+                            continue;
+                        }
+                        v.entries.push(v1);
+                    }
                 }
 
                 ret.craft = dcraft;
             }
 
             ret.tuner = data.tuner;
+            
+            data.box.sort((a, b) => {
+                let an = a.boxItem.name.name.toUpperCase();
+                let bn = b.boxItem.name.name.toUpperCase();
+
+                let r = an < bn ? -1 : an > bn;
+
+                return r;
+            });
+            
             ret.box = data.box;
+
+
             ret.quest = data.quest;
             ret.stageClear = data.stageClear;
 
@@ -344,7 +521,10 @@ export default {
 
         selectCraft(index) {
             this.activeCraftGroup = index;
-        }
+        },
+        shouldBoxRender(item) {
+            return ItemFilter.shouldRender(this.boxFilter, item);
+        },
     }
 }
 </script>
@@ -479,6 +659,13 @@ export default {
                                 text-transform: uppercase;
                                 padding: 8px 4px;
                             }
+
+                            .exchange-rate {
+                                padding: 8px 0;
+                                .fa {
+                                    padding: 0 10px 0 4px;
+                                }
+                            }
                         }
                     }
                 }
@@ -593,6 +780,56 @@ export default {
                     }
                 }
 
+            }
+        }
+
+        .box-list {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            max-height: 364px;
+            overflow-y: scroll;
+            border-top: 2px solid @dv-c-accent-1;
+            border-bottom: 2px solid @dv-c-accent-1;
+
+            .result {
+                &.no {
+                    display: none;
+                }
+
+                &:first-child.no {
+                    display: block;
+                }
+            }
+
+            .entry {
+                flex: 1 1 400px;
+                border: 1px solid @dv-c-foreground;
+                border-top-color: transparent;
+
+                &:first-child {
+                    border-top-color: @dv-c-foreground;
+                }
+
+                @media only screen and (min-width:@min-desktop-wide-width) {
+                    flex: 0 1 470px;
+                    border-right-color: transparent;
+                    &:first-child,
+                    &:nth-child(2) {
+                        border-top-color: @dv-c-foreground;
+                    }
+                    &:nth-child(2n) {
+                        border-right-color: @dv-c-foreground;
+                    }
+                    &:last-child {
+                        border-right-color: @dv-c-foreground;
+                    }
+                    &:first-child:last-child {
+                        border-right-color: @dv-c-foreground;
+                    }
+
+                }
             }
         }
 
