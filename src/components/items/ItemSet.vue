@@ -40,7 +40,7 @@
             </div>
             <div class="right-col col">
                 <div class="title">
-                    Items in Set
+                    {{setContents.itemsInSet.length | thousands}} Items in Set
                 </div>
 
                 <form class="filter" v-if="setContents.itemsInSet.length > 20">
