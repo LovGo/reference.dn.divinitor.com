@@ -332,6 +332,8 @@ export default {
                 return "random item drop pouch";
             case "TITLE":
                 return "title";
+            case "DUAL_SKILL_TREE_EXPANSION":
+                return "dual skill scroll"
             
         }
 
