@@ -643,7 +643,13 @@ export default {
 
     .acq-list {
         .subsection {
-
+            h4 {
+                font-family: @dv-f-geomanist;
+                font-size: 14px;
+                color: @dv-c-accent-2;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+            }
         }
 
         .shop-list {
