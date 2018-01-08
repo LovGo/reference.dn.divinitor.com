@@ -238,6 +238,72 @@
                     </div>
                 </div>
 
+                <div class="subsection" v-if="acqData.cash && acqData.cash.length">
+                    <h4>Cash Shop</h4>
+                    <p>Can be obtained by purchasing from the cash shop:</p>
+
+                    <form class="options">
+                        <div class="checkbox">
+                            <input type="checkbox" v-model="showCashUnavailable" id="cash-unavailable" />
+                            <label for="cash-unavailable">Show unavailable packages</label>
+                        </div>
+                    </form>
+
+                    <div class="cash-list">
+                        <div class="cash-entry"
+                            v-for="e in acqData.cash"
+                            :key="e.serialNumber"
+                            v-if="(!showCashUnavailable || e.available) && e.price">
+
+                            <div class="count" v-if="!e.shopPackage">
+                                <span v-if="e.count > 1">x{{e.count}}</span>
+                            </div>
+                            <div v-else>
+                                <div class="name">
+                                    {{e.name}} <span v-if="e.count > 1">x{{e.count}}</span>
+                                </div>
+                                <div class="desc" v-if="e.desc">
+                                    {{e.desc}}
+                                </div>
+                            </div>
+
+                            <div class="price" v-if="e.price">
+                                <i class="fa fa-shopping-cart"></i> <strong>{{ e.price | thousands}}</strong> EC
+                            </div>
+
+                            <div class="params">
+                                <div class="param" v-if="e.period > 0">
+                                    <i class="fa fa-clock-o"></i> <strong>{{ e.period }}</strong> days
+                                </div>
+                                <div class="param" v-else>
+                                    <i class="fa fa-clock-o"></i> <strong>Permanent</strong>
+                                </div>
+                                <div class="param" v-if="e.minCreditLevel > 0">
+                                    <i class="fa fa-credit-card"></i> Lv <strong>{{e.minCreditLevel}}</strong>+ to purchase with credit
+                                </div>
+                                <div v-else-if="e.minCreditLevel == 0">
+                                    <i class="fa fa-ban negative"></i> Cannot use credit
+                                </div>
+                                <div v-else>
+                                    <i class="fa fa-credit-card"></i> Purchasable with credit
+                                </div>
+                                <div class="param" v-if="e.giftable">
+                                     <i class="fa fa-gift"></i> Giftable
+                                </div>
+                                <div class="param" v-else>
+                                     <i class="fa fa-ban negative"></i> Not giftable
+                                </div>
+                            </div>
+
+                            <div class="unavailable" v-if="e.available">
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <!-- {{acqData.cash}} -->
+                </div>
+
                 <div class="no-results">
                     <small-error-box
                         errorTitle="No Results"
@@ -272,6 +338,7 @@ export default {
             error: null,
             activeCraftGroup: 0,
             useGoldenGoose: true,
+            showCashUnavailable: false,
             boxFilter: ItemFilter.defaultFilter(),
        }
     },
@@ -512,6 +579,7 @@ export default {
             
             ret.box = data.box;
 
+            ret.cash = data.cash;
 
             ret.quest = data.quest;
             ret.stageClear = data.stageClear;
@@ -829,6 +897,90 @@ export default {
                         border-right-color: @dv-c-foreground;
                     }
 
+                }
+            }
+        }
+
+        .cash-list {
+            margin: 20px 0;
+            .cash-entry {
+                position: relative;
+                border: 1px solid @dv-c-foreground;
+                border-top: none;
+                padding: 10px 14px;
+                padding-right: 40px;
+
+                &:first-child {
+                    border-top: 1px solid @dv-c-foreground;
+                }
+
+                .unavailable{
+                    height: 22px;
+                    &::after {
+                        content: "UNAVAILABLE";
+                        position: absolute;
+                        background-color: fade(@dv-c-red, 20%);
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        text-align: center;
+                        font-family: @dv-f-geomanist;
+                        color: @dv-c-body;
+                        letter-spacing: 0.2em;
+                        padding: 4px 0;
+                        // border-bottom: 2px solid @dv-c-red;
+                    }
+                }
+
+                .name {
+                    font-family: @dv-f-geomanist;
+                    font-size: 18px;
+                    color: @dv-c-foreground;
+                    letter-spacing: 0.2em;
+                    text-transform: uppercase;
+                }
+
+                .desc {
+                    margin: 8px 0;
+                }
+
+                .price {
+                    font-size: 24px;
+                    color: @dv-c-foreground;
+                    strong {
+                        color: @dv-c-foreground;
+                    }
+                    .fa {
+                        margin-right: 8px;
+                    }
+                }
+
+                .count {
+                    position: absolute;
+                    top: 50%;
+                    right: 10px;
+                    transform: translateY(-50%);
+                    font-size: 18px;
+                    color: @dv-c-accent-2;
+                }
+
+                .params {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    margin: 10px 0;
+
+                    .param {
+                        margin: 0 8px;
+
+                        &:first-child {
+                            margin-left: 0;
+                        }
+
+                        .fa.negative {
+                            color: @dv-c-red;
+                        }
+                    }
                 }
             }
         }
