@@ -295,7 +295,7 @@
                                 </div>
                             </div>
 
-                            <div class="unavailable" v-if="e.available">
+                            <div class="unavailable" v-if="!e.available">
                             </div>
                         </div>
                         
