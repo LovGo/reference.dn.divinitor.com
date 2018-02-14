@@ -65,6 +65,15 @@
                                             <span class="point" v-else-if="f.type == 'LADDER_POINT'">
                                                 <point-tag pointId="1" :amount="f.value"></point-tag>
                                             </span>
+                                            <span class="point" v-else-if="f.type == 'MENTOR_POINT'">
+                                                <point-tag pointId="12" :amount="f.value"></point-tag>
+                                            </span>
+                                            <span class="point" v-else-if="f.type == 'COMMUNITY_POINT'">
+                                                <point-tag pointId="31" :amount="f.value"></point-tag>
+                                            </span>
+                                            <span class="point" v-else-if="f.type == 'CRYSTAL_POINT'">
+                                                <point-tag pointId="30" :amount="f.value"></point-tag>
+                                            </span>
                                             <span class="point" v-else-if="f.type == 'FRIENDSHIP'">
                                                 <span v-if="f.item == 0">
                                                     <point-tag pointId="2" :amount="f.value"></point-tag>

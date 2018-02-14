@@ -19,6 +19,11 @@ import ItemCashShop from '@/components/items/ItemCashShop';
 import ItemNpcShops from '@/components/items/ItemNpcShops';
 import ItemCrafting from '@/components/items/ItemCrafting';
 
+import ItemToolkit from '@/components/items/ItemToolkit';
+import ItemToolkitIndex from '@/components/items/ItemToolkitIndex';
+import ItemDrop from '@/components/items/ItemDrop';
+import ItemDropGroup from '@/components/items/ItemDropGroup';
+
 import Text from '@/components/Text';
 import UiStrings from '@/components/uistrings/UiStrings';
 import UiStringBrowse from '@/components/uistrings/UiStringBrowse';
@@ -129,6 +134,27 @@ export default new Router({
           path: 'crafting',
           name: 'item-crafting',
           component: ItemCrafting
+        },
+        {
+          path: 'toolkit',
+          component: ItemToolkit,
+          children: [
+            {
+              path: 'index',
+              name: 'item-toolkit',
+              component: ItemToolkitIndex
+            },
+            {
+              path: 'dropgroup/:id?',
+              name: 'item-drop-group',
+              component: ItemDropGroup
+            },
+            {
+              path: 'drop/:id?',
+              name: 'item-drop',
+              component: ItemDrop
+            }
+          ]
         }
       ]
     },
@@ -153,6 +179,7 @@ export default new Router({
             },
             {
               path: 'midlup',
+              name: 'mid-lup',
               component: UiStringMidLup
             },
             {

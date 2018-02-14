@@ -21,6 +21,9 @@
                             <div class="container">
                                 <h1>MID {{ activeResultId }}</h1>
                                 <uistring-midresult :result="activeResult"></uistring-midresult>
+                                <router-link class="permalink" :to="{name: 'mid-lup', query: {q: activeResultId}}">
+                                    <i class="fa fa-link"></i> Permalink
+                                </router-link>
                                 <div class="buttonbox">
                                     <button v-on:click="closeActive">Close</button>
                                 </div>
@@ -278,6 +281,22 @@ export default {
                     margin-top: 4em;
                     min-width: 100px;
                     width: 20%;
+                }
+
+                .permalink {
+                    position: absolute;
+                    padding-top: 2px;
+                    right: 0;
+                    font-size: 12px;
+                    color: @dv-c-accent-1;
+                    letter-spacing: 0.2em;
+                    text-transform: uppercase;
+                    transition: color ease-in 0.125s;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: @dv-c-foreground;
+                    }
                 }
             }
 

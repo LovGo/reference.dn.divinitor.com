@@ -308,6 +308,30 @@ const ShopNames = {
         ids: [
             11000,
         ]
+    },
+    community: {
+        nameId: 1000121512,
+        ids: [
+            89011,
+        ]
+    },
+    mentor: {
+        nameId: 120342,
+        ids: [
+            89000,
+        ]
+    },
+    crystal: {
+        nameId: 1000120308,
+        ids: [
+            96001,
+        ]
+    },
+    banquet: {
+        override: 1000121906,
+        ids: [
+            89021,
+        ]
     }
 };
 

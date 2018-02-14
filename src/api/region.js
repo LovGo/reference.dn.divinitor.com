@@ -3,8 +3,8 @@ const Regions = {
         id: "local",
         name: "North America",
         localizedName: "North America",
-        version: 660,
-        patched: "2017-12-14",
+        version: 674,
+        patched: "2018-02-08",
         language: "English (US)",
         levelCap: 95
     },

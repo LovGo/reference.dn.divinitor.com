@@ -10,38 +10,67 @@
     <br/>
     Styles on this page are not refined and there may be display issues (like smushed text)
     <br/>
-    <br/>
-    <form class="filter" v-on:submit.prevent="search">
-        <legend>Filter</legend>
-        <label for="filter-name">Item Name</label>
-        <input id="filter-name" type="text" v-model="filter.nameSearch" />
-        <br/>
-        <label for="filter-level-min">Level </label>
-        <input id="filter-level-min" type="number" min="0" max="100" v-model="filter.minLevel" />
-        <label> to </label>
-        <input id="filter-level-max" type="number" :min="filter.minLevel" max="100" v-model="filter.maxLevel" />
+
+    <div class="warn toast">
+    THIS PAGE IS A WORK IN PROGRESS
+    </div>
+
+    <form class="search-form" v-on:submit.prevent="search">
+        <div class="filter">
+            <legend>Search</legend>
+
+            <div class="level-filter">
+                <label for="filter-level-min">Level </label>
+                <input id="filter-level-min" type="number" min="0" max="100" v-model="filter.minLevel" />
+                <label> to </label>
+                <input id="filter-level-max" type="number" :min="filter.minLevel" max="100" v-model="filter.maxLevel" />
+            </div>
+
+            <div class="name-class-filter">
+                <input id="filter-name" type="text" v-model="filter.nameSearch" placeholder="Item name"/>
+
+                <!-- <label for="filter-class">Class</label>
+                <input id="filter-class" type="text" v-model="filter.selectClass" /> -->
+            </div>
+            
+            <div class="grade-filter">
+                <span class="normal">
+                    <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.normal" />
+                    <label for="filter-grade-normal">Normal</label>
+                </span>
+                <span class="magic">
+                    <input id="filter-grade-magic" type="checkbox" v-model="filter.grades.magic" />
+                    <label for="filter-grade-magic">Magic</label>
+                </span>
+                <span class="rare">
+                    <input id="filter-grade-rare" type="checkbox" v-model="filter.grades.rare" />
+                    <label for="filter-grade-rare">Rare</label>
+                </span>
+                <span class="epic">
+                    <input id="filter-grade-epic" type="checkbox" v-model="filter.grades.epic" />
+                    <label for="filter-grade-epic">Epic</label>
+                </span>
+                <span class="unique">
+                    <input id="filter-grade-unique" type="checkbox" v-model="filter.grades.unique" />
+                    <label for="filter-grade-unique">Unique</label>
+                </span>
+                <span class="legendary">
+                    <input id="filter-grade-legendary" type="checkbox" v-model="filter.grades.legendary" />
+                    <label for="filter-grade-legendary">Legendary</label>
+                </span>
+                <span class="divine">
+                    <input id="filter-grade-divine" type="checkbox" v-model="filter.grades.divine" />
+                    <label for="filter-grade-divine">Divine</label>
+                </span>
+            </div>
+        </div>
+
+
+        <div class="button-row">
+            <button class="submit" v-on:click.prevent="search">Search</button>
+            <button class="submit" v-on:click.prevent="resetFilter">Reset</button>
+        </div>
         
-        <!-- <label for="filter-class">Class</label>
-        <input id="filter-class" type="text" v-model="filter.selectClass" /> -->
-        <br/>
-        <!-- <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.normal" />
-        <label for="filter-grade-normal">Normal</label>
-        <input id="filter-grade-magic" type="checkbox" v-model="filter.grades.magic" />
-        <label for="filter-grade-magic">Magic</label>
-        <input id="filter-grade-rare" type="checkbox" v-model="filter.grades.rare" />
-        <label for="filter-grade-rare">Rare</label>
-        <input id="filter-grade-epic" type="checkbox" v-model="filter.grades.epic" />
-        <label for="filter-grade-epic">Epic</label>
-        <input id="filter-grade-unique" type="checkbox" v-model="filter.grades.unique" />
-        <label for="filter-grade-unique">Unique</label>
-        <input id="filter-grade-legendary" type="checkbox" v-model="filter.grades.legendary" />
-        <label for="filter-grade-legendary">Legendary</label>
-        <input id="filter-grade-divine" type="checkbox" v-model="filter.grades.divine" />
-        <label for="filter-grade-divine">Divine</label> -->
-
-        <br/>
-
-        <button class="submit" v-on:click.prevent="search">Search</button>
     </form>
 
 
@@ -117,19 +146,20 @@ export default {
         };
     },
     created() {
+        this.reset();
         this.onLoad();
         this.fetchData();
     },
     watch: {
-        ["filter.nameSearch"](to, from) {
-            this.updateQuery();
-        },
-        ["filter.minLevel"](to, from) {
-            this.updateQuery();
-        },
-        ["filter.maxLevel"](to, from) {
-            this.updateQuery();
-        }
+        // ["filter.nameSearch"](to, from) {
+        //     this.updateQuery();
+        // },
+        // ["filter.minLevel"](to, from) {
+        //     this.updateQuery();
+        // },
+        // ["filter.maxLevel"](to, from) {
+        //     this.updateQuery();
+        // }
     },
     computed: {
 
@@ -143,6 +173,17 @@ export default {
             if (this.$route.query.lmax) {
                 this.filter.maxLevel = this.$route.query.lmax;
             }
+            let g = this.$route.query.g;
+            if (g) {
+                this.filter.grades.normal = g.indexOf("n") == -1;
+                this.filter.grades.magic = g.indexOf("m") == -1;
+                this.filter.grades.rare = g.indexOf("r") == -1;
+                this.filter.grades.epic = g.indexOf("e") == -1;
+                this.filter.grades.unique = g.indexOf("u") == -1;
+                this.filter.grades.legendary = g.indexOf("l") == -1;
+                this.filter.grades.divine = g.indexOf("d") == -1;
+            }
+
         },
         fetchData() {
             clearTimeout(this.lastChangeTimer);
@@ -178,10 +219,21 @@ export default {
                 this.fetchData();
             }
         },
+        reset() {
+            this.filter = ItemFilter.defaultFilter();
+            this.filter.ext = {
+
+            };
+        },
+        resetFilter() {
+            this.reset();
+            this.updateQuery();
+        },
         search() {
             this.page = 0;
             this.results = [];
             this.end = false;
+            this.updateQuery();
             this.fetchData();
         },
         updateQuery() {
@@ -194,6 +246,15 @@ export default {
             }
             if (this.filter.maxLevel != 100) {
                 query.lmax = this.filter.maxLevel;
+            }
+            let g = "";
+            for (let grade in this.filter.grades) {
+                if (!this.filter.grades[grade]) {
+                    g += grade.substr(0, 1);
+                }
+            }
+            if (g) {
+                query.g = g;
             }
 
             this.$router.replace({ 
@@ -210,6 +271,13 @@ export default {
 
 
 .item-search {
+
+    .search-form {
+        .button-row {
+            margin-top: 10px;
+        }
+    }
+
     .result-wrapper {
         margin-top: 20px;
         position: relative;

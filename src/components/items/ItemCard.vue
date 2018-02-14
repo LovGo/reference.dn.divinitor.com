@@ -270,13 +270,14 @@ export default {
         color: @dv-c-body;
 
         .icon{ 
-            flex: 0 1 50px;
+            flex: 0 0 50px;
+            width: 50px;
             vertical-align: middle;
 
             .centering {
                 position: absolute;
-                top: 50%;
-                transform: translate(0px, -50%);
+                top: 12px;
+                // transform: translate(0px, -50%);
             }
         }
         
@@ -295,8 +296,8 @@ export default {
         .title {
             flex: 1 1 auto;
             padding-left: 12px;
-            padding-top: 8px;
-            padding-bottom: 8px;
+            padding-top: 0px;
+            padding-bottom: 20px;
 
             &:last-child {
                 padding-right: 40px;

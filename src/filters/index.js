@@ -52,8 +52,22 @@ export default {
             return gold.toLocaleString() + "g";
         }
 
+        if (amt <= 100) {
+            return `${amt.toLocaleString(undefined, {
+                minimumFractionDigits: (Math.floor(amt * 100) / 100 == Math.floor(amt)) ? 0 : 1,
+            })}c`;
+
+        }
+
+        if (amt < 10000) {
+            amt = amt / 100;
+            return `${amt.toLocaleString(undefined, {
+                minimumFractionDigits: (Math.floor(amt * 100) / 100 == Math.floor(amt)) ? 0 : 1
+            })}s`;
+        }
+
         return `${gold.toLocaleString(undefined, {
-            minimumFractionDigits: 1,
+            minimumFractionDigits: (Math.floor(amt * 100) / 100 == Math.floor(amt)) ? 0 : 1,
         })}g`;
     },
     dec2hex: function(x) {

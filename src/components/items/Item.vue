@@ -135,18 +135,36 @@
                             <div class="icon"><i class="fa fa-minus-circle"></i></div>
                             Cannot be destroyed
                         </div>
-                        <div class="attrib" v-if="itemData.npcSellAmount">
+                        <div class="attrib tooltip" v-if="itemData.npcSellAmount">
                             <div class="icon">
                                 <i class="fa fa-dollar"></i>
                                 <!-- More dollars for more gold -->
                                 <i class="fa fa-dollar" v-if="itemData.npcSellAmount >= 10000000"></i>
                                 <i class="fa fa-dollar" v-if="itemData.npcSellAmount >= 100000000"></i>
                             </div>
-                            NPC for {{ itemData.npcSellAmount | gold }}
+                            <!-- NPC for {{ itemData.npcSellAmount | gold }} -->
+                            NPC for {{ itemData.npcSellAmount | goldG }}
+                            <div class="tooltext">
+                                <div class="content">Sell to an NPC for <strong>{{ itemData.npcSellAmount | gold }}</strong><br/>Golden Goose (+15%): <strong>{{ Math.round(itemData.npcSellAmount * 1.15, 1) | gold }}</strong></div>
+                            </div>
                         </div>
-                        <div class="attrib" v-if="itemData.gearScore">
+                        <div class="attrib yes tooltip" v-if="itemData.gearScore">
+                            <div class="icon">
+                                <i class="fa fa-diamond"></i>
+                                <i class="fa fa-diamond" v-if="itemData.gearScore >= 300"></i>
+                                <i class="fa fa-diamond" v-if="itemData.gearScore >= 600"></i>
+                            </div>
+                            <strong>+{{ itemData.gearScore | thousands }}</strong> GS
+                            <div class="tooltext">
+                                <div class="content">Gear Score (GS) is a rough rating of an item's strength</div>
+                            </div>
+                        </div>
+                        <div class="attrib tooltip" v-if="itemData.equipPoints">
                             <div class="icon"><i class="fa fa-balance-scale"></i></div>
-                            <strong>{{ itemData.gearScore | thousands }}</strong> Gear points
+                            <strong>{{ itemData.equipPoints | thousands }}</strong> EP
+                            <div class="tooltext">
+                                <div class="content">Equipment Points (EP) is an item's weight.<br/>Max <strong>50 EP</strong> of equipment can be worn.</div>
+                            </div>
                         </div>
                     </div>
                     <!-- {{ itemData.type.type }} -->
@@ -394,7 +412,8 @@
                 
                 <div class="side-remark">
                     <i class="fa fa-exclamation-triangle"></i> 
-                    Extraction specifics (amount, rate) are not available in client data and cannot be displayed here</div>
+                    Sorry! We can't show extraction rates and amounts because they aren't in the client.
+                </div>
             </div>
 
             <div class="section">
@@ -798,6 +817,19 @@ export default {
                     }
                     &:nth-child(3) {
                         color: white;
+                    }
+                }
+
+                &.fa-diamond {
+                    color: lighten(@dv-c-green, -10%);
+
+                    &:nth-child(2) {
+                        color: @dv-c-green;
+                        margin-left: -0.75em;
+                    }
+                    &:nth-child(3) {
+                        color: lighten(@dv-c-green, 20%);
+                        margin-left: -0.75em;
                     }
                 }
             }

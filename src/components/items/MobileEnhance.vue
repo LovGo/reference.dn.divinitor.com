@@ -1,6 +1,13 @@
 <template>
 <div class="mobile-enchant">
-    <transition name="fade">
+    <div class="warn toast">
+        <div class="heading">Confounding Hammers</div>
+        New Enhancement Hammer system data is not yet well understood and will not be displayed.<br/>
+        Standard hammers appear to enhance at a rate of <strong>25%</strong> and work on 
+        <strong>Lv93+</strong> equipment.<br/>
+        Sorry for the inconvenience.
+    </div>
+    <!-- <transition name="fade">
         <div v-if="loading" class="loading">
             <div class="loader-box">
                 <div class="loader"></div>
@@ -38,7 +45,7 @@
                 </tr>
             </table>
         </div>
-    </transition>
+    </transition> -->
 </div>
 </template>
 
@@ -93,19 +100,19 @@ export default {
     },
     methods: {
         fetchData() {
-            this.loading = true;
-            this.enchantData = null;
-            this.error = null;
-            Item.getMobileEnchantInfo(this.mobileEnchantId, this.$store.state.regionCode,
-                (res) => {
-                    this.error = null;
-                    this.enchantData = res;
-                    this.loading = false;
-                },
-                (err) => {
-                    this.loading = false;
-                    this.error = err;
-                });
+            // this.loading = true;
+            // this.enchantData = null;
+            // this.error = null;
+            // Item.getMobileEnchantInfo(this.mobileEnchantId, this.$store.state.regionCode,
+            //     (res) => {
+            //         this.error = null;
+            //         this.enchantData = res;
+            //         this.loading = false;
+            //     },
+            //     (err) => {
+            //         this.loading = false;
+            //         this.error = err;
+            //     });
         },
         getRate(level, rank) {
             for (let k in this.enchantData) {

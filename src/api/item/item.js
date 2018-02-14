@@ -362,8 +362,21 @@ export default {
         errcb);
     },
     getRandom(randomId, region, okcb, errcb) {
+        this.getItemDrop(randomId, region, okcb, errcb);
+    },
+    getItemDrop(dropId, region, okcb, errcb) {
         if (!region) region = Store.state.regionCode;
-        Vue.http.get(`/api/server/${region}/items/drop/${randomId}`,
+        Vue.http.get(`/api/server/${region}/items/drop/${dropId}`,
+        {
+        }).then(
+        (res) => {
+            okcb(res.body);
+        }, 
+        errcb);
+    },
+    getItemDropGroup(dropGroupId, region, okcb, errcb) {
+        if (!region) region = Store.state.regionCode;
+        Vue.http.get(`/api/server/${region}/items/dropgroup/${dropGroupId}`,
         {
         }).then(
         (res) => {
@@ -373,20 +386,35 @@ export default {
     },
 
     getBulk({ page, size, query }, { region }, okcb, errcb) {
+
+        function anyMatch(obj, predicate) {
+            for (let k in obj) {
+                let v = obj[k];
+                if (predicate(v)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         if (!region) region = Store.state.regionCode;
 
         let hasQuery = false;
+        let hasGrade = false;
         if (query) {
+            hasGrade = anyMatch(query.grades, (v) => !v);
             hasQuery = hasQuery || query.nameSearch;
             hasQuery = hasQuery || query.minLevel > 0;
             hasQuery = hasQuery || query.maxLevel != 100;
+            hasQuery = hasQuery || hasGrade;
         }
 
         if (hasQuery) {
 
             let params = {
                 p: page,
-                sz: size,
+                sz: size
             };
 
             if (query.nameSearch) {
@@ -397,6 +425,16 @@ export default {
             }
             if (query.maxLevel != 100) {
                 params.lmax = query.maxLevel;
+            }
+            if (hasGrade) {
+                let g = "";
+                for (let k in query.grades) {
+                    if (!query.grades[k]) {
+                        g += k.substr(0, 1);
+                    }
+                }
+
+                params.g = g;
             }
 
             Vue.http.get(`/api/server/${region}/items/search`,

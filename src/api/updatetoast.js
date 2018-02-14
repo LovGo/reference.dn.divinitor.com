@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Shiny Chrome",
+            "timestamp": "Feb 14 15:08",
+            "body": "Fix issue with Chrome rendering things as zero-width<br/>Updated NPC sell price prop with new format and Golden Goose tooltip<br/>Identified more shops<br/>Disabled Enhancement Hammer information<br/>Added a UIString Permalink<br/>Started improving Item Search<br/>Added Item Toolkit (for dataminers)"
+        },
+        {
             "title": "Minerva",
             "timestamp": "Jan 03 00:31",
             "body": "We have a name!<br/>Item sets have been optimized, now only shows items of the same class, and can now be filtered<br/>Tweaked some animations and styles to be prettier<br/>Added new index pages for General and Items"
