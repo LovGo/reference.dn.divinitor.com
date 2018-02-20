@@ -68,7 +68,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "less/core.less";
+@import "less/core2.less";
 
 html {
     background-image: url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged.png");

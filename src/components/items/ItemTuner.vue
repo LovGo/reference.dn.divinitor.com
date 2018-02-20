@@ -3,10 +3,8 @@
     <div class="tuner-id">#{{ tunerId }}</div>
     <transition name="fade">
         <div v-if="loading" class="loading">
-            <div class="loader-box">
-                <div class="loader"></div>
-                <div class="label">Loading</div>
-            </div>
+              <load-indicator
+                loadText="Tunable Items"></load-indicator>
         </div>
     </transition>
     <transition name="fade">
@@ -178,6 +176,9 @@ import ItemFilter from "@/api/item/itemfilter";
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('item-card', ItemCard);
+
+import Loader from "@/components/util/Loader";
+Vue.component("load-indicator", Loader);
 
 export default {
     props: ["tunerId", "parentItemId"],

@@ -37,6 +37,9 @@ Vue.component('stat-equal-line-chart', StatEqualLineChart);
 Vue.component('big-error-box', BigErrorBox);
 Vue.component('small-error-box', SmallErrorBox);
 
+import Loader from "@/components/util/Loader";
+Vue.component("load-indicator", Loader);
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -3,10 +3,8 @@
     <div class="charm-id">#{{ charmId }}</div>
     <transition name="fade">
         <div v-if="loading" class="loading">
-            <div class="loader-box">
-                <div class="loader"></div>
-                <div class="label">Loading</div>
-            </div>
+            <load-indicator
+            loadText="Box contents"></load-indicator>
         </div>
     </transition>
     <transition name="fade">
@@ -122,10 +120,12 @@ import ItemStat from "@/api/item/itemstat";
 
 import Item from "@/api/item/item";
 import ItemFilter from "@/api/item/itemfilter";
+import Loader from "@/components/util/Loader";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('item-card', ItemCard);
+Vue.component("load-indicator", Loader);
 
 export default {
     props: ["charmId", "itemType"],

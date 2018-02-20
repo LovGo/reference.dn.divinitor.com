@@ -5,10 +5,8 @@
             <input type="text" placeholder="Enter Drop Group ID" v-model="dropGroupId" id="dropgroupid" />
         </div>
         <div v-if="loading" class="loading">
-            <div class="loader-box">
-                <div class="loader"></div>
-                <div class="label">Loading</div>
-            </div>
+            <load-indicator
+            loadText="Item Drop Group"></load-indicator>
         </div>
         <div v-if="groups">
             <p>Group {{ dropGroupId }}</p>

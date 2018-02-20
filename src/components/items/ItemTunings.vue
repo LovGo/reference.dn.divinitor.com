@@ -2,10 +2,8 @@
 <div class="tunings">
     <transition name="fade">
         <div v-if="loading" class="loading">
-            <div class="loader-box">
-                <div class="loader"></div>
-                <div class="label">Finding tunings</div>
-            </div>
+            <load-indicator
+            loadText="Finding Item Tunings"></load-indicator>
         </div>
     </transition>
     <transition name="fade">
@@ -61,6 +59,9 @@ import ItemCard from "@/components/items/ItemCard";
 import Item from "@/api/item/item";
 
 Vue.component('item-card', ItemCard);
+
+import Loader from "@/components/util/Loader";
+Vue.component("load-indicator", Loader);
 
 export default {
     props: ["itemId", "parentItem"],

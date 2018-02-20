@@ -6,10 +6,8 @@
     <button v-on:click="reset">Reset</button> -->
     <transition name="fade">
         <div v-if="loading" class="loading">
-            <div class="loader-box">
-                <div class="loader"></div>
-                <div class="label">Loading</div>
-            </div>
+            <load-indicator
+            loadText="Enhancing Info"></load-indicator>
         </div>
     </transition>
     <transition name="fade">

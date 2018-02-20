@@ -5,10 +5,8 @@
             <input type="text" placeholder="Enter Drop ID" v-model="dropId" id="dropid" />
         </div>
         <div v-if="loading" class="loading">
-            <div class="loader-box">
-                <div class="loader"></div>
-                <div class="label">Loading</div>
-            </div>
+            <load-indicator
+            loadText="Item Drop"></load-indicator>
         </div>
         <div v-if="drops">
             <div class="item-list">

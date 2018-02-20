@@ -7,13 +7,8 @@
         <div class="top">&nbsp; <!-- Prevent margin collapse --></div>
         <transition name="fade">
             <div v-if="loading" class="loading">
-                <div class="loader-box">
-                    <div class="loader"></div>
-                    <div class="label">
-                        Loading<br/>
-                        #{{ itemId }}
-                    </div>
-                </div>
+                <load-indicator
+                :loadText="`Item #${itemId}`"></load-indicator>
             </div>
         </transition>
         <!-- <div class="go-back"

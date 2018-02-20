@@ -2,10 +2,8 @@
 <div class="item-acquire">
     <transition name="fade">
         <div v-if="loading" class="loading">
-            <div class="loader-box">
-                <div class="loader"></div>
-                <div class="label">Finding sources</div>
-            </div>
+            <load-indicator
+            loadText="Finding Item Sources"></load-indicator>
         </div>
     </transition>
     <transition name="fade">
@@ -262,7 +260,12 @@
                         <div class="cash-entry"
                             v-for="e in acqData.cash"
                             :key="e.serialNumber"
-                            v-if="(!showCashUnavailable || e.available) && e.price">
+                            v-if="(showCashUnavailable || e.available)">
+                            <div class="serial">
+                                {{e.serialNumber}}
+                            </div>
+
+                            <div class="name">{{e.name}}</div>
 
                             <div class="count" v-if="!e.shopPackage">
                                 <span v-if="e.count > 1">x{{e.count}}</span>
@@ -276,8 +279,21 @@
                                 </div>
                             </div>
 
-                            <div class="price" v-if="e.price">
-                                <i class="fa fa-shopping-cart"></i> <strong>{{ e.price | thousands}}</strong> EC
+                            <div class="price">
+                                <div v-if="!(e.useCoupon && e.price == 0)">
+                                    <i class="fa fa-shopping-cart"></i> <strong>{{ e.price | thousands}}</strong> EC
+                                </div>
+                                <div v-if="e.useCoupon">
+                                    <div v-if="e.couponItem" class="coupon">
+                                        <item-icon-tooltip
+                                            :itemId="e.couponItem.id"
+                                            :itemStub="e.couponItem">
+                                        </item-icon-tooltip>
+                                    </div>
+                                    <div v-else class="no-coupon">
+                                        <i class="fa fa-exclamation-triangle"></i>Coupon unavailable
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="params">
@@ -290,22 +306,27 @@
                                 <div class="param" v-if="e.minCreditLevel > 0">
                                     <i class="fa fa-credit-card"></i> Lv <strong>{{e.minCreditLevel}}</strong>+ to purchase with credit
                                 </div>
-                                <div v-else-if="e.minCreditLevel == 0">
-                                    <i class="fa fa-ban negative"></i> Cannot use credit
+                                <div class="param" v-else-if="e.minCreditLevel == 0">
+                                    <i class="fa negative fa-ban"></i> Cannot use credit
                                 </div>
-                                <div v-else>
+                                <div class="param" v-else>
                                     <i class="fa fa-credit-card"></i> Purchasable with credit
+                                </div>
+                                <div class="param" v-if="!e.canUseDnp">
+                                     <i class="fa negative fa-ban"></i> Cannot use DNP
                                 </div>
                                 <div class="param" v-if="e.giftable">
                                      <i class="fa fa-gift"></i> Giftable
                                 </div>
                                 <div class="param" v-else>
-                                     <i class="fa fa-ban negative"></i> Not giftable
+                                     <i class="fa negative fa-ban"></i> Cannot gift
                                 </div>
                             </div>
 
                             <div class="unavailable" v-if="!e.available">
                             </div>
+
+                            <!-- {{e}} -->
                         </div>
                         
                     </div>
@@ -337,6 +358,9 @@ import Shop from "@/api/shop";
 
 Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('point-tag', Points);
+
+import Loader from "@/components/util/Loader";
+Vue.component("load-indicator", Loader);
 
 export default {
     props: ["item"],
@@ -896,7 +920,6 @@ export default {
                 }
 
                 @media only screen and (min-width:@min-desktop-wide-width) {
-                    flex: 0 1 470px;
                     border-right-color: transparent;
                     &:first-child,
                     &:nth-child(2) {
@@ -918,15 +941,51 @@ export default {
 
         .cash-list {
             margin: 20px 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            max-height: 364px;
+            overflow-y: scroll;
+            border-top: 2px solid @dv-c-accent-1;
+            border-bottom: 2px solid @dv-c-accent-1;
             .cash-entry {
-                position: relative;
+                flex: 1 1 400px;
                 border: 1px solid @dv-c-foreground;
-                border-top: none;
+                border-top-color: transparent;
+
+                &:first-child {
+                    border-top-color: @dv-c-foreground;
+                }
+                position: relative;
                 padding: 10px 14px;
                 padding-right: 40px;
 
-                &:first-child {
-                    border-top: 1px solid @dv-c-foreground;
+                @media only screen and (min-width:@min-desktop-wide-width) {
+                    border-right-color: transparent;
+                    &:first-child,
+                    &:nth-child(2) {
+                        border-top-color: @dv-c-foreground;
+                    }
+                    &:nth-child(2n) {
+                        border-right-color: @dv-c-foreground;
+                    }
+                    &:last-child {
+                        border-right-color: @dv-c-foreground;
+                    }
+                    &:first-child:last-child {
+                        border-right-color: @dv-c-foreground;
+                    }
+
+                }
+
+                .serial {
+                    color: fade(@dv-c-body, 20%);
+                    position: absolute;
+                    top: 0;
+                    right: 2px;
+                    text-align: right;
+                    font-size: 12px;
+                    letter-spacing: 0.1em;
                 }
 
                 .unavailable{
@@ -960,13 +1019,42 @@ export default {
                 }
 
                 .price {
-                    font-size: 24px;
+                    font-size: 18px;
+                    line-height: 24px;
+                    vertical-align: middle;
                     color: @dv-c-foreground;
+                    
                     strong {
-                        color: @dv-c-foreground;
+                        color: white;
+                        font-weight: normal;
                     }
                     .fa {
                         margin-right: 8px;
+                    }
+
+                    .coupon {
+                        margin-left: 10px;
+                        &:first-child {
+                            margin-left: 0;
+                        }
+                    }
+
+                    .no-coupon {
+                        &:first-child {
+                            margin-left: 0;
+                        }
+                        margin-left: 10px;
+                        padding: 6px 12px 6px 10px;
+                        background: fade(@dv-c-red, 25%);
+                        border-left: @dv-c-red 4px solid;
+                        vertical-align: top;
+                        text-transform: uppercase;
+                        letter-spacing: 0.2em;
+                        font-size: 14px;
+                        color: @dv-c-body;
+                        .fa {
+                            color: @dv-c-red;
+                        }
                     }
                 }
 
@@ -986,13 +1074,13 @@ export default {
                     margin: 10px 0;
 
                     .param {
-                        margin: 0 8px;
+                        margin: 0 16px 0 0;
 
-                        &:first-child {
-                            margin-left: 0;
-                        }
+                        // &:first-child {
+                        //     margin-left: 0;
+                        // }
 
-                        .fa.negative {
+                        .negative {
                             color: @dv-c-red;
                         }
                     }

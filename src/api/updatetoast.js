@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Loadin Loadin Loadin",
+            "timestamp": "Feb 19 00:25",
+            "body": "Implemented new loading indicators<br/>Updated EC shop acquisition to filter unobtainables<br/>Added coupons to EC shop prices"
+        },
+        {
             "title": "Shiny Chrome",
             "timestamp": "Feb 14 15:08",
             "body": "Fix issue with Chrome rendering things as zero-width<br/>Updated NPC sell price prop with new format and Golden Goose tooltip<br/>Identified more shops<br/>Disabled Enhancement Hammer information<br/>Added a UIString Permalink<br/>Started improving Item Search<br/>Added Item Toolkit (for dataminers)"

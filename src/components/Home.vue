@@ -19,9 +19,13 @@
       later.
     </p>
 
+  <load-indicator
+    loadText="Region Information" inline></load-indicator>
+
     <h2>Region Information</h2>
     <div class="loading" v-if="loading">
-      Loading region data...
+      <load-indicator
+        loadText="Region Information" inline></load-indicator>
     </div>
     <div class="warn toast" v-if="error">
       <div class="heading">
@@ -55,7 +59,12 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import region from '@/api/region';
+
+import Loader from "@/components/util/Loader";
+
+Vue.component("load-indicator", Loader);
 
 export default {
   name: 'home',
