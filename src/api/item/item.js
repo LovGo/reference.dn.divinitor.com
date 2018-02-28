@@ -498,5 +498,8 @@ export default {
         let bi = mapping[b.rank];
 
         return ai - bi;
+    },
+    getItemChatLink(itemInfo) {
+        
     }
 };

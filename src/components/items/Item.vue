@@ -149,9 +149,9 @@
                                 <i class="fa fa-diamond" v-if="itemData.gearScore >= 300"></i>
                                 <i class="fa fa-diamond" v-if="itemData.gearScore >= 600"></i>
                             </div>
-                            <strong>+{{ itemData.gearScore | thousands }}</strong> GS
+                            <strong>+{{ combinedGearScore | thousands }}</strong> GS
                             <div class="tooltext">
-                                <div class="content">Gear Score (GS) is a rough rating of an item's strength</div>
+                                <div class="content">Gear Score (GS) is a rough rating of an item's strength<br/><span v-if="potentialGearScore">Base <strong>{{itemData.gearScore}} GS</strong> + Variant <strong>{{potentialGearScore}} GS</strong></span></div>
                             </div>
                         </div>
                         <div class="attrib tooltip" v-if="itemData.equipPoints">
@@ -347,7 +347,9 @@
                     </div>
                 </div>
                 <div class="model-view" v-if="hasModel">
-                    3D VIEW PLACEHOLDER
+                    <item-parts 
+                        :itemId=itemData.id
+                        :parts=itemData.parts></item-parts>
                 </div>
             </div>
 
@@ -444,6 +446,7 @@ import ItemPotential from "@/components/items/ItemPotential";
 import ItemAcquire from "@/components/items/ItemAcquire";
 import ItemSet from "@/components/items/ItemSet";
 import ItemTunings from "@/components/items/ItemTunings";
+import ItemParts from "@/components/items/ItemParts";
 import BigErrorBox from '@/components/util/BigErrorBox';
 
 
@@ -463,6 +466,7 @@ Vue.component('item-set', ItemSet);
 Vue.component('item-tunings', ItemTunings);
 Vue.component('mobile-enhance', MobileEnhance);
 Vue.component('item-acquire', ItemAcquire);
+Vue.component('item-parts', ItemParts);
 
 Vue.component('big-error-box', BigErrorBox);
 
@@ -545,9 +549,7 @@ export default {
             return t === "QUEST";
         },
         hasModel() {
-            // TODO
-            let t = this.itemData.type.type;
-            return t === "PARTS" || t === "WEAPON";
+            return !!this.itemData.parts;
         },
         statSet() {
             let ret = ItemStat.joinStatSet(this.itemData.stats);
@@ -592,6 +594,23 @@ export default {
             }
 
             return false;
+        },
+        combinedGearScore() {
+            let gs = this.itemData.gearScore;
+            gs += this.potentialGearScore;
+            return gs;
+        },
+        potentialGearScore() {
+            if (this.potentialId) {
+                for (let k in this.itemData.potentials) {
+                    let v = this.itemData.potentials[k];
+                    if (v.id == this.potentialId) {
+                        return v.gearScore;
+                    }
+                }
+            }
+
+            return 0;
         }
     },
     methods: {
