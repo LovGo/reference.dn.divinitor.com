@@ -40,6 +40,9 @@ export default {
     created() {
         this.init();
     },
+    beforeMount() {
+        this.three();
+    },
     computed: {
         weaponPart() {
             if (this.parts.type == 'WEAPON') {
@@ -63,8 +66,6 @@ export default {
             } else {
                 this.selectedSknName = null;
             }
-
-            this.three();
         },
         expand() {
             this.expanded = !this.expanded;
@@ -73,8 +74,8 @@ export default {
             return this.$refs["render"];
         },
         three() {
-            // let canvas = Vue.$("canvas");
-            // console.log(canvas);
+            let canvas = this.$refs("canvas");
+            console.log(canvas);
             this.renderer = {
                 // camera: new THREE.PerspectiveCamera(70, canvas().wi)
             }

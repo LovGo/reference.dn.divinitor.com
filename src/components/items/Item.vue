@@ -530,7 +530,7 @@ export default {
         },
         canUse() {
             if (this.itemData.needClass) {
-                return this.itemData.needClass.map(c => c.name).join("/");;
+                return this.itemData.needClass.map(c => c.displayName).join("/");;
             }
 
             return null;

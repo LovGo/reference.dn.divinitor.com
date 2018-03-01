@@ -17,7 +17,15 @@
                 <stat-grid
                     :statSet="statSet(d)"
                     hideHeader="true"
+                    v-if="!d.skill || d.states.length"
                     ></stat-grid>
+                <div class="skill-option" v-if="d.skill">
+                    <skill-icon :iconIndex="d.skill.iconIndex"></skill-icon>
+                    <div class="skill-info">
+                        <div class="skill-class">{{d.skill.job.displayName}}</div>
+                        <div class="skill-name">{{d.skill.displayName}}</div>
+                    </div>
+                </div>
             </div>
             <div class="rate" v-if="d.rate">
                 {{ d.rate | rate}}%
@@ -32,11 +40,13 @@ import Vue from 'vue';
 import ItemIcon from "@/components/game/ItemIcon";
 import ItemStat from "@/api/item/itemstat";
 import StatGrid from "@/components/game/StatGrid";
+import SkillIcon from "@/components/game/SkillIcon";
 
 import Item from "@/api/item/item";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('stat-grid', StatGrid);
+Vue.component('skill-icon', SkillIcon);
 
 export default {
     props: ["potentialData", "selection", "potentialNum"],
@@ -159,6 +169,12 @@ export default {
                         color: @dv-c-accent-2;
                     }
                 }
+
+                .skill-option {
+                    .skill-class {
+                        color: @dv-c-accent-2;
+                    }
+                }
             }
 
             &:hover {
@@ -170,6 +186,12 @@ export default {
                 .rate {
                     color: @dv-c-foreground;
                     &::after {
+                        color: @dv-c-accent-2;
+                    }
+                }
+
+                .skill-option {
+                    .skill-class {
                         color: @dv-c-accent-2;
                     }
                 }
@@ -186,6 +208,31 @@ export default {
 
             .grid-cover {
                 pointer-events: none;
+            }
+
+            .skill-option {
+                display: flex;
+                flex-direction: row;
+
+                .skill-info {
+                    margin-left: 8px;
+                    margin-right: 10px;
+                    .skill-class {
+                        transition: color ease-in 0.125s;
+                        font-size: 10px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.3em;
+                        font-family: @dv-f-geomanist;
+                        color: @dv-c-accent-1;
+                    }
+
+                    .skill-name {
+                        text-transform: uppercase;
+                        letter-spacing: 0.1em;
+                        font-family: @dv-f-geomanist;
+                        color: @dv-c-foreground;
+                    }
+                }
             }
 
             .rate {

@@ -32,4 +32,23 @@ export default {
     //     let sJID = parentJob.id;
         
     // }
+    
+    getIconCoordinates(iconIndex) {
+        let row = Math.floor(iconIndex / 9);
+        let column = iconIndex % 9;
+        const UNIT_SIZE = 55;
+
+        let ret = {
+            x: Math.max(UNIT_SIZE * column, 0),
+            y: UNIT_SIZE * row,
+            size: UNIT_SIZE
+        };
+
+        return ret;
+    },
+
+    getIconUrl(region) {
+        if (!region) region = Store.state.regionCode;
+        return `/api/server/${region}/dds/jobicon_main/png`;
+    },
 };
