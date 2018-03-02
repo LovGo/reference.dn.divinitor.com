@@ -944,10 +944,10 @@ export default {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-            max-height: 364px;
-            overflow-y: scroll;
-            border-top: 2px solid @dv-c-accent-1;
-            border-bottom: 2px solid @dv-c-accent-1;
+            // max-height: 364px;
+            // overflow-y: scroll;
+            // border-top: 2px solid @dv-c-accent-1;
+            // border-bottom: 2px solid @dv-c-accent-1;
             .cash-entry {
                 flex: 1 1 400px;
                 border: 1px solid @dv-c-foreground;
