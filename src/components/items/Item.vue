@@ -530,7 +530,7 @@ export default {
         },
         canUse() {
             if (this.itemData.needClass) {
-                return this.itemData.needClass.map(c => c.displayName).join("/");;
+                return this.itemData.needClass.filter(c => c.id != 0).map(c => c.displayName).join("/");
             }
 
             return null;
@@ -549,7 +549,7 @@ export default {
             return t === "QUEST";
         },
         hasModel() {
-            return !!this.itemData.parts;
+            return !!this.itemData.parts && this.itemData.parts.parts.length;
         },
         statSet() {
             let ret = ItemStat.joinStatSet(this.itemData.stats);
