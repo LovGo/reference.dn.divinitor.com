@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div class="rate" v-if="d.rate">
+            <div class="rate" v-if="d.rate && !d.skill">
                 {{ d.rate | rate}}%
             </div>
         </div>
@@ -216,10 +216,10 @@ export default {
 
                 .skill-info {
                     margin-left: 8px;
-                    margin-right: 10px;
+                    margin-right: 24px;
                     .skill-class {
                         transition: color ease-in 0.125s;
-                        font-size: 10px;
+                        font-size: 12px;
                         text-transform: uppercase;
                         letter-spacing: 0.3em;
                         font-family: @dv-f-geomanist;
@@ -231,6 +231,7 @@ export default {
                         letter-spacing: 0.1em;
                         font-family: @dv-f-geomanist;
                         color: @dv-c-foreground;
+                        font-size: 16px;
                     }
                 }
             }
