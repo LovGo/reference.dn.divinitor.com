@@ -15,7 +15,8 @@
 
                 </div>
                 <button class="expand" v-on:click="expand">
-                    {{ expanded ? 'X' : 'E' }}
+                    <i v-if="expanded" class="fa fa-close"></i>
+                    <i v-else class="fa fa-expand"></i>
                 </button>
             </div>
         </div>
