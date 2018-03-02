@@ -8,7 +8,8 @@
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
-    "deploy": "node build/deploy.js"
+    "deploy": "node build/deploy.js",
+    "buildploy": "node build/build.js && node build/deploy.js"
   },
   "dependencies": {
     "chart.js": "^2.7.0",
