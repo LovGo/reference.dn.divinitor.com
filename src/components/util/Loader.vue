@@ -1,7 +1,7 @@
 <<template>
     <div class="loading-indicator">
         <div class="loader">
-            <div class="title">Now Loading</div>
+            <div class="title"><span v-if="altText">{{altText}}</span><span v-else>Now Loading</span></div>
             <div v-if="loadText" class="text">{{loadText}}</div>
         </div>
     </div>
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-    props: ["loading", "loadText"]
+    props: ["loading", "loadText", "altText"]
 }
 </script>
 

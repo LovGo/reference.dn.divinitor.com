@@ -1,3 +1,6 @@
+import Vue from 'vue';
+import Store from '@/store';
+
 const Regions = {
     "local": {
         id: "local",
@@ -20,26 +23,45 @@ const Regions = {
 };
 
 export default {
+
+    regionCache: {},
+
     getDefaultRegionCode() {
         return "local";
     },
 
-    getRegion(id, okcb, errcb) {
-        //  TODO load region info
-        let ret = Regions[id];
-        if (!ret) {
-            errcb(`Region "${id}" not found`);
-        } else {
-            okcb(ret);
+    getRegionByShortName(shortName, okcb, errcb) {
+        if (shortName == "local") {
+            shortName = "na";
         }
+
+        if (this.regionCache[shortName]) {
+            return this.regionCache[shortName];
+        }
+
+        Vue.http.get(`https://arcsat.divinitor.com/svc/rs/regions/shortname/${shortName}`,
+        {
+        }).then(
+        (res) => {
+            this.regionCache[shortName] = res.body;
+            okcb(res.body);
+        }, 
+        errcb);
     },
 
     getRegions(okcb, errcb) {
-        let ret = [];
-        for (let k in Regions) {
-            ret.push(Regions[k]);
-        }
+        Vue.http.get(`https://arcsat.divinitor.com/svc/rs/regions/`,
+        {
+        }).then(
+        (res) => {
+            let d = res.body;
+            for (let k in d) {
+                let v = d[k];
+                this.regionCache[v.shortName] = v;
+            }
 
-        okcb(ret);
+            okcb(d);
+        }, 
+        errcb);
     }
 };

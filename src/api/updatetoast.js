@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Mad Skills",
+            "timestamp": "Mar 2 09:43",
+            "body": "Added support for skill variants on items<br/>Fixed several style issues<br/>Basic skill information on items with skills coming soon™"
+        },
+        {
             "title": "Loadin Loadin Loadin",
             "timestamp": "Feb 19 00:25",
             "body": "Implemented new loading indicators<br/>Updated EC shop acquisition to filter unobtainables<br/>Added coupons to EC shop prices"

@@ -530,7 +530,7 @@ export default {
         },
         canUse() {
             if (this.itemData.needClass) {
-                return this.itemData.needClass.filter(c => c.id != 0).map(c => c.displayName).join("/");
+                return this.itemData.needClass.filter(c => c.id != 0).map(c => c.displayName).join("/\u200B");
             }
 
             return null;
@@ -708,8 +708,9 @@ export default {
         flex-direction: row;
 
         .icon{ 
-            flex: 0 1 50px;
+            flex: 0 0 50px;
             vertical-align: middle;
+            width: 50px;
             
             .centering {
                 position: absolute;

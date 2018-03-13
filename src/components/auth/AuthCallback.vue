@@ -2,10 +2,17 @@
     <div class="auth-cb">
         <div class="verifying" v-if="!result">
             <div class="error" v-if="error">
-                Error {{ error.status }} {{ error.statusText }}: {{error.bodyText}}
+                <big-error-box 
+                    errorTitle="Discord Authentication Error" 
+                    :errorContent="error.statusText + ': ' + error.bodyText" 
+                    secondaryInfo=""
+                    canRetry="true"
+                    v-on:retry="retry"
+                    iconClass="fa-exclamation-triangle"></big-error-box>
             </div>
             <div v-else>
-                Verifying...
+                <load-indicator
+                loadText="Verifying" altText="Please wait"></load-indicator>
             </div>
         </div>
         <div class="result" v-else>
@@ -54,6 +61,9 @@ export default {
                 this.error = e;
                 console.error(e);
             });
+        },
+        retry() {
+            this.$router.push({path: '/auth'});
         }
     }
 }

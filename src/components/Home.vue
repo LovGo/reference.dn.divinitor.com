@@ -36,7 +36,7 @@
     <div class="tag-table" v-if="server">
       <div class="row">
         <div class="rowhead">Region</div>
-        <div class="data">{{ server.name }}</div>
+        <div class="data">{{ server.displayNames.default }}</div>
       </div>
       <div class="row">
         <div class="rowhead">Version</div>
@@ -44,16 +44,16 @@
       </div>
       <div class="row">
         <div class="rowhead">Patched</div>
-        <div class="data">{{ server.patched | moment("MMM DD YYYY") }}</div>
+        <div class="data">{{ server.patchedTime | moment("MMM DD YYYY") }}</div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="rowhead">Language</div>
-        <div class="data">{{ server.language }}</div>
+        <div class="data">{{ server.defaultLocale }}</div>
       </div>
       <div class="row">
         <div class="rowhead">Level Cap</div>
         <div class="data">{{ server.levelCap }}</div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -82,7 +82,7 @@ export default {
     fetchData() {
       this.error = this.server = null;
       this.loading = true;
-      region.getRegion(this.$store.state.regionCode,
+      region.getRegionByShortName(this.$store.state.regionCode,
         (d) => {
           this.server = d;
           this.loading = false;

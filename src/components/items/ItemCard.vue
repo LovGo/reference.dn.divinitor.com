@@ -166,7 +166,7 @@ export default {
         },
         canUse() {
             if (this.itemData.needClass) {
-                return this.itemData.needClass.filter(c => c.id != 0).map(c => c.displayName).join("/");
+                return this.itemData.needClass.filter(c => c.id != 0).map(c => c.displayName).join("/\u200B");
             }
 
             return null;
@@ -316,6 +316,7 @@ export default {
                 font-size: 12px;
                 letter-spacing: 0.2em;
                 text-transform: uppercase;
+                word-wrap: break-word;
 
                 .iid {
                     color: fade(@dv-c-body, 20%);
