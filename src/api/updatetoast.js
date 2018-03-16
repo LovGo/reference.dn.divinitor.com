@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "MinervaTax",
+            "timestamp": "Mar 13 16:38",
+            "body": "Added a tax/fee calculator to the <a href=\"/general/taxes/\">Taxes and Fees page</a>"
+        },
+        {
             "title": "Mad Skills",
             "timestamp": "Mar 2 09:43",
             "body": "Added support for skill variants on items<br/>Fixed several style issues<br/>Basic skill information on items with skills coming soon™"

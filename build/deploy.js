@@ -12,6 +12,7 @@ var spinner = ora('deploying to production...');
 spinner.start();
 
 shell.cd('dist');
+shell.exec('chmod -R 0755 .');
 shell.exec('scp -r -F C:\\Users\\Vince\\.ssh\\config . root@static.divinitor.com:/var/www/reference.dn.divinitor.com/prod',
     {}, (code, out, err) => {
         console.log(out);

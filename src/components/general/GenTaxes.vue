@@ -35,13 +35,25 @@
                         Transaction
                     </th>
                     <th>
-                        Fee
+                        Fee Rate
+                    </th>
+                    <th>
+                        Fee Amount
+                    </th>
+                    <th>
+                        Total Cost
                     </th>
                 </thead>
                 <tr>
                     <th>
                         Server Storage
                     </th>
+                    <td>
+                        {{ taxes.serverStorageFee | goldG }}
+                    </td>
+                    <td>
+                        {{ taxes.serverStorageFee | goldG }}
+                    </td>
                     <td>
                         {{ taxes.serverStorageFee | goldG }}
                     </td>
@@ -53,6 +65,12 @@
                     <td>
                         {{ taxes.tradeFee | enhancePercent }}
                     </td>
+                    <td>
+                        {{ taxes.tradeFee * inputSafe * 10000 | goldG }}
+                    </td>
+                    <td>
+                        {{ ((taxes.tradeFee * inputSafe + inputSafe) * 10000) | goldG }}
+                    </td>
                 </tr>
                 <tr>
                     <th>
@@ -61,24 +79,50 @@
                     <td>
                         {{ taxes.mailFee | enhancePercent }}
                     </td>
+                    <td>
+                        {{ taxes.mailFee * inputSafe * 10000 | goldG }}
+                    </td>
+                    <td>
+                        {{ ((taxes.mailFee * inputSafe + inputSafe) * 10000) | goldG }}
+                    </td>
                 </tr>
                 <tr>
                     <th>
-                        Market Listing
+                        Market Listing*
                     </th>
                     <td>
                         {{ taxes.listingFee | enhancePercent }}
                     </td>
+                    <td>
+                        {{ taxes.listingFee * inputSafe * 10000 | goldG }}
+                    </td>
+                    <td>
+                        {{ ((taxes.listingFee * inputSafe + inputSafe) * 10000) | goldG }}
+                    </td>
                 </tr>
                 <tr>
                     <th>
-                        Market Sell
+                        Market Sell&#8224;
                     </th>
                     <td>
                         {{ taxes.marketSellFee | enhancePercent }}
                     </td>
+                    <td>
+                        {{ taxes.marketSellFee * inputSafe * 10000 | goldG }}
+                    </td>
+                    <td>
+                        {{ ((inputSafe - taxes.marketSellFee * inputSafe) * 10000) | goldG }}
+                    </td>
                 </tr>
             </table>
+            <div class="note">
+                Assuming using a <router-link :to="{path: `/items/1107308544`}">Marketplace Pass</router-link>.
+            </div>
+            <div class="dagger note">
+                This is the gold you will receive after clicking <strong>Collect</strong>.
+            </div>
+            <label for="gold">Calculate fee (gold): </label>
+            <input id="gold" type="text" v-model="inputVal" placeholder="Gold Amount"/>
         </div>
     </transition>
 </div>
@@ -93,11 +137,30 @@ export default {
         return {
             loading: true,
             taxes: null,
+            inputVal: null,
+            tradeVal: 0,
+            mailVal: 0,
+            marketListVal: 0,
+            marketSelLVal: 0,
             error: null,
         }
     },
     created() {
         this.fetchData();
+    },
+    computed: {
+        inputSafe() {
+            if (!this.inputVal) {
+                return 0;
+            }
+
+            let ret = Number(this.inputVal);
+            if (isNaN(ret)) {
+                return 0;
+            }
+
+            return ret;
+        }
     },
     methods: {
         fetchData() {
@@ -143,7 +206,7 @@ export default {
 
                 &:first-child {
                     border-right: 2px solid @dv-c-body;
-                    min-width: 50px;
+                    min-width: 40px;
                     text-align: right;
                 }
 
@@ -202,6 +265,35 @@ export default {
         }
         tr:last-child td {
             border-bottom-color: transparent;
+        }
+    }
+
+    .note {
+        margin: 8px 0;
+        &::before {
+            content: "NOTE*";
+            font-size: 0.75em;
+            color: @dv-c-accent-2;
+        }
+
+        &.dagger {
+            &::before {
+                content: "NOTE†";
+            }
+        }
+    }
+
+    input[type="text"] {
+        color: @rank-divine;
+        border-bottom: 1px fade(@rank-divine, 40%) solid;
+        
+        &:hover,
+        &:focus {
+            border-bottom-color: @rank-divine;
+        }
+        
+        &::placeholder {
+            color: fade(@rank-divine, 40%);
         }
     }
 
