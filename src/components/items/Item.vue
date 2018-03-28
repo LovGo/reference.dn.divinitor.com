@@ -1,6 +1,5 @@
 <template>
     <div class="itempage">
-
         <!--
             LOADING
          -->
@@ -20,6 +19,10 @@
          -->
         <transition name="fade">
             <div class="error" v-if="error">
+                <div class="go-back"
+                    v-on:click="goBack">
+                    <i class="fa fa-angle-double-left"></i>Back
+                </div>
                 <big-error-box 
                     :errorTitle="'Error: ' + error.statusText" 
                     :errorContent="error.bodyText" 
@@ -33,6 +36,10 @@
             RESULT
          -->
         <div v-if="!loading && itemData">
+            <div class="go-back"
+                v-on:click="goBack">
+                <i class="fa fa-angle-double-left"></i>Back
+            </div>
 
             <div class="header">
                 <div class="icon">

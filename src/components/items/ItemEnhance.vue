@@ -69,7 +69,7 @@
                         <div class="title">
                             Enhancement Levels
                         </div>
-                        <table class="rates">
+                        <table class="rates level-grid">
                             <thead>
                                 <th class="first">Level</th>
                                 <th class="fixed">Rate</th>
@@ -142,10 +142,14 @@
                         </transition>
                     </div>
                 </div>
+
+                <div class="graph-appendix">
+                    <item-enhance-rate-line-chart :itemData="itemData" :enhanceData="enhanceData" />
+                </div>
             </div>
 
             <div v-if="page == 1">
-                <table class="material-grid">
+                <table class="material-grid level-grid">
                     <thead>
                         <th class="first">Level</th>
                         <th>
@@ -165,7 +169,10 @@
                             </item-icon-tooltip>
                         </th>
                     </thead>
-                    <tr v-for="e in enhanceData" :key="e.level">
+                    <tr v-for="e in enhanceData" 
+                        :key="e.level"
+                        v-on:click="updateLevel(e.level)"
+                        :class="(e.level == level ? `active` : `` )">
                         <th>+{{e.level}}</th>
                         <td>
                             {{ e.cost * (useGoldenGoose ? 0.5 : 1) | goldG }}
@@ -177,11 +184,33 @@
                             {{ v.amount[String(e.level)] | zeroDash }}
                         </td>
                     </tr>
+                    <tr class="total">
+                        <th>Total</th>
+                        <td v-for="(e, i) in totalMaterials" :key="i">
+                            <span v-if="i == 0">
+                                {{ e | goldG }}
+                            </span>
+                            <span v-else>
+                                {{ e | thousandsFloor }}
+                            </span>
+                        </td>
+                    </tr>
                 </table>
+                
+                <div class="graph-appendix">
+                    <item-enhance-material-line-chart 
+                        :itemData="itemData" 
+                        :enhanceData="enhanceData" 
+                        :goldenGoose="useGoldenGoose"
+                        :materialsSet="materialsSet" />
+                    <div class="help">
+                        <i class="fa fa-question-circle"></i> Click on a legend entry (at the bottom of the chart) to toggle visibility
+                    </div>
+                </div>
             </div>
 
             <div class="stat-grid-page" v-if="page == 2">
-                <table class="stat-grid">
+                <table class="stat-grid level-grid">
                     <thead>
                         <th class="first">Level</th>
                         <th v-for="(e, k) in statGridSet.minmax" :key="k">
@@ -191,7 +220,10 @@
                             {{e.state.abbv}}
                         </th>
                     </thead>
-                    <tr v-for="e in enhanceData" :key="e.level">
+                    <tr v-for="e in enhanceData" 
+                        :key="e.level"
+                        v-on:click="updateLevel(e.level)"
+                        :class="(e.level == level ? `active` : `` )">
                         <th>+{{e.level}}</th>
                         <td v-for="(v, k) in statGridSet.minmax" :key="k">
                             <span v-if="v.amount[String(e.level)]">
@@ -216,8 +248,66 @@
                     </tr>
                 </table>
                 <!-- {{ statGridSet }} -->
+                Graph coming soon
             </div>
 
+            <div class="estimation container">
+                <div class="title">
+                    Estimated Material Cost to +{{level}}
+                </div>
+
+                <table class="estimated-material-grid">
+                    <thead>
+                        <th>
+
+                        </th>
+                        <th>
+                            <item-icon-tooltip
+                                itemId="1073750029">
+                            </item-icon-tooltip>
+                        </th>
+                        <th v-if="canUseJelly">
+                            <item-icon-tooltip
+                                itemId="1107302400">
+                            </item-icon-tooltip>
+                        </th>
+                        <th class="item-head" v-for="v in materialsSet" :key="v.item.id">
+                            <item-icon-tooltip
+                                :itemId="v.item.id"
+                                :itemStub="v.item.stub">
+                            </item-icon-tooltip>
+                        </th>
+                    </thead>
+                    <tr>
+                        <th>From +0</th>
+                        <td v-for="(v, i) in estimatedMaterials.total" :key="i">
+                            <span v-if="i == 0">
+                                {{ v | goldG }}
+                            </span>
+                            <span v-else>
+                                {{ v | thousandsFloor }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr v-if="level > 1">
+                        <th>From +{{level - 1}}</th>
+                        <td v-for="(v, i) in estimatedMaterials.prev" :key="i">
+                            <span v-if="i == 0">
+                                {{ v | goldG }}
+                            </span>
+                            <span v-else>
+                                {{ v | thousandsFloor }}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                <div class="info toast">
+                    <div class="heading">
+                        Expect the Unexpected
+                    </div>
+                    Estimated material amounts are based on a simple inverse rate and does not factor in breakages or downgrades.
+                </div>
+            </div>
             <!-- {{ enhanceData }} -->
 
         </div>
@@ -231,6 +321,7 @@ import ItemIcon from "@/components/game/ItemIcon";
 import ItemIconTooltip from "@/components/items/ItemIconTooltip";
 import ItemStat from "@/api/item/itemstat";
 import StatGrid from "@/components/game/StatGrid";
+
 
 import Item from "@/api/item/item";
 
@@ -253,6 +344,7 @@ export default {
             enhanceData: null,
             page: 0,
             error: null,
+            selectedStat: null,
         };
     },
     created() {
@@ -404,6 +496,71 @@ export default {
             }
 
             return rret;
+        },
+        estimatedMaterials() {
+            let ret = {};
+            let accum = new Array(2 + this.materialsSet.length);
+            let prev = new Array(2 + this.materialsSet.length);
+
+            for (let i = 0; i < accum.length; ++i) {
+                accum[i] = 0;
+                prev[i] = 0;
+            }
+
+            for (let k in this.enhanceData) {
+                let e = this.enhanceData[k];
+                if (e.level > this.level) {
+                    break;
+                }
+
+                let rate = this.rateMod(e.successRate, e.level);
+                let invRate = 1 / rate;
+                //  Gold
+                let gCost = e.cost * (this.useGoldenGoose ? 0.5 : 1);
+                let expGold = gCost * invRate;
+                prev[0] = accum[0];
+                accum[0] += expGold;
+
+                //  Jelly
+                let jCost = e.jellyUseCount;
+                let expJelly = jCost * invRate;
+                prev[1] = accum[1];
+                accum[1] += expJelly;
+
+                for (let mk in this.materialsSet) {
+                    let v = this.materialsSet[mk];
+                    let iCost = v.amount[String(e.level)];
+                    let expItem = iCost * invRate;
+                    if (isNaN(expItem)) {
+                        expItem = 0;
+                    }
+                    let idx = Number(mk);
+                    prev[2 + idx] = accum[2 + idx];
+                    accum[2 + idx] += expItem;
+                }
+            }
+
+
+            ret.total = accum;
+            ret.prev = accum.map((v, i) => v - prev[i]);
+
+            return ret;
+        },
+        totalMaterials() {
+            let mset = this.materialsSet;
+            let ret = Array.from(new Array(2 + mset.length), (x, i) => 0);
+            for (let k in this.enhanceData) {
+                let v = this.enhanceData[k];
+                ret[0] += v.cost * (this.useGoldenGoose ? 0.5 : 1);
+                ret[1] += v.jellyUseCount;
+            }
+
+            for (let m in mset) {
+                let v = mset[m];
+                ret[2 + Number(m)] = Object.values(v.amount).reduce((total, n) => n + total);
+            }
+
+            return ret;
         }
     },
     methods: {
@@ -640,7 +797,7 @@ export default {
         }
     }
 
-    .rates {
+    .level-grid {
         tr {
             cursor: pointer;
         }
@@ -654,6 +811,35 @@ export default {
     .material-grid {
         td {
             min-width: 60px;
+        }
+
+        .total {
+            cursor: default;
+            border-top: 2px solid @dv-c-foreground;
+            &:hover {
+                background-color: transparent;
+            }
+            th {
+                color: @dv-c-foreground;
+                font-size: 12px;
+                font-weight: normal;
+                text-transform: uppercase;
+            }
+            td {
+                color: @dv-c-foreground;
+                // font-weight: bold;
+            }
+        }
+    }
+
+    .estimated-material-grid {
+        tr {
+            th {
+                color: @dv-c-foreground;
+                font-size: 12px;
+                font-weight: normal;
+                text-transform: uppercase;
+            }
         }
     }
 
@@ -670,6 +856,26 @@ export default {
     .stat-grid {
         td {
             padding: 0 20px;
+        }
+    }
+
+    .graph-appendix {
+        margin-top: 10px;
+        font-family: @dv-f-lato;
+
+        .help {
+            text-align: left;
+            margin-top: 10px;
+            font-size: 14px;
+            padding: 8px 12px;
+            background-color: fade(@dv-c-background, 40%);
+            border-left: 4px solid @dv-c-accent-2;
+
+            .fa {
+                color: @dv-c-foreground;
+                display: inline-block;
+                padding-right: 6px;
+            }
         }
     }
 

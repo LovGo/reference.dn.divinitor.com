@@ -5,6 +5,7 @@ import LadderRank from '@/api/ladderrank';
 export default {
     install: function(Vue, opt) {
         Vue.filter("thousands", this.thousands);
+        Vue.filter("thousandsFloor", this.thousandsFloor);
         Vue.filter("gold", this.gold);
         Vue.filter("goldG", this.goldG);
         Vue.filter("dec2hex", this.dec2hex);
@@ -24,6 +25,15 @@ export default {
             return value;
         }
         return value.toLocaleString();
+    },
+
+    thousandsFloor: function(value) {
+        if (value == null) {
+            return value;
+        }
+        return value.toLocaleString(undefined, {
+            maximumFractionDigits: 0
+        });
     },
 
     gold: function(value) {

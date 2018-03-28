@@ -25,7 +25,7 @@
             <div class="tuning-list">
                 <div class="list-entry" v-for="v in data.tunings" :key="v.tunerId">
                     <div class="tuner" v-if="trimTuners(v).length">
-                        <div class="col-title">Tuner #{{v.tunerId}}</div>
+                        <div class="col-title">Tuning #{{v.tunerId}}</div>
                         <div class="item-entry" v-for="t in trimTuners(v)" :key="t.id">
                             <item-card
                                 :itemId="t.id"
@@ -33,10 +33,15 @@
                         </div>
                     </div>
                     <div class="tuner" v-else>
-                        <div class="col-title">Tuner #{{v.tunerId}}</div>
-                        No tuners exist for this tuning.
+                        <div class="col-title">Tuning #{{v.tunerId}}</div>
+
+                        
+                    <small-error-box 
+                        errorTitle="No Tuners exist" 
+                        errorContent="This may be for a future update or is removed content" 
+                        iconClass="fa-exclamation-triangle"></small-error-box>
                     </div>
-                    <div class="options">
+                    <div class="options" :long="v.options.length > 4">
                         <div class="col-title">Options</div>
                         <div class="item-entry" v-for="t in v.options" :key="t.id">
                             <item-card
@@ -202,6 +207,13 @@ export default {
                 display: flex;
                 flex-direction: column;
                 margin-left: 8px;
+
+                &[long] {
+                    max-height: 400px;
+                    overflow-y: scroll;
+                    border-top: 2px solid @dv-c-accent-1;
+                    border-bottom: 2px solid @dv-c-accent-1;
+                }
             }
 
             .item-entry {

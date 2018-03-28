@@ -5,6 +5,16 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Graph Wrangling",
+            "timestamp": "Mar 22 02:48",
+            "body": "Stat graphs no longer perform a full redraw when you update the value<br/>Enhancing Graphs can now toggle visibility<br/>Enhancing materials are off by default on the Enhancment Material Grid. You can toggle visibility by clicking on the corresponding legend entry<br/>Fixed ugly fonts on charts<br/>Usable tuners for items now use a scrollbar when there are more than 4 items"
+        },
+        {
+            "title": "Ride the Lines",
+            "timestamp": "Mar 20 02:02",
+            "body": "Added graphs to enhancing Overview and Material Grid tabs<br/>Sorry about the font on those graphs<br/>You can now click on the rows in the Material Grid and Stat Grids to change the active enhance level"
+        },
+        {
             "title": "MinervaTax",
             "timestamp": "Mar 13 16:38",
             "body": "Added a tax/fee calculator to the <a href=\"/general/taxes/\">Taxes and Fees page</a>"

@@ -36,7 +36,7 @@ export default {
         }
 
         if (this.regionCache[shortName]) {
-            return this.regionCache[shortName];
+            okcb(this.regionCache[shortName]);
         }
 
         Vue.http.get(`https://arcsat.divinitor.com/svc/rs/regions/shortname/${shortName}`,

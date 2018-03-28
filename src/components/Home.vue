@@ -19,9 +19,6 @@
       later.
     </p>
 
-  <load-indicator
-    loadText="Region Information" inline></load-indicator>
-
     <h2>Region Information</h2>
     <div class="loading" v-if="loading">
       <load-indicator

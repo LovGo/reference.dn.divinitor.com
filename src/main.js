@@ -3,20 +3,23 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-import StatLineChart from '@/components/general/stat/StatLineChart';
-import StatEqualLineChart from '@/components/general/stat/StatEqualLineChart';
 import BigErrorBox from '@/components/util/BigErrorBox';
 import SmallErrorBox from '@/components/util/SmallErrorBox';
 import store from './store';
 import VueResource from 'vue-resource';
 import infiniteScroll from 'vue-infinite-scroll';
 import filters from './filters';
-import Chart from 'chart.js';
 import VueAnalytics from 'vue-analytics'
 
-Chart.defaults.global.defaultFontFamily = "Lato";
+import Chart from 'chart.js';
+Chart.defaults.global.defaultFontFamily = `Lato, "Segoe UI", Tahoma, Verdana, sans-serif`;
 Chart.defaults.global.defaultFontSize = 14;
 Chart.defaults.global.defaultFontColor = "#A6AEB3";
+
+import StatLineChart from '@/components/general/stat/StatLineChart';
+import StatEqualLineChart from '@/components/general/stat/StatEqualLineChart';
+import ItemEnhanceRateChart from "@/components/items/ItemEnhanceRateChart";
+import ItemEnhanceMaterialChart from "@/components/items/ItemEnhanceMaterialChart";
 
 Vue.config.productionTip = false;
 
@@ -34,6 +37,8 @@ Vue.use(VueAnalytics, {
 
 Vue.component('stat-line-chart', StatLineChart);
 Vue.component('stat-equal-line-chart', StatEqualLineChart);
+Vue.component('item-enhance-rate-line-chart', ItemEnhanceRateChart);
+Vue.component('item-enhance-material-line-chart', ItemEnhanceMaterialChart);
 Vue.component('big-error-box', BigErrorBox);
 Vue.component('small-error-box', SmallErrorBox);
 
