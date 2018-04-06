@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Toasters toast toast",
+            "timestamp": "Apr 06 00:30",
+            "body": "Updated all toasts to support icons<br/>Added icons to some toasts so they can be more iconic<br/>Extraction now shows item counts<br/>Gear Score now takes into account the enhancement level of the item<br/>Gonna be porting this to TypeScript soon owo"
+        },
+        {
             "title": "Graph Wrangling",
             "timestamp": "Mar 22 02:48",
             "body": "Stat graphs no longer perform a full redraw when you update the value<br/>Enhancing Graphs can now toggle visibility<br/>Enhancing materials are off by default on the Enhancment Material Grid. You can toggle visibility by clicking on the corresponding legend entry<br/>Fixed ugly fonts on charts<br/>Usable tuners for items now use a scrollbar when there are more than 4 items"

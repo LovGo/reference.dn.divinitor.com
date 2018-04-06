@@ -6,8 +6,10 @@
         <i class="fa fa-angle-double-left"></i>Back
     </div>
     <div class="warn toast">
-      <div class="heading">Coming Soon</div>
-      This feature is currently under development
+        <div class="content">
+            <div class="heading">Coming Soon</div>
+            <p>This feature is currently under development</p>
+        </div>
     </div>
 </div>
 </template>

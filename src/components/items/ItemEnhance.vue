@@ -38,22 +38,37 @@
 
             <transition name="fadecollapse-item">
                 <div class="ok toast" v-if="useJelly && dragonGem && canUseJelly">
-                    <div class="heading">The Goddess protects those she loves</div>
-                    Dragon Gem enhancing will always succeed when using <strong>Item Protection Jelly</strong>.
+                    <div class="icon">
+                        <i class="fa fa-level-up"></i>
+                    </div>
+                    <div class="content">
+                        <div class="heading">The Goddess protects those she loves</div>
+                        Dragon Gem enhancing will always succeed when using <strong>Item Protection Jelly</strong>.
+                    </div>
                 </div>
             </transition>
 
             <transition name="fadecollapse-item">
                 <div class="ok toast" v-if="!showFailDropAmount">
-                    <div class="heading">Safety Net</div>
-                    This item cannot drop in level when enhancement fails.
+                    <div class="icon">
+                        <i class="fa fa-plus-circle"></i>
+                    </div>
+                    <div class="content">
+                        <div class="heading">Safety Net</div>
+                        This item cannot drop in level when enhancement fails.
+                    </div>
                 </div>
             </transition>
 
             <transition name="fadecollapse-item">
                 <div class="warn toast" v-if="!canUseJelly && showBreakChance">
-                    <div class="heading">May the Goddess be with you</div>
-                    <strong>Item Protection Jelly</strong> cannot be used with this item.
+                    <div class="icon">
+                        <i class="fa fa-minus-circle"></i>
+                    </div>
+                    <div class="content">
+                        <div class="heading">May the Goddess be with you</div>
+                        <strong>Item Protection Jelly</strong> cannot be used with this item.
+                    </div>
                 </div>
             </transition>
 
@@ -302,10 +317,14 @@
                     </tr>
                 </table>
                 <div class="info toast">
-                    <div class="heading">
-                        Expect the Unexpected
+                    <div class="content">
+                        <div class="heading">
+                            Expect the Unexpected
+                        </div>
+                        <p>
+                            Estimated material amounts are based on a simple inverse rate and does not factor in breakages or downgrades.
+                        </p>
                     </div>
-                    Estimated material amounts are based on a simple inverse rate and does not factor in breakages or downgrades.
                 </div>
             </div>
             <!-- {{ enhanceData }} -->
@@ -582,7 +601,7 @@ export default {
         },
         updateLevel(newLevel) {
             this.level = newLevel;
-            this.$emit("levelUpdate", this.level, this.currentStatSet);
+            this.$emit("levelUpdate", this.level, this.currentStatSet, this.enhanceData);
         },
         test() {
             this.updateLevel(this.level + 1);

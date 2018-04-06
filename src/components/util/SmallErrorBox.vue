@@ -32,29 +32,7 @@ export default {
 <style lang="less" scoped>
 @import "../../less/core.less";
 .small-error {
-    display: flex;
-    flex-direction: row;
-
-    .icon {
-        font-size: 36px;
-        color: @dv-c-red;
-        margin-right: 16px;
-    }
-
     .content {
-        font-family: @dv-f-lato;
-
-        .heading {
-            white-space: nowrap;
-        }
-        
-        p {
-            font-size: 16px;
-            word-wrap: break-word;
-            padding: 0;
-            margin: 0.25em 0;
-        }
-
         .secondary {
             color: #555;
             font-size: 14px;

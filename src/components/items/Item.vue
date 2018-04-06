@@ -156,9 +156,10 @@
                                 <i class="fa fa-diamond" v-if="itemData.gearScore >= 300"></i>
                                 <i class="fa fa-diamond" v-if="itemData.gearScore >= 600"></i>
                             </div>
-                            <strong>+{{ combinedGearScore | thousands }}</strong> GS
+                            <strong>+{{ combinedGearScore.total | thousands }}</strong> GS
                             <div class="tooltext">
-                                <div class="content">Gear Score (GS) is a rough rating of an item's strength<br/><span v-if="potentialGearScore">Base <strong>{{itemData.gearScore}} GS</strong> + Variant <strong>{{potentialGearScore}} GS</strong></span></div>
+                                <div class="content">Gear Score (GS) is a rough rating of an item's strength<br/>
+                                <span v-if="combinedGearScore.total != combinedGearScore.base">Base <strong>{{itemData.gearScore}} GS</strong> + Variant <strong>{{combinedGearScore.potential}} GS</strong> + Enhance <strong>{{combinedGearScore.enhance}} GS</strong></span></div>
                             </div>
                         </div>
                         <div class="attrib tooltip" v-if="itemData.equipPoints">
@@ -406,17 +407,29 @@
                 <div class="title">Extraction</div>
                 Extracting 
                 <span v-if="itemData.enchantId">at +{{enhanceLevel}}</span> 
-                costs <b>{{ itemData.extract.cost | gold }}</b> and can give:
+                costs <b>{{ itemData.extract.cost | gold }}</b> and can give one of:
 
-                <transition-group name="fade-item" tag="div" class="item-list" v-if="itemData.extract.results[effectiveEnhanceLevel]">
+                <transition-group name="fade-item" tag="div" class="item-list" v-if="itemData.extract.results[effectiveEnhanceLevel] && !enhanceData[effectiveEnhanceLevel - 1]">
                     <div class="entry" v-for="(iid, key) in itemData.extract.results[effectiveEnhanceLevel]" :key="key">
                         <item-card :itemId="iid"></item-card>
                     </div>
                 </transition-group>
-                
-                <div class="side-remark">
-                    <i class="fa fa-exclamation-triangle"></i> 
-                    Sorry! We can't show extraction rates and amounts because they aren't in the client.
+                <transition name="fade-item" v-else-if="enhanceData[effectiveEnhanceLevel - 1]">
+                    <item-drop-list :dropId="enhanceData[effectiveEnhanceLevel - 1].disjointDropId" />
+                </transition>
+
+                <div class="info toast">
+                    <div class="icon">
+                        <i class="fa fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="content">
+                        <div class="heading">
+                            Darkness Falls
+                        </div>
+                        <p>
+                            Sorry! We can't show extraction rates because they aren't in the client.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -455,6 +468,8 @@ import ItemSet from "@/components/items/ItemSet";
 import ItemTunings from "@/components/items/ItemTunings";
 import ItemParts from "@/components/items/ItemParts";
 import BigErrorBox from '@/components/util/BigErrorBox';
+import ItemDropListComponent from "@/components/items/ItemDropListComponent";
+
 
 
 import Item from "@/api/item/item";
@@ -474,6 +489,7 @@ Vue.component('item-tunings', ItemTunings);
 Vue.component('mobile-enhance', MobileEnhance);
 Vue.component('item-acquire', ItemAcquire);
 Vue.component('item-parts', ItemParts);
+Vue.component('item-drop-list', ItemDropListComponent);
 
 Vue.component('big-error-box', BigErrorBox);
 
@@ -486,6 +502,7 @@ export default {
             itemData: null,
             enhanceLevel: 0,
             enhanceLevelStats: null,
+            enhanceData: [],
             potentialNum: 0,
             potentialId: 0,
             error: null,
@@ -603,9 +620,15 @@ export default {
             return false;
         },
         combinedGearScore() {
-            let gs = this.itemData.gearScore;
-            gs += this.potentialGearScore;
-            return gs;
+            let ret = {
+                base: this.itemData.gearScore,
+                potential: this.potentialGearScore,
+                enhance: this.enhanceGearScore
+            };
+
+            ret.total = ret.base + ret.potential + ret.enhance;
+
+            return ret;
         },
         potentialGearScore() {
             if (this.potentialId) {
@@ -615,6 +638,13 @@ export default {
                         return v.gearScore;
                     }
                 }
+            }
+
+            return 0;
+        },
+        enhanceGearScore() {
+            if (this.enhanceLevel && this.enhanceData && this.enhanceData[this.enhanceLevel - 1]) {
+                return this.enhanceData[this.enhanceLevel - 1].gearScoreBonus;
             }
 
             return 0;
@@ -644,9 +674,10 @@ export default {
                     this.error = err;
                 });
         },
-        onLevelUpdate(newLevel, enhanceStatSet)  {
+        onLevelUpdate(newLevel, enhanceStatSet, enhanceData)  {
             this.enhanceLevel = newLevel;
             this.enhanceLevelStats = enhanceStatSet;
+            this.enhanceData = enhanceData;
         },
         onPotentialIdUpdate(newPotentialId) {
             this.potentialId = newPotentialId;

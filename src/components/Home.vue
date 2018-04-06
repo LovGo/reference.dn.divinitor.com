@@ -3,8 +3,12 @@
     <h1>Welcome</h1>
 
     <div class="warn toast">
-      <div class="heading">Under construction!</div>
-      Please check back later when we have real content.
+      <div class="content">
+        <div class="heading">Under construction!</div>
+        <p>
+          Please check back later when we have real content.
+        </p>
+      </div>
     </div>
 
     <p>
@@ -25,10 +29,12 @@
         loadText="Region Information" inline></load-indicator>
     </div>
     <div class="warn toast" v-if="error">
-      <div class="heading">
-        Error
+      <div class="content">
+        <div class="heading">
+          Error
+        </div>
+        <p>{{ error }}</p>
       </div>
-      {{ error }}
     </div>
     <div class="tag-table" v-if="server">
       <div class="row">

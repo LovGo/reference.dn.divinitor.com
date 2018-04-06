@@ -1,11 +1,10 @@
 <template>
 <div class="mobile-enchant">
     <div class="warn toast">
-        <div class="heading">Confounding Hammers</div>
-        New Enhancement Hammer system data is not yet well understood and will not be displayed.<br/>
-        Standard hammers appear to enhance at a rate of <strong>25%</strong> and work on 
-        <strong>Lv93+</strong> equipment.<br/>
-        Sorry for the inconvenience.
+        <div class="content">
+            <div class="heading">Coming Soon</div>
+            <p>This feature is currently under development</p>
+        </div>
     </div>
     <!-- <transition name="fade">
         <div v-if="loading" class="loading">

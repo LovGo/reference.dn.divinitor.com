@@ -3,8 +3,10 @@
         <h1>Error</h1>
         
         <div class="warn toast">
-            <div class="heading">404 Page Not Found</div>
-            The page you have requested does not exist.
+            <div class="content">
+                <div class="heading">404 Page Not Found</div>
+                The page you have requested does not exist.
+            </div>
         </div>
         <p>
             Sorrymasen! We couldn't find this page. You can 

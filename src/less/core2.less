@@ -112,6 +112,16 @@ strong {
     padding: 0.5em 1em;
     margin: 1em 0;
     color: @dv-c-foreground;
+    display: flex;
+    flex-direction: row;
+
+    .icon {
+        font-size: 36px;
+        color: @dv-c-foreground;
+        margin-right: 16px;
+        text-align: center;
+        width: 40px;
+    }
 
     & .heading {
         font-size: 0.8em;
@@ -119,18 +129,35 @@ strong {
         letter-spacing: 0.3em;
         font-family: @dv-f-geomanist;
         color: white;
+        white-space: nowrap;
+    }
+
+    .content {
+        font-family: @dv-f-lato;
+        p {
+            font-size: 16px;
+            word-wrap: break-word;
+            padding: 0;
+            margin: 0.25em 0;
+        }
     }
 
     &.warn {
         border-color: @dv-c-red;
         background: fade(lighten(@dv-c-red, -30%), 50%);
         color: lighten(desaturate(@dv-c-red, 50%), 30%);
+        .icon {
+            color: @dv-c-red;
+        }
     }
 
     &.ok {
         border-color: @dv-c-green;
         background: fade(lighten(@dv-c-green, -40%), 50%);
         color: lighten(@dv-c-green, 30%);
+        .icon {
+            color: @dv-c-green;
+        }
     }
 
 }
