@@ -34,6 +34,10 @@ import NotFound from '@/components/NotFound';
 import Auth from '@/components/auth/Auth';
 import AuthCallback from '@/components/auth/AuthCallback';
 
+import Resources from '@/components/resources/Resources';
+import ResourcesHome from '@/components/resources/ResourcesHome';
+import GameChat from '@/components/resources/chat/GameChat';
+
 Vue.use(Router);
 
 export default new Router({
@@ -203,6 +207,25 @@ export default new Router({
         {
           path: '*',
           component: NotFound
+        }
+      ]
+    },
+    {
+      path: '/resources',
+      component: Resources,
+      meta: {
+        auth: true
+      },
+      children: [
+        {
+          path: '',
+          name: 'resource-home',
+          component: ResourcesHome
+        },
+        {
+          path: 'chat',
+          name: 'resource-chat',
+          component: GameChat
         }
       ]
     },
