@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Aint nobody got time for dat",
+            "timestamp": "Apr 08 13:51",
+            "body": "Added current server time and timers for various resets to the home page"
+        },
+        {
             "title": "Toasters toast toast",
             "timestamp": "Apr 06 00:30",
             "body": "Updated all toasts to support icons<br/>Added icons to some toasts so they can be more iconic<br/>Extraction now shows item counts<br/>Gear Score now takes into account the enhancement level of the item<br/>Gonna be porting this to TypeScript soon owo"

@@ -58,6 +58,8 @@
         <div class="data">{{ server.levelCap }}</div>
       </div> -->
     </div>
+
+    <server-time big="true" />
   </div>
 </template>
 
@@ -66,8 +68,10 @@ import Vue from 'vue';
 import region from '@/api/region';
 
 import Loader from "@/components/util/Loader";
+import ServerTime from "@/components/util/ServerTime";
 
 Vue.component("load-indicator", Loader);
+Vue.component("server-time", ServerTime);
 
 export default {
   name: 'home',
