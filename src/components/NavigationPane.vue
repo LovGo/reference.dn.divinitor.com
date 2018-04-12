@@ -7,7 +7,7 @@
       <router-link to="/jobs" tag="a"><li class="disabled">Classes</li></router-link>
       <router-link to="/items" tag="a"><li :class="authed ? '' : 'disabled'">Items</li></router-link>
       <router-link to="/maps" tag="a"><li class="disabled">Maps</li></router-link>
-      <router-link to="/monsters" tag="a"><li class="disabled">Monsters</li></router-link>
+      <router-link to="/monsters" tag="a"><li :class="authed ? '' : 'disabled'">Monsters</li></router-link>
       <router-link to="/npcs" tag="a"><li class="disabled">NPCs</li></router-link>
       <router-link to="/quests" tag="a"><li class="disabled">Quests</li></router-link>
       <router-link to="/skills" tag="a"><li class="disabled">Skills</li></router-link>

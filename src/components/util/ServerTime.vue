@@ -112,7 +112,7 @@ export default {
             let nowPST = now.tz("America/Los_Angeles");
             this.time = nowPST.format("HH:mm:ss");
             
-            if (nowPST.isAfter(this.nextDailyRestTime)) {
+            if (nowPST.isAfter(this.nextDailyResetTime)) {
                 this._initClocks();
             }
             let dailyResetDuration = Moment.duration(this.nextDailyResetTime.diff(nowPST));
@@ -136,10 +136,12 @@ export default {
                 this._initClocks();
             }
             let weeklyResetDuration = Moment.duration(this.nextWeeklyResetTime.diff(nowPST));
-            if (weeklyResetDuration.hours() == 0) {
-                this.weeklyResetCountdown = `${weeklyResetDuration.minutes()}m ${weeklyResetDuration.seconds()}s`;
-            } else if (weeklyResetDuration.days() == 0) {
-                this.weeklyResetCountdown = `${weeklyResetDuration.hours()}h ${weeklyResetDuration.minutes()}m`;
+            if (weeklyResetDuration.days() == 0) {
+                if (weeklyResetDuration.hours() == 0) {
+                    this.weeklyResetCountdown = `${weeklyResetDuration.minutes()}m ${weeklyResetDuration.seconds()}s`;
+                } else {
+                    this.weeklyResetCountdown = `${weeklyResetDuration.hours()}h ${weeklyResetDuration.minutes()}m`;
+                }
             } else {
                 this.weeklyResetCountdown = `${weeklyResetDuration.days()}d ${weeklyResetDuration.hours()}h`;
             }

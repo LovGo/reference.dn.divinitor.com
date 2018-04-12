@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Vahr why are up so late",
+            "timestamp": "Too early in the morning",
+            "body": "Added extremely basic support for monster lookups. <a href='/monsters/507051'>Check it out</a>"
+        },
+        {
             "title": "Aint nobody got time for dat",
             "timestamp": "Apr 08 13:51",
             "body": "Added current server time and timers for various resets to the home page"

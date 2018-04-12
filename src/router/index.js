@@ -38,6 +38,8 @@ import Resources from '@/components/resources/Resources';
 import ResourcesHome from '@/components/resources/ResourcesHome';
 import GameChat from '@/components/resources/chat/GameChat';
 
+import * as Monsters from '@/components/monsters/index';
+
 Vue.use(Router);
 
 export default new Router({
@@ -160,6 +162,30 @@ export default new Router({
             }
           ]
         }
+      ]
+    },
+    {
+      path: '/monsters',
+      component: Monsters.Monsters,
+      meta: {
+        auth: true
+      },
+      children: [
+        {
+          path: '',
+          name: 'monster-home',
+          component: Monsters.MonsterHome
+        },
+        {
+          path: 'search',
+          name: 'monster-search',
+          component: Monsters.MonsterSearch
+        },
+        {
+          path: ':monsterId',
+          name: 'monster-view',
+          component: Monsters.Entry.Monster
+        },
       ]
     },
     {

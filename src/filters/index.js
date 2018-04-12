@@ -20,11 +20,17 @@ export default {
         Vue.filter("ladderrank", this.ladderRank);
     },
 
-    thousands: function(value) {
+    thousands: function(value, key) {
         if (value == null) {
             return value;
         }
-        return value.toLocaleString();
+        if (key) {
+            value = value[key];
+        }
+
+        return value.toLocaleString(undefined, {
+            useGrouping: true
+        });
     },
 
     thousandsFloor: function(value) {
