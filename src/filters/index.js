@@ -33,9 +33,12 @@ export default {
         });
     },
 
-    thousandsFloor: function(value) {
+    thousandsFloor: function(value, key) {
         if (value == null) {
             return value;
+        }
+        if (key) {
+            value = value[key];
         }
         return value.toLocaleString(undefined, {
             maximumFractionDigits: 0

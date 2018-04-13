@@ -76,147 +76,166 @@
                 <div class="title">Stats</div>
 
                 Please note that difficulty IDs are arbitrary and don't necessarily go in order of difficulty.
-
-                <table class="stats">
-                    <thead>
-                        <th class="first">Stat</th>
-                        <th>Base</th>
-                        <th v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            Difficulty {{ w.difficulty }}
-                        </th>
-                    </thead>
-                    <tr>
-                        <th>HP</th>
-                        <td>{{ monsterData.baseStats.hp | thousands}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "hp") | thousands }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>PDMG</th>
-                        <td>
-                            {{ monsterData.baseStats.pdmg.min | thousands}} -<br/>
-                            {{ monsterData.baseStats.pdmg.max | thousands}}
-                        </td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "pdmg") | thousands("min") }} -<br/>
-                            {{ applyStat(w.statWeights, "pdmg") | thousands("max") }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>MDMG</th>
-                        <td>
-                            {{ monsterData.baseStats.mdmg.min | thousands}} -<br/>
-                            {{ monsterData.baseStats.mdmg.max | thousands}}
-                        </td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "mdmg") | thousands("min") }} -<br/>
-                            {{ applyStat(w.statWeights, "mdmg") | thousands("max") }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>PDEF</th>
-                        <td>{{ monsterData.baseStats.pdef | thousands}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "pdef") | thousands }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>MDEF</th>
-                        <td>{{ monsterData.baseStats.mdef | thousands}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "mdef") | thousands }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Para</th>
-                        <td>{{ monsterData.baseStats.para | thousands}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "para") | thousands }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Crit</th>
-                        <td>{{ monsterData.baseStats.crit | thousands}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "crit") | thousands }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Stun</th>
-                        <td>{{ monsterData.baseStats.stun | thousands}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "stun") | thousands }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Para Resist</th>
-                        <td>{{ monsterData.baseStats.paraResist | thousands}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "paraResist") | thousands }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Crit Resist</th>
-                        <td>{{ monsterData.baseStats.critResist | thousands}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "critResist") | thousands }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Stun Resist</th>
-                        <td>{{ monsterData.baseStats.stunResist | thousands}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "stunResist") | thousands }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Ele Atk</th>
-                        <td>{{ monsterData.baseStats.eleAtk | statPercent}} {{ monsterData.elementalType }}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "eleAtk") | statPercent }} {{ monsterData.elementalType }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Fire Def</th>
-                        <td>{{ monsterData.baseStats.fireDef | statPercent}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "fireDef") | statPercent }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Ice Def</th>
-                        <td>{{ monsterData.baseStats.iceDef | statPercent}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "iceDef") | statPercent }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Light Def</th>
-                        <td>{{ monsterData.baseStats.lightDef | statPercent}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "lightDef") | statPercent }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Dark Def</th>
-                        <td>{{ monsterData.baseStats.darkDef | statPercent}}</td>
-                        <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                            {{ applyStat(w.statWeights, "darkDef") | statPercent }}
-                        </td>
-                    </tr>
-                </table>
-
-                <table class="stats">
-                    <thead>
-                        <th class="first smaller">Difficulty</th>
-                        <th>AI Script</th>
-                    </thead>
-                    <tr v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
-                        <th>D {{ w.difficulty }}</th>
-                        <td>{{ w.aiScript }}</td>
-                    </tr>
-                </table>
+                <div class="stats" :wide="monsterData.difficulties.length > 4">
+                    <table>
+                        <thead>
+                            <th class="first">Stat</th>
+                            <th>Base</th>
+                            <th v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                Difficulty {{ w.difficulty }}
+                            </th>
+                        </thead>
+                        <tr>
+                            <th>HP</th>
+                            <td>{{ monsterData.baseStats.hp | thousandsFloor}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "hp") | thousandsFloor }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>PDMG</th>
+                            <td>
+                                {{ monsterData.baseStats.pdmg.min | thousandsFloor}} -<br/>
+                                {{ monsterData.baseStats.pdmg.max | thousandsFloor}}
+                            </td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "pdmg") | thousandsFloor("min") }} -<br/>
+                                {{ applyStat(w.statWeights, "pdmg") | thousandsFloor("max") }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>MDMG</th>
+                            <td>
+                                {{ monsterData.baseStats.mdmg.min | thousandsFloor}} -<br/>
+                                {{ monsterData.baseStats.mdmg.max | thousandsFloor}}
+                            </td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "mdmg") | thousandsFloor("min") }} -<br/>
+                                {{ applyStat(w.statWeights, "mdmg") | thousandsFloor("max") }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>PDEF</th>
+                            <td>{{ monsterData.baseStats.pdef | thousandsFloor}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "pdef") | thousandsFloor }}
+                                <div class="substat">
+                                    ({{ calcDef(applyStat(w.statWeights, "pdef")).result | statPercent }})
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>MDEF</th>
+                            <td>{{ monsterData.baseStats.mdef | thousandsFloor}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "mdef") | thousandsFloor }}
+                                <div class="substat">
+                                    ({{ calcDef(applyStat(w.statWeights, "mdef")).result | statPercent }})
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Para</th>
+                            <td>{{ monsterData.baseStats.para | thousandsFloor}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "para") | thousandsFloor }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Crit</th>
+                            <td>{{ monsterData.baseStats.crit | thousandsFloor}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "crit") | thousandsFloor }}
+                                <div class="substat" v-if="applyStat(w.statWeights, 'crit') > 0">
+                                    ({{ calcCrit(applyStat(w.statWeights, "crit")).result | statPercent }})
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Stun</th>
+                            <td>{{ monsterData.baseStats.stun | thousandsFloor}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "stun") | thousandsFloor }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Para Resist</th>
+                            <td>{{ monsterData.baseStats.paraResist | thousandsFloor}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "paraResist") | thousandsFloor }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Crit Resist</th>
+                            <td>{{ monsterData.baseStats.critResist | thousandsFloor}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "critResist") | thousandsFloor }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Stun Resist</th>
+                            <td>{{ monsterData.baseStats.stunResist | thousandsFloor}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "stunResist") | thousandsFloor }}
+                            </td>
+                        </tr>
+                        <tr v-if="monsterData.elementalType != 'NONE'">
+                            <th>Ele Atk</th>
+                            <td>
+                                {{ monsterData.baseStats.eleAtk | statPercent}}
+                                <div class="elemental" :element="monsterData.elementalType">
+                                    {{ monsterData.elementalType }}
+                                </div>
+                            </td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "eleAtk") | statPercent }}
+                                <div class="elemental" :element="monsterData.elementalType">
+                                    {{ monsterData.elementalType }}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Fire Def</th>
+                            <td>{{ monsterData.baseStats.fireDef | statPercent}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "fireDef") | statPercent }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Ice Def</th>
+                            <td>{{ monsterData.baseStats.iceDef | statPercent}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "iceDef") | statPercent }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Light Def</th>
+                            <td>{{ monsterData.baseStats.lightDef | statPercent}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "lightDef") | statPercent }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Dark Def</th>
+                            <td>{{ monsterData.baseStats.darkDef | statPercent}}</td>
+                            <td v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                                {{ applyStat(w.statWeights, "darkDef") | statPercent }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="stats" wide>
+                    <table>
+                        <thead>
+                            <th class="first smaller">Difficulty</th>
+                            <th>AI Script</th>
+                        </thead>
+                        <tr v-for="w in sorted(monsterData.difficulties, 'difficulty')" :key="w.id">
+                            <th>D {{ w.difficulty }}</th>
+                            <td>{{ w.aiScript }}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <div class="section">
                 <div class="title">Actor Info</div>
@@ -257,6 +276,7 @@ import BigErrorBox from '@/components/util/BigErrorBox';
 Vue.component('big-error-box', BigErrorBox);
 
 import Monster from "@/api/monster/monster";
+import StatCalc from "@/api/StatCalc";
 
 export default {
     data: function() {
@@ -323,11 +343,6 @@ export default {
                 return a[fieldName] - b[fieldName];
             });
         },
-        mapStatName(name) {
-            //  TODO
-
-            return name;
-        },
         applyStat(difficultyObj, statName) {
             let stat = this.monsterData.baseStats[statName];
             let statMul = difficultyObj[statName];
@@ -339,6 +354,12 @@ export default {
             }
 
             return Number(stat * statMul);
+        },
+        calcDef(stat) {
+            return StatCalc.getDefensePercent(stat, this.monsterData.level);
+        },
+        calcCrit(stat) {
+            return StatCalc.getCriticalPercent(stat, this.monsterData.level);
         }
     }
 }
@@ -353,6 +374,7 @@ export default {
     margin-top: 0;
     padding-top: 0;
     width: 100%;
+    overflow-x: hidden;
     .header {
         position: relative;
         width: 100%;
@@ -409,6 +431,7 @@ export default {
         margin-top: 25px;
         border-top: 1px solid @dv-c-accent-1;
         padding-top: 4px;
+        overflow: hidden;
         .title {
             font-size: 12px;
             color: @dv-c-accent-1;
@@ -435,82 +458,119 @@ export default {
 
     .stats {
         
-        margin: 0.5em 0;
-        border-collapse: collapse;
-        text-align: center;
-        thead {
-            th {
-                border-bottom: 2px solid @dv-c-body;
+        &[wide] {
+            overflow-x: auto;
+            max-width: 250px;
+            @media only screen and (min-width: 450px) {
+                max-width: 380px;
+            }
+
+            @media only screen and (min-width: 550px) {
+                max-width: 500px;
+            }
+
+            @media only screen and (min-width:650px) {
+                max-width: 400px;
+            }
+
+            @media only screen and (min-width:780px) {
+                max-width: 500px;
+            }
+
+            @media only screen and (min-width:900px) {
+                max-width: 644px;
+            }
+
+            @media only screen and (min-width:@min-desktop-wide-width) {
+                max-width: 950px;
+            }
+        }
+        
+        table {
+            margin: 0.5em 0;
+            border-collapse: collapse;
+            text-align: center;
+
+            thead {
+                th {
+                    border-bottom: 2px solid @dv-c-body;
+                    color: @dv-c-foreground;
+                    font-size: 12px;
+                    font-weight: normal;
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
+                    text-align: center;
+
+                    &.first {
+                        border-right: 2px solid @dv-c-body;
+                        width: 80px;
+                        text-align: right;
+                        &.smaller {
+                        }
+                    }
+
+                    &.fixed {
+                        width: 80px;
+                    }
+                }
+
+                tr:hover {
+                    background: none;
+                }
+            }
+
+            tr {
+                padding-left: 0.125em;
+                transition: background-color 0.125s ease-in, color 0.125s ease-in;
+                background-color: fade(@dv-c-background, 70%);
+            }
+
+            tr:hover,
+            tr.active:hover {
+                background: fade(@dv-c-foreground, 30%);
+                color: @dv-c-foreground;
+            }
+
+            tr.active {
+                background: fade(@dv-c-foreground, 20%);
+                color: @dv-c-foreground;
+            }
+
+            tr th {
+                border-right: 2px solid @dv-c-body;
+                border-bottom-color: transparent;
+                padding: 4px 12px 4px 0;
+                text-align: right;
                 color: @dv-c-foreground;
                 font-size: 12px;
                 font-weight: normal;
                 text-transform: uppercase;
-                letter-spacing: 0.1em;
-                text-align: center;
+                min-width: 68px;
 
-                &.first {
-                    border-right: 2px solid @dv-c-body;
-                    width: 80px;
-                    text-align: right;
-                    &.smaller {
-                    }
-                }
+            }
 
-                &.fixed {
-                    width: 80px;
+            th, td {
+                border-bottom: 1px solid @dv-c-idle;
+                padding: 4px 4px 4px 4px;
+            }
+
+            td {
+                padding: 0.25em 1em;
+                letter-spacing: 0.05em;
+
+                .substat {
+                    font-size: 12px;
                 }
             }
 
-            tr:hover {
-                background: none;
+            td:first-child,
+            th:first-child {
+                padding-left: 0.25em;
+                padding-right: 0.5em;
             }
-        }
-
-        tr {
-            padding-left: 0.125em;
-            transition: background-color 0.125s ease-in, color 0.125s ease-in;
-        }
-
-        tr:hover,
-        tr.active:hover {
-            background: fade(@dv-c-foreground, 30%);
-            color: @dv-c-foreground;
-        }
-
-        tr.active {
-            background: fade(@dv-c-foreground, 20%);
-            color: @dv-c-foreground;
-        }
-
-        tr th {
-            border-right: 2px solid @dv-c-body;
-            border-bottom-color: transparent;
-            padding: 4px 12px 4px 0;
-            text-align: right;
-            color: @dv-c-foreground;
-            font-size: 12px;
-            font-weight: normal;
-            text-transform: uppercase;
-            min-width: 68px;
-
-        }
-
-        th, td {
-            border-bottom: 1px solid @dv-c-idle;
-            padding: 4px 4px 4px 4px;
-        }
-
-        td {
-            padding: 0 1em;
-        }
-
-        td:first-child,
-        th:first-child {
-            padding-left: 0.25em;
-            padding-right: 0.5em;
-        }
-        tr:last-child td {
-            border-bottom-color: transparent;
+            tr:last-child td {
+                border-bottom-color: transparent;
+            }
         }
     }
 }
