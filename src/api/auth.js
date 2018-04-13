@@ -4,7 +4,7 @@ import Vue from 'vue';
 
 export default {
     redeem(code, okcb, errcb) {
-        Vue.http.get(`/api/auth/discord?code=${code}`,
+        Vue.http.get(`auth/discord?code=${code}`,
         {
         }).then(
         (res) => {

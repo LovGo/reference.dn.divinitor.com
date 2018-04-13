@@ -24,7 +24,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/items/${itemId}`,
+        Vue.http.get(`server/${region}/items/${itemId}`,
         {
         }).then(
         (res) => {
@@ -42,7 +42,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/items/${itemId}/tuning`,
+        Vue.http.get(`server/${region}/items/${itemId}/tuning`,
         {
         }).then(
         (res) => {
@@ -60,7 +60,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/items/${itemId}/acquire`,
+        Vue.http.get(`server/${region}/items/${itemId}/acquire`,
         {
         }).then(
         (res) => {
@@ -78,7 +78,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/items/${itemId}/set`,
+        Vue.http.get(`server/${region}/items/${itemId}/set`,
         {
             params: {
                 'jobs': jobs.join(",")
@@ -117,14 +117,14 @@ export default {
             pageStr = page;
         }
 
-        return `/api/server/${region}/dds/itemicon${pageStr}/png`;
+        return `${Vue.http.options.root}/server/${region}/dds/itemicon${pageStr}/png`;
     },
     
     getSlotOverlay(rank, type, region) {
         if (!region) region = Store.state.regionCode;
         const UNIT_SIZE = 52;
         let ret = {
-            url: `/api/server/${region}/dds/uit_itemslotbutton_o.dds/png`,
+            url: `${Vue.http.options.root}/server/${region}/dds/uit_itemslotbutton_o.dds/png`,
             x: 0,
             y: 0,
         };
@@ -207,7 +207,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/items/enhance/smith/${enhanceId}`,
+        Vue.http.get(`server/${region}/items/enhance/smith/${enhanceId}`,
         {
         }).then(
         (res) => {
@@ -224,7 +224,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/items/enhance/mobile/${mobileEnchantId}`,
+        Vue.http.get(`server/${region}/items/enhance/mobile/${mobileEnchantId}`,
         {
         }).then(
         (res) => {
@@ -241,7 +241,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/items/tuner/${tunerId}`,
+        Vue.http.get(`server/${region}/items/tuner/${tunerId}`,
         {
         }).then(
         (res) => {
@@ -252,7 +252,7 @@ export default {
     },
     getItemTunerInfo(itemId, region, okcb, errcb) {
         if (!region) region = Store.state.regionCode;
-        Vue.http.get(`/api/server/${region}/items/${itemId}/tuning`,
+        Vue.http.get(`server/${region}/items/${itemId}/tuning`,
         {
         }).then(
         (res) => {
@@ -262,7 +262,7 @@ export default {
     },
     getItemSetForItem(itemId, jobIds, region, okcb, errcb) {
         if (!region) region = Store.state.regionCode;
-        Vue.http.get(`/api/server/${region}/items/${itemId}/set`,
+        Vue.http.get(`server/${region}/items/${itemId}/set`,
         {
             params: {
                 jobs: jobIds.join(",")
@@ -353,7 +353,7 @@ export default {
     },
     getCharm(charmId, region, okcb, errcb) {
         if (!region) region = Store.state.regionCode;
-        Vue.http.get(`/api/server/${region}/items/charm/${charmId}`,
+        Vue.http.get(`server/${region}/items/charm/${charmId}`,
         {
         }).then(
         (res) => {
@@ -366,7 +366,7 @@ export default {
     },
     getItemDrop(dropId, region, okcb, errcb) {
         if (!region) region = Store.state.regionCode;
-        Vue.http.get(`/api/server/${region}/items/drop/${dropId}`,
+        Vue.http.get(`server/${region}/items/drop/${dropId}`,
         {
         }).then(
         (res) => {
@@ -376,7 +376,7 @@ export default {
     },
     getItemDropGroup(dropGroupId, region, okcb, errcb) {
         if (!region) region = Store.state.regionCode;
-        Vue.http.get(`/api/server/${region}/items/dropgroup/${dropGroupId}`,
+        Vue.http.get(`server/${region}/items/dropgroup/${dropGroupId}`,
         {
         }).then(
         (res) => {
@@ -437,7 +437,7 @@ export default {
                 params.g = g;
             }
 
-            Vue.http.get(`/api/server/${region}/items/search`,
+            Vue.http.get(`server/${region}/items/search`,
             {
                 params: params
             }).then(
@@ -446,7 +446,7 @@ export default {
             }, 
             errcb);
         } else {
-            Vue.http.get(`/api/server/${region}/items/`,
+            Vue.http.get(`server/${region}/items/`,
             {
                 params: {
                     p: page,

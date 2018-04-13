@@ -262,8 +262,44 @@
                 TODO
             </div>
             <div class="section">
-                <div class="title">Status Immunities</div>
-                {{monsterData.immunities}}
+                <div class="title">Status Resist</div>
+
+                <div class="info toast">
+                    <div class="icon">
+                        <i class="fa fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="content">
+                        <div class="heading">
+                            Skill Twist
+                        </div>
+                        <p>
+                            These are the base resisted effects for this monster. The actual
+                            resisted effects may change due to monster skills or other external
+                            factors.
+                        </p>
+                    </div>
+                </div>
+
+                <table class="state-effect">
+                    <thead>
+                        <th>Status</th>
+                        <th>ID</th>
+                        <th>Immunity Rate</th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="se in sorted(monsterData.immunities, 'stateEffectId')" :key="se.stateEffectId">
+                            <th>
+                                {{ stateEffectName(se) }}
+                            </th>
+                            <td>
+                                {{ se.stateEffectId }}
+                            </td>
+                            <td>
+                                {{ se.immuneRateInt }}%
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -277,6 +313,7 @@ Vue.component('big-error-box', BigErrorBox);
 
 import Monster from "@/api/monster/monster";
 import StatCalc from "@/api/StatCalc";
+import StateEffect from "@/api/skill/stateeffect";
 
 export default {
     data: function() {
@@ -360,6 +397,9 @@ export default {
         },
         calcCrit(stat) {
             return StatCalc.getCriticalPercent(stat, this.monsterData.level);
+        },
+        stateEffectName(stateEffect) {
+            return StateEffect.getStateEffectName(stateEffect.stateEffectId);
         }
     }
 }
@@ -431,7 +471,6 @@ export default {
         margin-top: 25px;
         border-top: 1px solid @dv-c-accent-1;
         padding-top: 4px;
-        overflow: hidden;
         .title {
             font-size: 12px;
             color: @dv-c-accent-1;
@@ -453,6 +492,91 @@ export default {
             // font-family: @dv-f-geomanist;
             // letter-spacing: 0.05em;
             // text-transform: uppercase;
+        }
+    }
+
+    table {
+        margin: 0.5em 0;
+        border-collapse: collapse;
+        text-align: center;
+
+        thead {
+            th {
+                border-bottom: 2px solid @dv-c-body;
+                color: @dv-c-foreground;
+                font-size: 12px;
+                font-weight: normal;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                text-align: center;
+
+                &.first {
+                    border-right: 2px solid @dv-c-body;
+                    width: 80px;
+                    text-align: right;
+                }
+
+                &.fixed {
+                    width: 80px;
+                }
+            }
+
+            tr:hover {
+                background: none;
+            }
+        }
+
+        tr {
+            padding-left: 0.125em;
+            transition: background-color 0.125s ease-in, color 0.125s ease-in;
+            background-color: fade(@dv-c-background, 70%);
+        }
+
+        tr:hover,
+        tr.active:hover {
+            background: fade(@dv-c-foreground, 30%);
+            color: @dv-c-foreground;
+        }
+
+        tr.active {
+            background: fade(@dv-c-foreground, 20%);
+            color: @dv-c-foreground;
+        }
+
+        tr th {
+            border-right: 2px solid @dv-c-body;
+            border-bottom-color: transparent;
+            padding: 4px 12px 4px 0;
+            text-align: right;
+            color: @dv-c-foreground;
+            font-size: 12px;
+            font-weight: normal;
+            text-transform: uppercase;
+            min-width: 68px;
+
+        }
+
+        th, td {
+            border-bottom: 1px solid @dv-c-idle;
+            padding: 4px 4px 4px 4px;
+        }
+
+        td {
+            padding: 0.25em 1em;
+            letter-spacing: 0.05em;
+
+            .substat {
+                font-size: 12px;
+            }
+        }
+
+        td:first-child,
+        th:first-child {
+            padding-left: 0.25em;
+            padding-right: 0.5em;
+        }
+        tr:last-child td {
+            border-bottom-color: transparent;
         }
     }
 
@@ -486,92 +610,6 @@ export default {
             }
         }
         
-        table {
-            margin: 0.5em 0;
-            border-collapse: collapse;
-            text-align: center;
-
-            thead {
-                th {
-                    border-bottom: 2px solid @dv-c-body;
-                    color: @dv-c-foreground;
-                    font-size: 12px;
-                    font-weight: normal;
-                    text-transform: uppercase;
-                    letter-spacing: 0.1em;
-                    text-align: center;
-
-                    &.first {
-                        border-right: 2px solid @dv-c-body;
-                        width: 80px;
-                        text-align: right;
-                        &.smaller {
-                        }
-                    }
-
-                    &.fixed {
-                        width: 80px;
-                    }
-                }
-
-                tr:hover {
-                    background: none;
-                }
-            }
-
-            tr {
-                padding-left: 0.125em;
-                transition: background-color 0.125s ease-in, color 0.125s ease-in;
-                background-color: fade(@dv-c-background, 70%);
-            }
-
-            tr:hover,
-            tr.active:hover {
-                background: fade(@dv-c-foreground, 30%);
-                color: @dv-c-foreground;
-            }
-
-            tr.active {
-                background: fade(@dv-c-foreground, 20%);
-                color: @dv-c-foreground;
-            }
-
-            tr th {
-                border-right: 2px solid @dv-c-body;
-                border-bottom-color: transparent;
-                padding: 4px 12px 4px 0;
-                text-align: right;
-                color: @dv-c-foreground;
-                font-size: 12px;
-                font-weight: normal;
-                text-transform: uppercase;
-                min-width: 68px;
-
-            }
-
-            th, td {
-                border-bottom: 1px solid @dv-c-idle;
-                padding: 4px 4px 4px 4px;
-            }
-
-            td {
-                padding: 0.25em 1em;
-                letter-spacing: 0.05em;
-
-                .substat {
-                    font-size: 12px;
-                }
-            }
-
-            td:first-child,
-            th:first-child {
-                padding-left: 0.25em;
-                padding-right: 0.5em;
-            }
-            tr:last-child td {
-                border-bottom-color: transparent;
-            }
-        }
     }
 }
 </style>

@@ -29,7 +29,7 @@ export default {
             pageStr = page;
         }
 
-        return `/api/server/${region}/dds/skillicon${pageStr}/png`;
+        return `${Vue.http.options.root}/server/${region}/dds/skillicon${pageStr}/png`;
     },
 
 };

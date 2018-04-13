@@ -12,7 +12,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/monsters/${monsterId}`,
+        Vue.http.get(`server/${region}/monsters/${monsterId}`,
         {
         }).then(
         (res) => {
@@ -52,7 +52,7 @@ export default {
                 params.lmax = query.maxLevel;
             }
 
-            Vue.http.get(`/api/server/${region}/monsters/search`,
+            Vue.http.get(`server/${region}/monsters/search`,
             {
                 params: params
             }).then(
@@ -61,7 +61,7 @@ export default {
             }, 
             errcb);
         } else {
-            Vue.http.get(`/api/server/${region}/monsters/`,
+            Vue.http.get(`server/${region}/monsters/`,
             {
                 params: {
                     p: page,

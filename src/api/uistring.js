@@ -19,7 +19,7 @@ export default {
             }
         }
 
-        Vue.http.get(`/api/server/${region}/uistring/${mid}`,
+        Vue.http.get(`server/${region}/uistring/${mid}`,
             {
                 params: {
                     fmt: format,
@@ -40,7 +40,7 @@ export default {
 
     getVariant(mid, { region, param, okcb, errcb }) {
         if (!region) region = Store.state.regionCode;
-        Vue.http.get(`/api/server/${region}/uistring/${mid}/variant`,
+        Vue.http.get(`server/${region}/uistring/${mid}/variant`,
             {
                 params: {
                     param: param
@@ -55,7 +55,7 @@ export default {
     getBulk({ page, size, query }, { region, format, okcb, errcb }) {
         if (!region) region = Store.state.regionCode;
         if (query) {
-            Vue.http.get(`/api/server/${region}/uistring/search`,
+            Vue.http.get(`server/${region}/uistring/search`,
             {
                 params: {
                     fmt: format,
@@ -74,7 +74,7 @@ export default {
             }, 
             errcb);
         } else {
-            Vue.http.get(`/api/server/${region}/uistring/`,
+            Vue.http.get(`server/${region}/uistring/`,
             {
                 params: {
                     fmt: format,
