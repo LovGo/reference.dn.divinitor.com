@@ -18,7 +18,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/jobs`,
+        Vue.http.get(`server/${region}/jobs`,
         {
         }).then(
         (res) => {
@@ -49,6 +49,6 @@ export default {
 
     getIconUrl(region) {
         if (!region) region = Store.state.regionCode;
-        return `/api/server/${region}/dds/jobicon_main/png`;
+        return `${Vue.http.options.root}/server/${region}/dds/jobicon_main/png`;
     },
 };

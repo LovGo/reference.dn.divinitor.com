@@ -20,7 +20,7 @@ export default {
     },
 
     getPointIconUrl(region) {
-        return `/api/server/${region}/dds/pointicon.dds/png`;
+        return `${Vue.http.options.root}/server/${region}/dds/pointicon.dds/png`;
     },
 
     getPoint(pointId, region, okcb, errcb) {
@@ -31,7 +31,7 @@ export default {
             return;
         }
 
-        Vue.http.get(`/api/server/${region}/points/${pointId}`,
+        Vue.http.get(`server/${region}/points/${pointId}`,
         {
         }).then(
         (res) => {
