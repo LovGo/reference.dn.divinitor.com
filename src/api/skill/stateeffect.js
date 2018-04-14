@@ -5,19 +5,19 @@ export default {
 
     stateEffects: {
         "25": {
-            name: "Frame rate increase",
-            desc: "Speeds up action frame rate"
+            name: "Action speed",
+            desc: "Action speed/frame rate"
         },
         "41": {
             name: "Frozen",
             desc: "Actor is frozen and cannot act"
         },
         "42": {
-            name: "Burn",
+            name: "Burned",
             desc: "Actor is on fire and taking damage",
         },
         "43": {
-            name: "Shock",
+            name: "Shocked",
             desc: "Actor is electrocuted and will intermittently suffer from electric shocks"
         },
         "44": {
@@ -25,7 +25,7 @@ export default {
             desc: ""
         },
         "45": {
-            name: "Sleep",
+            name: "Asleep",
             desc: "Puts the unit to sleep"
         },
         "66": {
@@ -101,23 +101,23 @@ export default {
             desc: "Reduce action and movement speed and reduce ice resist"
         },
         "146": {
-            name: "Time Stop",
+            name: "Time Stopped",
             desc: "Completely stops time (frame rate 0), highest priority action speed effect"
         },
         "148": {
-            name: "Reset aggro",
+            name: "Aggro reset",
             desc: "Force aggro reset (monster targets only)"
         },
         "162": {
-            name: "Breaking Point SA break",
+            name: "SA break (Breaking Point)",
             desc: "Break super armor on crits"
         },
         "174": {
-            name: "Buff steal",
+            name: "Buff stolen",
             desc: "Steal the specified number of buffs from the target and grant them to the caster"
         },
         "175": {
-            name: "Knockback/pushed",
+            name: "Knockback",
             desc: "Knocks back or pushes the target"
         },
         "206": {
@@ -129,7 +129,7 @@ export default {
             desc: "Effect applied by meteorite monsters in Lotus Marsh"
         },
         "228": {
-            name: "Hit signal invalidation",
+            name: "Hit signal invalidated",
             desc: "Ignore the effect of the given hit signal at a certain rate"
         },
         "247": {
