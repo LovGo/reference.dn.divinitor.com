@@ -55,7 +55,7 @@ new Vue({
   created() {
     this.$store.dispatch('init');
 
-    let storedApiName = window.sessionStorage.getItem("api");
+    let storedApiName = window.localStorage.getItem("api");
     if ("api" in this.$route.query || storedApiName) {
       let apiName = ((this.$route.query.api || storedApiName) || "api");
       if (!apiName.startsWith("/")) {
@@ -63,12 +63,14 @@ new Vue({
       }
       Vue.http.options.root = apiName;
       if (apiName !== "api") {
-        window.sessionStorage.setItem("api", apiName);
+        window.localStorage.setItem("api", apiName);
       } else {
-        window.sessionStorage.removeItem("api");
+        window.localStorage.removeItem("api");
       }
 
       console.log("Using API '" + apiName + "'");
+    } else {
+      Vue.http.options.root = "/api";
     }
 
     //  Redirect on direct link if auth required
