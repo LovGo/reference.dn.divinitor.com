@@ -19,13 +19,13 @@
                 <div class="description">Download base game client files for a new installation. Patching will be required.</div>
             </div>
         </router-link>
-        <router-link to="/resources/clientpatch" class="option">
+        <!-- <router-link to="/resources/clientpatch" class="option">
             <div class="icon fa fa-copy"></div>
             <div class="content">
                 <div class="title">Patch files</div>
                 <div class="description">Download, inspect, and verify individual game patch files</div>
             </div>
-        </router-link>
+        </router-link> -->
     </div>
 </div>
 </template>
