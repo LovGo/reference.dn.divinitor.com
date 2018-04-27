@@ -81,10 +81,10 @@
 
     <h3>Raw file list</h3>
     <p>
-        Use this if you have a download manager or are scripting
+        Use this if you have a download manager or are scripting. Be sure to move the XIGNCODE files to the XIGNCODE folder.
     </p>
     <div>
-        <code v-html="asList"></code>
+        <code class="block" v-html="asList" />
     </div>
 
 </div>

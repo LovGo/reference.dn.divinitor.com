@@ -105,6 +105,18 @@ code {
     color: white;
     background-color: fade(black, 50%);
     padding: 0.1em 0.3em;
+    transition: background-color ease-in 0.125s;
+
+    &.block {
+        display: block;
+        padding: 10px 14px;
+        border: 1px solid fade(@dv-c-body, 80%);
+        color: @dv-c-body;
+        
+        &:hover {
+            background-color: fade(@dv-c-background, 80%);
+        }
+    }
 }
 
 strong {
