@@ -237,9 +237,6 @@ export default new Router({
     {
       path: '/resources',
       component: Resources.Resources,
-      meta: {
-        auth: true
-      },
       children: [
         {
           path: '',
@@ -249,7 +246,10 @@ export default new Router({
         {
           path: 'chat',
           name: 'resource-chat',
-          component: Resources.Chat.GameChat
+          component: Resources.Chat.GameChat,
+          meta: {
+            auth: true
+          },
         },
         {
           path: 'downloadgame',

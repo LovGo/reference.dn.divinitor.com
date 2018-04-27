@@ -12,7 +12,7 @@
       <router-link to="/quests" tag="a"><li class="disabled">Quests</li></router-link>
       <router-link to="/skills" tag="a"><li class="disabled">Skills</li></router-link>
       <router-link to="/text" tag="a"><li :class="authed ? '' : 'disabled'">Text</li></router-link>
-      <router-link to="/resources" tag="a"><li :class="authed ? '' : 'disabled'">Resources</li></router-link>
+      <router-link to="/resources" tag="a"><li>Resources</li></router-link>
     </ul>
   </div>
 </template>
