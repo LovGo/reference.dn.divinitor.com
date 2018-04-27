@@ -14,7 +14,7 @@
         <li>Create a <code>xigncode</code> folder in the target folder.</li>
         <li>Download all the files from <strong>Set 2</strong> into the <code>xigncode</code> folder.</li>
         <li>In the target folder, run <code>vcredist_x86.exe</code> as an administrator and complete its installation.</li>
-        <li>Patch your new Dragon Nest installation by running <code>DnLauncher.exe</code>. Once patching has completed, your are ready to play.</li>
+        <li>Patch your new Dragon Nest installation by running <code>DnLauncher.exe</code>. Once patching has completed, you are ready to play.</li>
     </ol>
 
     <div class="dl-info">
