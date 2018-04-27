@@ -9,11 +9,24 @@
             </h2>
         </router-link>
     </div>
-    
-    <!-- <router-link :to="{name: 'resource-toolkit'}" class="option-toolkit">
-            <div class="icon fa fa-bars"></div>
-            Toolkit
-    </router-link> -->
+
+    <h2>Client Resources</h2>
+    <div class="options-list">
+        <router-link to="/resources/downloadgame" class="option">
+            <div class="icon fa fa-download"></div>
+            <div class="content">
+                <div class="title">Download game client</div>
+                <div class="description">Download base game client files for a new installation. Patching will be required.</div>
+            </div>
+        </router-link>
+        <!-- <router-link to="/resources/clientpatch" class="option">
+            <div class="icon fa fa-copy"></div>
+            <div class="content">
+                <div class="title">Patch files</div>
+                <div class="description">Download, inspect, and verify individual game patch files</div>
+            </div>
+        </router-link> -->
+    </div>
 </div>
 </template>
 

@@ -34,9 +34,7 @@ import NotFound from '@/components/NotFound';
 import Auth from '@/components/auth/Auth';
 import AuthCallback from '@/components/auth/AuthCallback';
 
-import Resources from '@/components/resources/Resources';
-import ResourcesHome from '@/components/resources/ResourcesHome';
-import GameChat from '@/components/resources/chat/GameChat';
+import * as Resources from '@/components/resources';
 
 import * as Monsters from '@/components/monsters/index';
 
@@ -238,20 +236,25 @@ export default new Router({
     },
     {
       path: '/resources',
-      component: Resources,
-      meta: {
-        auth: true
-      },
+      component: Resources.Resources,
       children: [
         {
           path: '',
           name: 'resource-home',
-          component: ResourcesHome
+          component: Resources.ResourcesHome
         },
         {
           path: 'chat',
           name: 'resource-chat',
-          component: GameChat
+          component: Resources.Chat.GameChat,
+          meta: {
+            auth: true
+          },
+        },
+        {
+          path: 'downloadgame',
+          name: 'game-client',
+          component: Resources.GameClient.GameClient
         }
       ]
     },

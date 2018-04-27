@@ -1,8 +1,6 @@
 <template>
 <div class="general-index">
     <h1>General</h1>
-
-
     <div class="options-grid">
         <router-link to="/general/stat/" class="option">
             <h2 class="heading">
