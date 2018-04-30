@@ -97,6 +97,7 @@ export default {
                                 minimumFractionDigits: 0
                             });
                         },
+                        min: 0,
                     },
                     scaleLabel: {
                         display: true,
