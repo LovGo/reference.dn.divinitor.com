@@ -30,16 +30,25 @@ export default {
         return "local";
     },
 
-    getRegionByShortName(shortName, okcb, errcb) {
+    normalizeName(shortName) {
+        if (!shortName) {
+            shortName = this.getDefaultRegionCode();
+        }
         if (shortName == "local") {
             shortName = "na";
         }
+
+        return shortName;
+    },
+
+    getRegionByShortName(shortName, okcb, errcb) {
+        shortName = this.normalizeName(shortName);
 
         if (this.regionCache[shortName]) {
             okcb(this.regionCache[shortName]);
         }
 
-        Vue.http.get(`https://arcsat.divinitor.com/svc/rs/regions/shortname/${shortName}`,
+        Vue.http.get(`https://regionservice-dn.arcsat.divinitor.com/regions/shortname/${shortName}`,
         {
         }).then(
         (res) => {
@@ -50,7 +59,7 @@ export default {
     },
 
     getRegions(okcb, errcb) {
-        Vue.http.get(`https://arcsat.divinitor.com/svc/rs/regions/`,
+        Vue.http.get(`https://regionservice-dn.arcsat.divinitor.com/regions/`,
         {
         }).then(
         (res) => {
@@ -63,5 +72,18 @@ export default {
             okcb(d);
         }, 
         errcb);
+    },
+
+    getServerStats(shortName, rangeOption) {
+        shortName = this.normalizeName(shortName);
+
+        let range = '';
+        if (rangeOption) {
+            range = `?d=${rangeOption.d}&u=${rangeOption.u}`;
+        }
+
+        return Vue.http.get(`https://regionservice-dn.arcsat.divinitor.com/regions/shortname/${shortName}/pop${range}`,
+        {
+        });
     }
 };
