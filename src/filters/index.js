@@ -18,6 +18,7 @@ export default {
         Vue.filter("rate", this.rate);
         Vue.filter("pvprank", this.pvpRank);
         Vue.filter("ladderrank", this.ladderRank);
+        Vue.filter("fileSize", this.fileSize);
     },
 
     thousands: function(value, key) {
@@ -161,5 +162,51 @@ export default {
     ladderRank(v) {
         let rank = Number(v);
         return LadderRank.getRankName(rank);
+    },
+    fileSize(v) {
+        let size = Number(v);
+        if (isNaN(size)) {
+            return "N/A";
+        }
+
+        const KB = 1024;
+        const MB = 1024 * KB;
+        const GB = 1024 * MB;
+        const TB = 1024 * GB;
+
+        if (size < KB) {
+            return size + " bytes";
+        }
+        if (size < MB) {
+            return ((size / KB).toLocaleString(undefined, {
+                maximumFractionDigits: 0
+            })) + " KB";
+        }
+        if (size < GB / 2 * 3) {
+            const sizeMb = size / MB;
+            if (sizeMb < 10) {
+                return (sizeMb.toLocaleString(undefined, {
+                    maximumFractionDigits: 1
+                })) + " MB"
+            }
+            return (sizeMb.toLocaleString(undefined, {
+                maximumFractionDigits: 0
+            })) + " MB"
+        }
+        if (size < TB / 2 * 3) {
+            const sizeGb = size / GB;
+            if (sizeGb < 10) {
+                return (sizeGb.toLocaleString(undefined, {
+                    maximumFractionDigits: 1
+                })) + " GB"
+            }
+            return (sizeGb.toLocaleString(undefined, {
+                maximumFractionDigits: 0
+            })) + " GB"
+        }
+        const sizeTb = size / TB;
+        return (sizeTb.toLocaleString(undefined, {
+            maximumFractionDigits: 1
+        })) + " TB"
     }
 };

@@ -100,6 +100,25 @@ p {
     letter-spacing: -0.005em;
 }
 
+code {
+    font-family: 'Consolas', 'Courier New', 'Lucidia Console', monospace;
+    color: white;
+    background-color: fade(black, 50%);
+    padding: 0.1em 0.3em;
+    transition: background-color ease-in 0.125s;
+
+    &.block {
+        display: block;
+        padding: 10px 14px;
+        border: 1px solid fade(@dv-c-body, 80%);
+        color: @dv-c-body;
+        
+        &:hover {
+            background-color: fade(@dv-c-background, 80%);
+        }
+    }
+}
+
 strong {
     color: #DDD;
 }
@@ -993,6 +1012,57 @@ button {
     }
 }
 
+.options-list {
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+
+    .option {
+        border: 1px solid @dv-c-accent-2;
+        border-top-color: transparent;
+        background: fade(@dv-c-background, 40%);
+        transition: color 0.125s ease-in, background-color 0.125s ease-in, border-color 0.125s ease-in;
+        padding: 8px;
+
+        display: flex;
+        flex-direction: row;
+
+        &:first-child {
+            border-top-color: @dv-c-accent-2;
+        }
+
+        .icon {
+            flex: 0 0 40px;
+            width: 40px;
+            margin-right: 6px;
+            padding-top: 8px;
+            font-size: 24px;
+            color: @dv-c-foreground;
+            text-align: center;
+        }
+
+        .content {
+            .title {
+                font-family: @dv-f-geomanist;
+                font-size: 18px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: @dv-c-foreground;
+            }
+            .description {
+                color: @dv-c-body;
+            }
+        }
+        
+        &:hover {
+            border-color: @dv-c-foreground;
+            background: fade(@dv-c-foreground, 20%);
+            .heading {
+                color: lighten(@dv-c-foreground, 20%);
+            }
+        }
+    }
+}
 
 input[type="text"] {
     background: none;
