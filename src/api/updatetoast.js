@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Look at all the bots!",
+            "timestamp": "Apr 29 23:55",
+            "body": "Added a basic <a href='/resources/gamepop'>server population tracker</a>. #weekendproject<br/>You can now preview decals"
+        },
+        {
             "title": "Vahr why are up so late",
             "timestamp": "Too early in the morning",
             "body": "Added extremely basic support for monster lookups. <a href='/monsters/507051'>Check it out</a>"
