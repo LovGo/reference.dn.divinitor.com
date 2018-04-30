@@ -3,13 +3,20 @@
     <h1>Server Stats</h1>
 
     <div class="section">
-        <div class="stat">
-            <h2 class="head">Connected Accounts</h2>
-            <div class="value">
-                {{ lastEntry ? lastEntry.cp.toLocaleString() : "--" }}
+        <h2 class="head">Connected Accounts</h2>
+
+        <div class="info toast">
+            <div class="icon">
+                <i class="fa fa-clock-o"></i>
             </div>
-            <div class="footer" v-if="lastEntry">
-                As of {{ moment(lastEntry.t).format("MMM DD YYYY HH:mm") }}
+            <div class="content">
+                <div class="heading">
+                    OwO whats this?
+                </div>
+                <p>
+                    This displays the number of accounts (aggregate) logged in to DN at a given point in time. 
+                    Data is updated approximately every 15 minutes although sampling gaps exist due to server reliability.
+                </p>
             </div>
         </div>
 
@@ -20,6 +27,10 @@
             <strong v-if="lastEntry">{{ moment(lastEntry.t).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
         </div>
 
+        <div>
+            Range: <strong>{{ range.name }}</strong>
+        </div>
+
         <div v-if="popData" class="chart-container">
             <transition name="fade">
                 <div v-if="loading" class="loading">
@@ -27,7 +38,24 @@
                     loadText="Pulling fresh data" altText="Please wait" class="loader"/>
                 </div>
             </transition>
+            <transition name="fade">
+            <div v-if="!loading" class="stat">
+                <div class="value">
+                    {{ lastEntry ? lastEntry.cp.toLocaleString() : "--" }}
+                </div>
+                <div class="footer" v-if="lastEntry">
+                    As of {{ moment(lastEntry.t).format("MMM DD YYYY HH:mm") }}
+                </div>
+            </div>
+            </transition>
             <server-pop-chart :popData="popData" :range="range"/>
+        </div>
+
+        <div class="refresh">
+            Refreshing in {{ refreshCountdown }}s {{ new Array(3 - (refreshCountdown % 4)).fill('.').join('') }}
+            <div class="toploader">
+                <div class="bar" :style="'width:' + refreshCountdownPercent * 100 + '%'" />
+            </div>
         </div>
 
         
@@ -112,14 +140,18 @@ const RANGE_OPTIONS = [
     }
 ]
 
+const refreshDuration = 300;
+// const refreshDuration = 10;
+
 export default {
     data() {
         return {
-            range: RANGE_OPTIONS[6],    //  12 hours
+            range: RANGE_OPTIONS[4],    //  24 hours
             popData: null,
             loading: true,
             error: null,
             refreshTimer: null,
+            refreshCountdown: refreshDuration,
         }
     },
     computed: {
@@ -129,14 +161,23 @@ export default {
             } else {
                 return null;
             }
+        },
+        refreshCountdownPercent() {
+            return 1 - this.refreshCountdown / refreshDuration;
         }
     },
     created() {
         this.load();
         this.refreshTimer = window.setInterval(() => {
-            console.log("Refreshing");
-            this.load();
-        }, 60*1000);
+            this.refreshCountdown--;
+            if (this.refreshCountdown <= 1 && this.refreshCountdown > 0) {
+                this.loading = true;
+            }
+            if (this.refreshCountdown <= 0) {
+                console.log("Refreshing");
+                this.load();
+            }
+        }, 1000);
     },
     methods: {
         load() {
@@ -144,10 +185,12 @@ export default {
             Region.getServerStats(null, this.range).then((d) => {
                 this.popData = d.body;
                 this.loading = false;
+                this.refreshCountdown = refreshDuration;
             }, (err) => {
                 console.error(err);
                 this.error = err;
                 this.loading = false;
+                this.refreshCountdown = refreshDuration;
             })
         },
         moment(val) {
@@ -178,47 +221,58 @@ export default {
     .loading {
         pointer-events: none;
         position: absolute;
-        top: 45%;
+        top: 40%;
         left: 55%;
         width: 300px;
         transform: translate(-50%, -50%);
     }
 
+    .refresh {
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 12px;
+        color: @dv-c-idle;
+
+        .toploader {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            .bar {
+                background-color: @dv-c-foreground;
+                height: 100%;
+                transition: width 1s linear;
+                box-shadow: 0 0 10px 2px fade(@dv-c-foreground, 40%);
+            }
+        }
+    }
+
     .stat {
-        margin-right: 12px;
-        padding: 10px 16px;
-        background-color: fade(@dv-c-background, 40%);
-        border-left: 4px solid @dv-c-accent-1;
-
-        transition: background-color ease-in 0.125s, border-color ease-in 0.125s;
-
-        &:hover {
-            background-color: @dv-c-background;
-            border-color: @dv-c-foreground;
-        }
-
-        .head {
-            font-family: @dv-f-geomanist;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: @dv-c-foreground;
-            margin: 0;
-        }
-
+        position: absolute;
+        top: 42.5%;
+        left: 50.75%;
+        width: 300px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        text-align: center;
+        
         .value {
             font-family: @dv-f-lato;
             // font-weight: 300;
-            font-size: 36px;
+            font-size: 48px;
             letter-spacing: 0.1em;
-            color: @dv-c-body;
+            color: @dv-c-foreground;
             text-transform: uppercase;
+            text-shadow: 0px 0px 10px @dv-c-foreground;
         }
 
         .footer {
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.3em;
-            color: @dv-c-idle;
+            color: @dv-c-accent-2;
+            text-shadow: 0px 0px 10px @dv-c-accent-2;
         }
     }
 }

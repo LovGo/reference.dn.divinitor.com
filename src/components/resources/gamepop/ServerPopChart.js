@@ -38,7 +38,7 @@ export default {
                     borderColor: "#5AA9E5",
                     data: data,
                     pointRadius: 0.001,
-                    borderWidth: 2,
+                    borderWidth: 1,
                     lineTension: 0.2,
                 }
             ]
