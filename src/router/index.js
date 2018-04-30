@@ -252,6 +252,14 @@ export default new Router({
           },
         },
         {
+          path: 'gamepop',
+          name: 'game-pop',
+          component: Resources.GamePop.GamePop,
+          meta: {
+            auth: true
+          },
+        },
+        {
           path: 'downloadgame',
           name: 'game-client',
           component: Resources.GameClient.GameClient
