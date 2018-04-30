@@ -5,8 +5,29 @@ export default {
     extends: Line,
     props: ["popData", "range"],
     name: "server-pop-chart",
+    watch: {
+        popData: function(oldVal, newVal) {
+            let chart = this.$data._chart;
+            let ds = chart.data.datasets[0].data;
+            let nv = this.genDatasets();
+            for (let k = 0; k < nv.length; ++k)
+            {
+                ds[k] = nv[k];
+            }
+
+            let start = moment().subtract(this.range.d, this.range.uu);
+            chart.options.scales.xAxes[0].time.min = start;
+            chart.options.scales.xAxes[0].time.max = moment();
+            chart.update();
+        }
+    },
+    methods: {
+        genDatasets() {
+            return this.popData.map(d => ({t: d.t, y: d.cp}));
+        }
+    },
     mounted() {
-        let data = this.popData.map(d => ({t: d.t, y: d.cp}));
+        let data = this.genDatasets();
         let start = moment().subtract(this.range.d, this.range.uu);
 
         this.renderChart({
@@ -16,8 +37,9 @@ export default {
                     backgroundColor: "rgba(58, 110, 150, 0.25)",
                     borderColor: "#5AA9E5",
                     data: data,
-                    pointRadius: 4,
-                    lineTension: 0.5,
+                    pointRadius: 0.001,
+                    borderWidth: 2,
+                    lineTension: 0.2,
                 }
             ]
         },
@@ -52,8 +74,10 @@ export default {
                     },
                     time: {
                         displayFormats: {
-                            minute: "HH:mm"
+                            minute: "HH:mm",
+                            hour: "HH:mm"
                         },
+                        unit: this.range.du,
                         min: start,
                         max: moment(),
                     },
@@ -66,6 +90,13 @@ export default {
                     gridLines: {
                         display: true,
                         color: "rgba(200, 225, 255, 0.2)"
+                    },
+                    ticks: {
+                        callback: function(lbl, idx, labels) {
+                            return lbl.toLocaleString(undefined, {
+                                minimumFractionDigits: 0
+                            });
+                        },
                     },
                     scaleLabel: {
                         display: true,

@@ -14,13 +14,19 @@
         </div>
 
         <div class="interval">
-            Current interval from 
-            <strong v-if="lastEntry">{{ moment(lastEntry.t).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
-            to 
+            Showing 
             <strong v-if="lastEntry">{{ moment().subtract(this.range.d, this.range.uu).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
+            to 
+            <strong v-if="lastEntry">{{ moment(lastEntry.t).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
         </div>
 
         <div v-if="popData" class="chart-container">
+            <transition name="fade">
+                <div v-if="loading" class="loading">
+                    <load-indicator inline
+                    loadText="Pulling fresh data" altText="Please wait" class="loader"/>
+                </div>
+            </transition>
             <server-pop-chart :popData="popData" :range="range"/>
         </div>
 
@@ -45,56 +51,64 @@ const RANGE_OPTIONS = [
         id: "180d",
         d: 180,
         u: "d",
-        uu: "days"
+        uu: "days",
+        du: "month",
     },
     {
         name: "30 Days",
         id: "30d",
         d: 30,
         u: "d",
-        uu: "days"
+        uu: "days",
+        du: "day"
     },
     {
         name: "14 Days",
         id: "14d",
         d: 14,
         u: "d",
-        uu: "days"
+        uu: "days",
+        du: "day"
     },
     {
         name: "7 Days",
         id: "7d",
         d: 7,
         u: "d",
-        uu: "days"
+        uu: "days",
+        du: "day"
     },
     {
         name: "1 Day",
         id: "1d",
         d: 1,
         u: "d",
-        uu: "days"
+        uu: "days",
+        du: "hour"
     },
     {
         name: "12 Hours",
         id: "12h",
         d: 12,
         u: "h",
-        uu: "hours"
+        uu: "hours",
+        du: "hour"
     },
     {
         name: "6 Hours",
         id: "6h",
         d: 6,
         u: "h",
-        uu: "hours"
+        uu: "hours",
+        du: "hour"
     },
     {
         name: "1 Hour",
         id: "1h",
         d: 1,
         u: "h",
-        uu: "hours"
+        uu: "hours",
+        du: "minute"
     }
 ]
 
@@ -122,7 +136,7 @@ export default {
         this.refreshTimer = window.setInterval(() => {
             console.log("Refreshing");
             this.load();
-        }, 15*60*1000);
+        }, 60*1000);
     },
     methods: {
         load() {
@@ -154,10 +168,20 @@ export default {
 
     .chart-container {
         margin: 10px 0;
+        position: relative;
     }
 
     .interval {
         margin: 10px 0;
+    }
+
+    .loading {
+        pointer-events: none;
+        position: absolute;
+        top: 45%;
+        left: 55%;
+        width: 300px;
+        transform: translate(-50%, -50%);
     }
 
     .stat {
