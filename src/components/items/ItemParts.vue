@@ -1,12 +1,17 @@
 <template>
     <div class="item-parts" :expand="expanded">
         <div class="content">
-            <div class="render" ref="render">
-                <canvas class="render-surface"></canvas>
+            <div class="render" ref="renderbox">
+                <canvas class="render-surface" ref="render" :width=size.width :height=size.height></canvas>
             </div>
             <div class="overlay">
                 <div class="active-skn-name">
-                    {{ selectedSknName }}
+                    <span v-if="selectedPart.sknName">
+                        {{ selectedPart.sknName }}
+                    </span>
+                    <span v-else-if="selectedPart.decalName">
+                        {{ selectedPart.decalName }}
+                    </span>
                 </div>
                 <div class="weapon" v-if="parts.type == 'WEAPON'">
 
@@ -14,7 +19,7 @@
                 <div class="parts" v-else>
 
                 </div>
-                <button class="expand" v-on:click="expand">
+                <button class="expand" v-on:click="expand" v-if="!this.selectedPart.decalName">
                     <i v-if="expanded" class="fa fa-close"></i>
                     <i v-else class="fa fa-expand"></i>
                 </button>
@@ -27,22 +32,28 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import * as THREE from "three";
+import Store from '@/store';
 
 export default {
     props: ["itemId", "parts"],
     data: function() {
         return {
-            selectedSknName: null,
+            selectedPart: null,
             expanded: false,
-            renderer: {}
+            renderer: {},
+            size: {
+                width: 256,
+                height: 256,
+            }
         };
     },
     created() {
         this.init();
     },
-    beforeMount() {
-        this.three();
+    mounted() {
+        this.setup();
     },
     computed: {
         weaponPart() {
@@ -63,22 +74,47 @@ export default {
     methods: {
         init() {
             if (this.parts.parts.length != 0) {
-                this.selectedSknName = this.parts.parts[0].sknName;
+                this.selectedPart = this.parts.parts[0];
             } else {
-                this.selectedSknName = null;
+                this.selectedPart = null;
             }
         },
         expand() {
             this.expanded = !this.expanded;
+            if (this.expanded) {
+                console.log(this.$refs["renderbox"].getClientRects());
+                this.size.width = this.$refs["renderbox"].getClientRects().width;
+                this.size.height = this.$refs["renderbox"].getClientRects().height;
+            } else {
+                this.size.width = 256;
+                this.size.height = 256;
+            }
+
+            this.drawDecal();
         },
         canvas() {
             return this.$refs["render"];
         },
-        three() {
-            let canvas = this.$refs("canvas");
-            console.log(canvas);
-            this.renderer = {
-                // camera: new THREE.PerspectiveCamera(70, canvas().wi)
+        setup() {
+            if (this.selectedPart.sknName) {
+
+            } else if (this.selectedPart.decalName) {
+                //  TEMPORARY
+                this.drawDecal();
+            }
+        },
+        drawDecal() {
+            if (this.selectedPart.decalName) {
+                let canvas = this.canvas();
+                let region = Store.state.regionCode;
+                let url = `${Vue.http.options.root}/server/${region}/dds/${this.selectedPart.decalName}/png`;
+                let img = new Image();
+                img.addEventListener('load', () => {
+                    let ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, -128, 0, 512, 256);
+                }, false);
+                img.src = url;
             }
         }
     },
