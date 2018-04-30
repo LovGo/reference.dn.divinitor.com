@@ -5,7 +5,13 @@
         <router-link :to="{name: 'resource-chat'}" class="option">
             <h2 class="heading">
                 Game Chat
-                <div class="icon fa fa-comments "></div>
+                <div class="icon fa fa-comments"></div>
+            </h2>
+        </router-link>
+        <router-link :to="{name: 'game-pop'}" class="option">
+            <h2 class="heading">
+                Server Stats
+                <div class="icon fa fa-area-chart"></div>
             </h2>
         </router-link>
     </div>
