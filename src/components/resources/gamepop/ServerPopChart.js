@@ -10,20 +10,28 @@ export default {
             let chart = this.$data._chart;
             let ds = chart.data.datasets[0].data;
             let nv = this.genDatasets();
+            ds = ds.slice(0, nv.length);
             for (let k = 0; k < nv.length; ++k)
             {
                 ds[k] = nv[k];
             }
 
+            chart.data.datasets[0].data = ds;
+
             let start = moment().subtract(this.range.d, this.range.uu);
             chart.options.scales.xAxes[0].time.min = start;
             chart.options.scales.xAxes[0].time.max = moment();
+            chart.options.scales.xAxes[0].time.unit = this.range.du;
             chart.update();
+            this.mounted();
+        },
+        range: function(oldVal, newVal) {
+            this.mounted();
         }
     },
     methods: {
         genDatasets() {
-            return this.popData.map(d => ({t: d.t, y: d.cp}));
+            return this.popData.map(d => ({t: d.t, y: d.cp})).reverse();
         }
     },
     mounted() {
@@ -86,24 +94,26 @@ export default {
                         labelString: "Time"
                     }
                 }],
-                yAxes: [{
-                    gridLines: {
-                        display: true,
-                        color: "rgba(200, 225, 255, 0.2)"
-                    },
-                    ticks: {
-                        callback: function(lbl, idx, labels) {
-                            return lbl.toLocaleString(undefined, {
-                                minimumFractionDigits: 0
-                            });
+                yAxes: [
+                    {
+                        gridLines: {
+                            display: true,
+                            color: "rgba(200, 225, 255, 0.2)"
                         },
-                        min: 0,
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Accounts"
+                        ticks: {
+                            callback: function(lbl, idx, labels) {
+                                return lbl.toLocaleString(undefined, {
+                                    minimumFractionDigits: 0
+                                });
+                            },
+                            min: 0,
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Accounts"
+                        }
                     }
-                }]
+                ]
             }
         });
     }

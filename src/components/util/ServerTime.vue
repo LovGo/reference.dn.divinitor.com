@@ -167,7 +167,7 @@ export default {
     }
 
     .timer {
-            margin-right: 12px;
+        margin-right: 12px;
         flex: 1 1 auto;
         padding: 10px 16px;
         background-color: fade(@dv-c-background, 40%);

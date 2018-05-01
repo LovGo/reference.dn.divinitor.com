@@ -3,7 +3,7 @@
     <h1>Server Stats</h1>
 
     <div class="section">
-        <h2 class="head">Connected Accounts</h2>
+        <h2 class="head">Players Online</h2>
 
         <div class="info toast">
             <div class="icon">
@@ -28,7 +28,13 @@
         </div>
 
         <div>
-            Range: <strong>{{ range.name }}</strong>
+            Range: 
+            <select v-model="range">
+                <option disabled value="">Please select one</option>
+                <option :value="v" v-for="v in options" :key="v.id">
+                    {{ v.name }}
+                </option>
+            </select>
         </div>
 
         <div v-if="popData" class="chart-container">
@@ -40,15 +46,36 @@
             </transition>
             <transition name="fade">
             <div v-if="!loading" class="stat">
+                <div class="head">
+                    Players Online
+                </div>
                 <div class="value">
                     {{ lastEntry ? lastEntry.cp.toLocaleString() : "--" }}
                 </div>
                 <div class="footer" v-if="lastEntry">
-                    As of {{ moment(lastEntry.t).format("MMM DD YYYY HH:mm") }}
+                    At {{ moment(lastEntry.t).format("MMM DD YYYY HH:mm") }}
                 </div>
             </div>
             </transition>
             <server-pop-chart :popData="popData" :range="range"/>
+        </div>
+        <div class="summary">
+            <div class="sum-stat">
+                <div class="title">Min</div>
+                <div class="value">{{summary.min | thousands}}</div>
+            </div>
+            <div class="sum-stat">
+                <div class="title">Max</div>
+                <div class="value">{{summary.max | thousands}}</div>
+            </div>
+            <div class="sum-stat">
+                <div class="title">Mean</div>
+                <div class="value">{{summary.mean | thousandsFloor}}</div>
+            </div>
+            <div class="sum-stat">
+                <div class="title">Median</div>
+                <div class="value">{{summary.median | thousandsFloor}}</div>
+            </div>
         </div>
 
         <div class="refresh">
@@ -141,11 +168,11 @@ const RANGE_OPTIONS = [
 ]
 
 const refreshDuration = 300;
-// const refreshDuration = 10;
 
 export default {
     data() {
         return {
+            options: RANGE_OPTIONS,
             range: RANGE_OPTIONS[4],    //  24 hours
             popData: null,
             loading: true,
@@ -164,6 +191,31 @@ export default {
         },
         refreshCountdownPercent() {
             return 1 - this.refreshCountdown / refreshDuration;
+        },
+        summary() {
+            let dat = this.popData.map(d => d.cp).sort();
+            let med = 0;
+            let half = ~~(dat.length / 2);
+            if (dat.length % 2 == 0) {
+                med = (dat[half] + dat[half + 1]) / 2;
+            } else {
+                med = dat[half];
+            }
+
+            return {
+                dat: dat,
+                max: Math.max(...dat),
+                min: Math.min(...dat),
+                mean: dat.reduce((t, n) => t + n) / dat.length,
+                median: med,
+            }
+        }
+    },
+    watch: {
+        range(from, to) {
+            if (from.id != to.id) {
+                this.load();
+            }
         }
     },
     created() {
@@ -212,6 +264,12 @@ export default {
     .chart-container {
         margin: 10px 0;
         position: relative;
+
+        &:hover {
+            .stat {
+                opacity: 0.2;
+            }
+        }
     }
 
     .interval {
@@ -250,13 +308,24 @@ export default {
 
     .stat {
         position: absolute;
-        top: 42.5%;
-        left: 50.75%;
+        top: 45.5%;
+        left: 50%;
         width: 300px;
         transform: translate(-50%, -50%);
         pointer-events: none;
         text-align: center;
+        opacity: 1.0;
+        transition: opacity ease-in 0.125s;
         
+        .head {
+            font-family: @dv-f-geomanist;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: @dv-c-accent-2;
+            text-shadow: 0px 0px 10px @dv-c-accent-2;
+            font-size: 12px;
+        }
+
         .value {
             font-family: @dv-f-lato;
             // font-weight: 300;
@@ -273,6 +342,36 @@ export default {
             letter-spacing: 0.3em;
             color: @dv-c-accent-2;
             text-shadow: 0px 0px 10px @dv-c-accent-2;
+        }
+    }
+
+    .summary {
+        display: flex;
+        flex-direction: row;
+        .sum-stat {
+            flex: 1 1 auto;
+            margin-right: 12px;
+            flex: 1 1 auto;
+            padding: 4px 10px;
+            background-color: fade(@dv-c-background, 40%);
+            border-left: 4px solid @dv-c-accent-1;
+
+            .title {
+                font-family: @dv-f-geomanist;
+                letter-spacing: 0.3em;
+                text-transform: uppercase;
+                color: @dv-c-foreground;
+                font-size: 12px;
+            }
+
+            .value {
+                font-family: @dv-f-lato;
+                // font-weight: 300;
+                font-size: 16px;
+                letter-spacing: 0.1em;
+                color: @dv-c-body;
+                text-transform: uppercase;
+            }
         }
     }
 }
