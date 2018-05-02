@@ -41,7 +41,7 @@ export default {
         this.renderChart({
             datasets: [
                 {
-                    label: `Connected Accounts`,
+                    label: `Players`,
                     backgroundColor: "rgba(58, 110, 150, 0.25)",
                     borderColor: "#5AA9E5",
                     data: data,
@@ -66,7 +66,7 @@ export default {
                         return moment(items[0].xLabel).format("MMM DD YYYY HH:mm");
                     },
                     label: function(item, data) {
-                        return item.yLabel.toLocaleString() + " accounts";
+                        return item.yLabel.toLocaleString() + " players";
                     }
                 }
             },
