@@ -19,13 +19,69 @@
                 </p>
             </div>
         </div>
-
-        <div class="interval">
-            Showing 
-            <strong v-if="lastEntry">{{ moment().subtract(this.range.d, this.range.uu).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
-            to 
-            <strong v-if="lastEntry">{{ moment(lastEntry.t).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
+        
+        <div>
+            Range: 
+            <select v-model="range">
+                <option disabled value="">Please select one</option>
+                <option :value="v" v-for="v in options" :key="v.id">
+                    {{ v.name }}
+                </option>
+            </select>
+            <div class="interval">
+                Showing 
+                <strong v-if="lastServerEntry">{{ moment().subtract(this.range.d, this.range.uu).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
+                to 
+                <strong v-if="lastServerEntry">{{ moment(lastServerEntry.t).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
+            </div>
         </div>
+
+        <div class="summary">
+            <div class="sum-stat">
+                <div class="title">Min</div>
+                <div class="value">{{summaryServer.min | thousands}}</div>
+            </div>
+            <div class="sum-stat">
+                <div class="title">Max</div>
+                <div class="value">{{summaryServer.max | thousands}}</div>
+            </div>
+            <div class="sum-stat">
+                <div class="title">Mean</div>
+                <div class="value">{{summaryServer.mean | thousandsFloor}}</div>
+            </div>
+            <div class="sum-stat">
+                <div class="title">Median</div>
+                <div class="value">{{summaryServer.median | thousandsFloor}}</div>
+            </div>
+        </div>
+        
+        <div v-if="serverPop.data" class="chart-container">
+            <transition name="fade">
+                <div v-if="serverPop.loading" class="loading">
+                    <load-indicator inline
+                    loadText="Pulling fresh data" altText="Please wait" class="loader"/>
+                </div>
+            </transition>
+            <transition name="fade">
+            <div v-if="!serverPop.loading" class="stat">
+                <div class="head">
+                    Players Online
+                </div>
+                <div class="value">
+                    {{ lastServerEntry ? lastServerEntry.cp.toLocaleString() : "--" }}
+                </div>
+                <div class="footer" v-if="lastServerEntry">
+                    At {{ moment(lastServerEntry.t).format("MMM DD YYYY HH:mm") }}
+                </div>
+            </div>
+            </transition>
+            <server-pop-chart :popData="serverPop.data" :range="range"/>
+        </div>
+    </div>
+
+    
+    <div class="section">
+        <h2 class="head">Saint's Haven Breakdown</h2>
 
         <div>
             Range: 
@@ -35,32 +91,25 @@
                     {{ v.name }}
                 </option>
             </select>
+            <div class="interval">
+                Showing 
+                <strong v-if="lastChEntry">{{ moment().subtract(this.range.d, this.range.uu).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
+                to 
+                <strong v-if="lastChEntry">{{ moment(lastChEntry.t).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
+            </div>
         </div>
 
-        <div v-if="popData" class="chart-container">
+        <div v-if="channelPop.data" class="chart-container">
             <transition name="fade">
-                <div v-if="loading" class="loading">
+                <div v-if="channelPop.loading" class="loading">
                     <load-indicator inline
                     loadText="Pulling fresh data" altText="Please wait" class="loader"/>
                 </div>
             </transition>
-            <transition name="fade">
-            <div v-if="!loading" class="stat">
-                <div class="head">
-                    Players Online
-                </div>
-                <div class="value">
-                    {{ lastEntry ? lastEntry.cp.toLocaleString() : "--" }}
-                </div>
-                <div class="footer" v-if="lastEntry">
-                    At {{ moment(lastEntry.t).format("MMM DD YYYY HH:mm") }}
-                </div>
-            </div>
-            </transition>
-            <server-pop-chart :popData="popData" :range="range"/>
+            <channel-pop-chart :popData="channelPop.data" :range="range"/>
         </div>
         <div class="summary">
-            <div class="sum-stat">
+            <!-- <div class="sum-stat">
                 <div class="title">Min</div>
                 <div class="value">{{summary.min | thousands}}</div>
             </div>
@@ -75,7 +124,7 @@
             <div class="sum-stat">
                 <div class="title">Median</div>
                 <div class="value">{{summary.median | thousandsFloor}}</div>
-            </div>
+            </div> -->
         </div>
 
         <div class="refresh">
@@ -84,9 +133,6 @@
                 <div class="bar" :style="'width:' + refreshCountdownPercent * 100 + '%'" />
             </div>
         </div>
-
-        
-
     </div>
 </div>
 </template>
@@ -97,8 +143,10 @@ import moment from 'moment';
 import Region from '@/api/region'
 
 import ServerPopChart from './ServerPopChart';
+import ChannelPopChart from './ChannelPopChart';
 
 Vue.component("server-pop-chart", ServerPopChart);
+Vue.component("channel-pop-chart", ChannelPopChart);
 
 const RANGE_OPTIONS = [
     {
@@ -174,17 +222,31 @@ export default {
         return {
             options: RANGE_OPTIONS,
             range: RANGE_OPTIONS[4],    //  24 hours
-            popData: null,
-            loading: true,
-            error: null,
+            serverPop: {
+                data: [],
+                loading: true,
+                error: null,
+            },
+            channelPop: {
+                data: [],
+                loading: true,
+                error: null,
+            },
             refreshTimer: null,
             refreshCountdown: refreshDuration,
         }
     },
     computed: {
-        lastEntry() {
-            if (this.popData && this.popData.length > 0) {
-                return this.popData[this.popData.length - 1];
+        lastServerEntry() {
+            if (this.serverPop.data && this.serverPop.data.length > 0) {
+                return this.serverPop.data[this.serverPop.data.length - 1];
+            } else {
+                return null;
+            }
+        },
+        lastChEntry() {
+            if (this.channelPop.data && this.channelPop.data.length > 0) {
+                return this.channelPop.data[this.channelPop.data.length - 1];
             } else {
                 return null;
             }
@@ -192,8 +254,18 @@ export default {
         refreshCountdownPercent() {
             return 1 - this.refreshCountdown / refreshDuration;
         },
-        summary() {
-            let dat = this.popData.map(d => d.cp).sort();
+        summaryServer() {
+            if (!this.serverPop.data.length) {
+                return {
+                    dat: [],
+                    max: 0,
+                    min: 0,
+                    mean: 0,
+                    median: 0,
+                };
+            }
+
+            let dat = this.serverPop.data.map(d => d.cp).sort();
             let med = 0;
             let half = ~~(dat.length / 2);
             if (dat.length % 2 == 0) {
@@ -209,7 +281,7 @@ export default {
                 mean: dat.reduce((t, n) => t + n) / dat.length,
                 median: med,
             }
-        }
+        },
     },
     watch: {
         range(from, to) {
@@ -233,15 +305,32 @@ export default {
     },
     methods: {
         load() {
-            this.loading = true;
+            this.loadServer();
+            this.loadChannel();
+        },
+        loadServer() {
+            this.serverPop.loading = true;
             Region.getServerStats(null, this.range).then((d) => {
-                this.popData = d.body;
-                this.loading = false;
+                this.serverPop.data = d.body;
+                this.serverPop.loading = false;
                 this.refreshCountdown = refreshDuration;
             }, (err) => {
-                console.error(err);
-                this.error = err;
-                this.loading = false;
+                console.error("Server", err);
+                this.serverPop.error = err;
+                this.serverPop.loading = false;
+                this.refreshCountdown = refreshDuration;
+            })
+        },
+        loadChannel() {
+            this.channelPop.loading = true;
+            Region.getChannelStats(null, 11, this.range).then((d) => {
+                this.channelPop.data = d.body;
+                this.channelPop.loading = false;
+                this.refreshCountdown = refreshDuration;
+            }, (err) => {
+                console.error("Channel", err);
+                this.channelPop.error = err;
+                this.channelPop.loading = false;
                 this.refreshCountdown = refreshDuration;
             })
         },
@@ -273,7 +362,8 @@ export default {
     }
 
     .interval {
-        margin: 10px 0;
+        margin: 4px 0 10px 10px;
+        display: inline-block;
     }
 
     .loading {

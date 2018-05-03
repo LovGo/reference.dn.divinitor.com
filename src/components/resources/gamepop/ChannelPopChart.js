@@ -1,22 +1,47 @@
 import { Line } from 'vue-chartjs';
 import moment from 'moment';
 
+const colors = [
+    "rgb(49, 192, 246)",
+    "rgb(49, 145, 245)",
+    "rgb(137, 78, 205)",
+    "rgb(208, 0, 141)",
+    "rgb(253, 48, 89)",
+    "rgb(255, 126, 39)"
+];
+
+const colorsTrans = [
+    "rgba(49, 192, 246, 0.1)",
+    "rgba(49, 145, 245, 0.1)",
+    "rgba(137, 78, 205, 0.1)",
+    "rgba(208, 0, 141, 0.1)",
+    "rgba(253, 48, 89, 0.1)",
+    "rgba(255, 126, 39, 0.1)"
+];
+
 export default {
     extends: Line,
     props: ["popData", "range"],
-    name: "server-pop-chart",
+    name: "channel-pop-chart",
     watch: {
         popData: function(oldVal, newVal) {
             let chart = this.$data._chart;
-            let ds = chart.data.datasets[0].data;
             let nv = this.genDatasets();
-            ds = ds.slice(0, nv.length);
-            for (let k = 0; k < nv.length; ++k)
-            {
-                ds[k] = nv[k];
+            if (chart.data.datasets.length != nv.length) {
+                chart.data.datasets = nv.slice();
             }
 
-            chart.data.datasets[0].data = ds;
+            for (let i = 0; i < nv.length; ++i) {
+                let ds = chart.data.datasets[i].data;
+                ds = ds.slice(0, nv[i].data.length);
+                for (let k = 0; k < nv[i].data.length; ++k)
+                {
+                    ds[k] = nv[i].data[k];
+                }
+    
+                chart.data.datasets[i].data = ds;
+            }
+
             chart.update();
         },
         range: function(oldVal, newVal) {
@@ -30,24 +55,46 @@ export default {
     },
     methods: {
         genDatasets() {
-            return this.popData.map(d => ({t: d.t, y: d.cp})).reverse();
+            //  Grouping
+            let ret = {};
+            let rev = this.popData.slice().reverse();
+            for (let k in rev) {
+                let v = rev[k];
+                let arr = ret[v.cn];
+                if (!arr) {
+                    arr = [];
+                    ret[v.cn] = arr;
+                }
+
+                arr.push({t: v.t, y: v.cp, n: v.cn});
+            }
+
+            let rret = [];
+
+            let i = 0;
+            for (let k in ret) {
+                let v = ret[k];
+                rret.push({
+                    label: `Ch${k}`,
+                    backgroundColor: colorsTrans[i % colorsTrans.length],
+                    borderColor: colors[i % colors.length],
+                    data: v,
+                    pointRadius: 0.001,
+                    borderWidth: 1,
+                    lineTension: 0.1,
+                    id: k,
+                });
+
+                ++i;
+            }
+
+            return rret.reverse();
         },
         onMount() {
             let data = this.genDatasets();
             let start = moment().subtract(this.range.d, this.range.uu);
-
             this.renderChart({
-                datasets: [
-                    {
-                        label: `Players`,
-                        backgroundColor: "rgba(58, 110, 150, 0.25)",
-                        borderColor: "#5AA9E5",
-                        data: data,
-                        pointRadius: 0.001,
-                        borderWidth: 1,
-                        lineTension: 0.2,
-                    }
-                ]
+                datasets: data
             },
             {
                 responsive: true,
@@ -64,7 +111,7 @@ export default {
                             return moment(items[0].xLabel).format("MMM DD YYYY HH:mm");
                         },
                         label: function(item, data) {
-                            return item.yLabel.toLocaleString() + " players";
+                            return data.datasets[item.datasetIndex].label + " " + item.yLabel.toLocaleString() + " players";
                         }
                     }
                 },
@@ -94,6 +141,7 @@ export default {
                     }],
                     yAxes: [
                         {
+                            stacked: true,
                             gridLines: {
                                 display: true,
                                 color: "rgba(200, 225, 255, 0.2)"
