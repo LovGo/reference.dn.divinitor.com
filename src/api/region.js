@@ -85,5 +85,19 @@ export default {
         return Vue.http.get(`https://regionservice-dn.arcsat.divinitor.com/regions/shortname/${shortName}/pop${range}`,
         {
         });
+    },
+
+    
+    getChannelStats(shortName, mapId, rangeOption) {
+        shortName = this.normalizeName(shortName);
+
+        let range = '';
+        if (rangeOption) {
+            range = `?d=${rangeOption.d}&u=${rangeOption.u}`;
+        }
+
+        return Vue.http.get(`https://regionservice-dn.arcsat.divinitor.com/regions/shortname/${shortName}/pop/maps/${mapId}${range}`,
+        {
+        });
     }
 };
