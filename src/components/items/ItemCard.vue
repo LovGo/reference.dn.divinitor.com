@@ -193,11 +193,22 @@ export default {
                     if (v.potentialNumber == this.potentialNum) {
                         let ret = [];
                         let states = v.states;
+                        let retSet = {};
                         for (let k1 in states) {
-                            ret.push(ItemStat.getStateInfo(states[k1]));
+                            let key = states[k1].state;
+                            let stateInfo = ItemStat.getStateInfo(key);
+                            if (stateInfo.minmax) {
+                                key = stateInfo.minmax;
+                                stateInfo = ItemStat.getStateInfo(key);
+                            }
+
+                            if (!retSet[key]) {
+                                retSet[key] = stateInfo;
+                                ret.push(stateInfo);
+                            }
                         }
 
-                        return ret;
+                        return ret.slice(0, Math.min(3, ret.length));
                     }
                 }
             } else {

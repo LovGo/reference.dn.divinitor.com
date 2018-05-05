@@ -2,16 +2,30 @@
 <div class="potential-info">
     This item has <strong>{{potentialData.length}}</strong> additional stat options:
     <!-- TODO add filter by stat -->
-    <div class="filter" v-if="potentialData.length > 6">
-        Filter
-    </div>
+    <form class="filter" v-if="potentialData.length > 6 && availableStats.length">
+        <legend>Filter by</legend>
+
+        <div class="grade-filter stat-filter">
+            <span class="stat-select divinitor" v-for="s in availableStats" :key="s">
+                <input :id="'filter-stat-' + s" type="checkbox" :value="s" v-model="statFilter" selected/>
+                <label :for="'filter-stat-' + s">{{statName(s).abbv}}</label>
+            </span>
+        </div>
+    
+        <div class="button-row">
+            <button class="submit" v-on:click.prevent="resetFilterNone">Show None</button>
+            <button class="submit" v-on:click.prevent="resetFilterAll">Show All</button>
+        </div>
+
+    </form>
 
     <div class="potential-list" :scrollable="potentialData.length > 30">
         <div class="potential-entry" 
             v-for="d in sortedData" 
             :key="d.id" 
             :active="potentialId == d.id"
-            v-on:click="select(d.id)">
+            v-on:click="select(d.id)"
+            v-if="!shouldFilter(d)">
             <div class="pid">{{d.id}}:{{d.potentialNumber}}</div>
             <div class="grid-cover">
                 <stat-grid
@@ -22,7 +36,8 @@
                 <div class="skill-option" v-if="d.skill">
                     <skill-icon :iconIndex="d.skill.iconIndex"></skill-icon>
                     <div class="skill-info">
-                        <div class="skill-class">{{d.skill.job.displayName}}</div>
+                        <div class="skill-id">#{{d.skill.id}}</div>
+                        <div class="skill-class" v-if="d.skill.job >= 0">{{d.skill.job.displayName}}</div>
                         <div class="skill-name">{{d.skill.displayName}}</div>
                     </div>
                 </div>
@@ -53,6 +68,7 @@ export default {
     data: function() {
         return {
             potentialId: 0,
+            statFilter: [],
         }
     },
     created() {
@@ -81,6 +97,34 @@ export default {
 
                 return 0;
             });
+
+            return ret;
+        },
+        availableStats() {
+            let ret = {};
+            for (let k in this.potentialData) {
+                let v = this.potentialData[k];
+
+                let joined = ItemStat.joinStatSet(v.states, "value");
+                // Merge stats that are min/max
+                for (let s in joined) {
+                    let stat = this.statName(s);
+                    if (stat.minmax) {
+                        ret[stat.minmax] = true;
+                    } else {
+                        ret[s] = true;
+                    }
+                }
+            }
+
+            return Object.keys(ret).sort();
+        },
+        filterAsSet() {
+            let ret = {};
+            for (let k in this.statFilter) {
+                let v = this.statFilter[k];
+                ret[v] = true;
+            }
 
             return ret;
         }
@@ -120,6 +164,8 @@ export default {
             } else {
                 this.select(this.sortedData[0].id);
             }
+
+            this.resetFilterAll();
         },
         statSet(potential) {
             return ItemStat.joinStatSet(potential.states, "value");
@@ -127,6 +173,31 @@ export default {
         select(potentialId) {
             this.potentialId = potentialId;
             this.$emit("potentialIdChange", this.potentialId);
+        },
+        statName(key) {
+            return ItemStat.getStateInfo(key);
+        },
+        shouldFilter(potential) {
+            let states = potential.states;
+            for (let k in states) {
+                let v = states[k];
+                if (this.filterAsSet[v.state]) {
+                    return false;
+                }
+
+                let stateInfo = ItemStat.getStateInfo(v.state);
+                if (stateInfo.minmax && this.filterAsSet[stateInfo.minmax]) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+        resetFilterNone() {
+            this.statFilter = [];
+        },
+        resetFilterAll() {
+            this.statFilter = this.availableStats.slice();
         }
     }
 
@@ -139,6 +210,20 @@ export default {
 .potential-info {
     position: relative;
 
+    .stat-filter {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        max-height: 75px;
+
+        .stat-select {
+            display: inline-block;
+            flex: 0 1;
+        }
+
+        margin-bottom: 10px;
+    }
+
     .potential-list {
         display: flex;
         flex-direction: row;
@@ -149,7 +234,7 @@ export default {
         overflow-y: auto;
 
         .potential-entry {
-            flex: 0 1 250px;
+            flex: 0 1 275px;
             padding: 8px;
             border: 1px solid @dv-c-foreground;
             cursor: pointer;
@@ -191,6 +276,12 @@ export default {
                 }
 
                 .skill-option {
+                    .skill-info {
+                        .skill-id {
+                            color: @dv-c-body;
+                        }
+                    }
+
                     .skill-class {
                         color: @dv-c-accent-2;
                     }
@@ -214,9 +305,24 @@ export default {
                 display: flex;
                 flex-direction: row;
 
+                .skil-icon {
+                    flex: 0 0;
+                }
+
                 .skill-info {
+                    flex: 1 0;
                     margin-left: 8px;
                     margin-right: 24px;
+                    .skill-id {
+                        font-size: 12px;
+                        letter-spacing: 0.2em;
+                        text-transform: uppercase;
+                        word-wrap: break-word;
+                        color: fade(@dv-c-body, 20%);
+                        transition: color ease-in 0.125s;
+                        line-height: 10px;
+                    }
+
                     .skill-class {
                         transition: color ease-in 0.125s;
                         font-size: 12px;
@@ -232,6 +338,8 @@ export default {
                         font-family: @dv-f-geomanist;
                         color: @dv-c-foreground;
                         font-size: 16px;
+                        word-wrap: break-word;
+                        overflow-wrap: break-word;
                     }
                 }
             }

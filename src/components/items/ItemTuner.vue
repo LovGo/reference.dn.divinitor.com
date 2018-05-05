@@ -118,40 +118,42 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="option" v-for="(vv, ke) in collapseEnhance(sortedOptions(selectedItem.options))" :key="ke">
-                                <div class="enhance" v-if="ke != '0'">
-                                    +{{ke}} input
-                                </div>
-                                <div v-for="(v, k) in vv" :key="k">
-                                    <div class="top">
-                                        <div class="name" v-if="v.name">{{ v.name }}</div>
-                                        <div class="info">
-                                            <div class="info-entry" v-if="v.rewardItem.enchantId && !allOptionsEnhanceTransfer && !allOptionsEnhanceReset">
-                                                <span v-if="v.enchantTransfer == 'RESET'">
-                                                    <i class="fa fa-ban nok"></i> Enhancement is reset
-                                                </span>
-                                                <span v-if="v.enchantTransfer == 'RETAIN'">
-                                                    <i class="fa fa-check-circle ok"></i> Enhancement is transferred
-                                                </span>
-                                            </div>
-                                            <div class="info-entry" v-if="v.rewardItem.type.potentialId && !allOptionsPotentialTransfer && !allOptionsPotentialReroll">
-                                                <span v-if="!v.potentialTransfer">
-                                                    <i class="fa fa-flask nok"></i> Extra stats re-rolled
-                                                </span>
-                                                <span v-else>
-                                                    <i class="fa fa-check-circle ok"></i> Extra stats preserved
-                                                </span>
+                            <div class="scroller">
+                                <div class="option" v-for="(vv, ke) in collapseEnhance(sortedOptions(selectedItem.options))" :key="ke">
+                                    <div class="enhance" v-if="ke != '0'">
+                                        +{{ke}} input
+                                    </div>
+                                    <div v-for="(v, k) in vv" :key="k">
+                                        <div class="top">
+                                            <div class="name" v-if="v.name">{{ v.name }}</div>
+                                            <div class="info">
+                                                <div class="info-entry" v-if="v.rewardItem.enchantId && !allOptionsEnhanceTransfer && !allOptionsEnhanceReset">
+                                                    <span v-if="v.enchantTransfer == 'RESET'">
+                                                        <i class="fa fa-ban nok"></i> Enhancement is reset
+                                                    </span>
+                                                    <span v-if="v.enchantTransfer == 'RETAIN'">
+                                                        <i class="fa fa-check-circle ok"></i> Enhancement is transferred
+                                                    </span>
+                                                </div>
+                                                <div class="info-entry" v-if="v.rewardItem.type.potentialId && !allOptionsPotentialTransfer && !allOptionsPotentialReroll">
+                                                    <span v-if="!v.potentialTransfer">
+                                                        <i class="fa fa-flask nok"></i> Extra stats re-rolled
+                                                    </span>
+                                                    <span v-else>
+                                                        <i class="fa fa-check-circle ok"></i> Extra stats preserved
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="option-card">
+                                            <item-card
+                                                :itemId="v.rewardItem.id"
+                                                :itemStub="v.rewardItem"
+                                                :potentialNum="v.potentialOptionNumber">
+                                            </item-card>
+                                        </div>
+                                        <!-- {{v}} -->
                                     </div>
-                                    <div class="option-card">
-                                        <item-card
-                                            :itemId="v.rewardItem.id"
-                                            :itemStub="v.rewardItem"
-                                            :potentialNum="v.potentialOptionNumber">
-                                        </item-card>
-                                    </div>
-                                    <!-- {{v}} -->
                                 </div>
                             </div>
                         </div>
@@ -434,9 +436,17 @@ export default {
     }
 
     .option-list {
+        position: relative;
         display: flex;
         flex-direction: column;
+        border-top: 2px solid @dv-c-accent-1;
+        border-bottom: 2px solid @dv-c-accent-1;
         
+        .scroller {
+            overflow-y: auto;
+            max-height: 438px;
+        }
+
         @media only screen and (min-width:@min-desktop-wide-width) {
             // max-width: 540px;
         }
@@ -448,6 +458,10 @@ export default {
 
             &:last-child {
                 border-bottom-color: @dv-c-foreground;
+            }
+        
+            &:first-child {
+                border-top-color: transparent;
             }
 
             .enhance {
@@ -476,7 +490,6 @@ export default {
 
         .all {
             border: 1px solid @dv-c-foreground;
-            border-bottom-color: transparent;
             padding: 8px;
 
             .title {

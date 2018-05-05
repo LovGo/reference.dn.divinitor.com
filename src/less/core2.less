@@ -646,6 +646,34 @@ button {
             border-left: 2px white solid;
             padding-left: 2px;
 
+            &.divinitor {
+                @ct: @dv-c-accent-2;
+                input:checked ~ label {
+                    color: @ct;
+                }
+                
+                border-left-color: @ct;
+
+                &:hover {
+                    label {
+                        color: @ct;
+
+                        &:before {
+                            border-color: lighten(@ct, -20%);
+                            background-color: fade(@ct, 20%);
+                        }
+                    }
+                    
+                    input:checked ~ label:before {
+                        background-color: @ct;
+                    }
+                }
+
+                input:checked ~ label:before {
+                    border-color: @ct;
+                    background-color: fade(@ct, 50%);
+                }
+            }
             &.divine {
                 @ct: @rank-divine;
                 input:checked ~ label {

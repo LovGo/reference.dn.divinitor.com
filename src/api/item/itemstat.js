@@ -158,12 +158,20 @@ const STATES = {
         abbv: "PDMG",
         type: "stat",
         combined: true,
+        children: [
+            "PHYSICAL_DAMAGE_MIN",
+            "PHYSICAL_DAMAGE_MAX",
+        ],
     },
     MAGICAL_DAMAGE_MINMAX: {
         name: "Magic Damage",
         abbv: "MDMG",
         type: "stat",
         combined: true,
+        children: [
+            "MAGICAL_DAMAGE_MIN",
+            "MAGICAL_DAMAGE_MAX",
+        ],
     },
     MOVEMENT_SPEED: {
         name: "Movement Speed",
@@ -298,12 +306,20 @@ const STATES = {
         abbv: "% PDMG",
         type: "percent",
         combined: true,
+        children: [
+            "PHYSICAL_DAMAGE_MIN_PERCENT",
+            "PHYSICAL_DAMAGE_MAX_PERCENT",
+        ],
     },
     MAGICAL_DAMAGE_MINMAX_PERCENT: {
         name: "% Magic Damage",
         abbv: "% MDMG",
         type: "percent",
         combined: true,
+        children: [
+            "MAGICAL_DAMAGE_MIN_PERCENT",
+            "MAGICAL_DAMAGE_MAX_PERCENT",
+        ],
     },
     CRITICAL_DAMAGE: {
         name: "Critical Damage",
