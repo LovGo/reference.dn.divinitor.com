@@ -171,6 +171,27 @@ const StatCalcTables = {
             5812.0, 5997.0, 6182.0, 6367.0, 7022.0, 7678.0, 8333.0, 11689.0,
             14944.0, 17461.0, 19977.0, 22494.0, 25010.0, 27527.0
         ]
+    },
+    fdlin:
+    {
+        maximum: 1.0,
+        rawToPercentEvaluator: linearEvaluator,
+        percentToRawEvaluator: linearInvEvaluator,
+        rawCapValues:
+        [
+            75.0, 87.0, 99.0, 111.0, 123.0, 135.0, 147.0, 159.0, 171.0, 183.0,
+            195.0, 207.0, 219.0, 231.0, 285.0, 300.0, 315.0, 330.0, 345.0,
+            360.0, 375.0, 390.0, 405.0, 420.0, 442.0, 465.0, 487.0, 510.0,
+            532.0, 555.0, 577.0, 600.0, 630.0, 660.0, 690.0, 720.0, 750.0,
+            780.0, 810.0, 850.0, 894.0, 938.0, 982.0, 1026.0, 1070.0, 1114.0,
+            1158.0, 1202.0, 1246.0, 1290.0, 1346.0, 1402.0, 1458.0, 1514.0,
+            1570.0, 1626.0, 1682.0, 1738.0, 1794.0, 1850.0, 1962.0, 2074.0,
+            2187.0, 2299.0, 2412.0, 2524.0, 2636.0, 2749.0, 2861.0, 2974.0,
+            3128.0, 3283.0, 3437.0, 3592.0, 3747.0, 3901.0, 4056.0, 4210.0,
+            4365.0, 4520.0, 4704.0, 4889.0, 5074.0, 5258.0, 5443.0, 5628.0,
+            5812.0, 5997.0, 6182.0, 6367.0, 7022.0, 7678.0, 8333.0, 11689.0,
+            14944.0, 17461.0, 19977.0, 22494.0, 25010.0, 27527.0
+        ]
     }
 };
 
@@ -194,6 +215,12 @@ const Constraints = {
         maxStat: 9999999
     },
     fd: {
+        minPercent: 0,
+        maxPercent: 100,
+        minStat: 0,
+        maxStat: 99999
+    },
+    fdlin: {
         minPercent: 0,
         maxPercent: 100,
         minStat: 0,
@@ -259,6 +286,15 @@ export default {
     getFinalDamageValue(percent, level)
     {
         return this.getValue(percent, level, StatCalcTables.fd);
+    },
+
+    getFinalDamageLinearPercent(rawStat, level)
+    {
+        return this.getPercent(rawStat, level, StatCalcTables.fdlin);
+    },
+    getFinalDamageLinearValue(percent, level)
+    {
+        return this.getValue(percent, level, StatCalcTables.fdlin);
     },
 
     getPercentByName(rawStat, level, stat) {

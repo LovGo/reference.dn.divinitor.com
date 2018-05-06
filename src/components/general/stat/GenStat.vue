@@ -16,6 +16,9 @@
         <h2>Final Damage</h2>
         <gen-stat-small stat="fd"></gen-stat-small>
 
+        <h2>Final Damage (Linear)</h2>
+        <gen-stat-small stat="fdlin"></gen-stat-small>
+
         <h2>Critical Chance</h2>
         <gen-stat-small stat="crit"></gen-stat-small>
 

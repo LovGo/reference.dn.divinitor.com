@@ -162,6 +162,12 @@ export default {
         },
         fdSTAT() {
             return StatCalc.getFinalDamagePercent(this.getTruncatedValue(), this.level).result;
+        },
+        fdlinPERCENT() {
+            return StatCalc.getFinalDamageLinearValue(this.getTruncatedPercent(), this.level).result;
+        },
+        fdlinSTAT() {
+            return StatCalc.getFinalDamageLinearPercent(this.getTruncatedValue(), this.level).result;
         }
     }
 }
@@ -288,7 +294,7 @@ export default {
 
         input[type="radio"]+label {
             display: block;
-            opacity: 0.5;
+            opacity: 0.75;
             transition: opacity ease-in 0.125s;
 
             .tag {
