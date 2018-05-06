@@ -25,7 +25,7 @@
             :key="d.id" 
             :active="potentialId == d.id"
             v-on:click="select(d.id)"
-            v-if="!shouldFilter(d)">
+            v-if="!shouldFilter(d) || availableStats.length == 0">
             <div class="pid">{{d.id}}:{{d.potentialNumber}}</div>
             <div class="grid-cover">
                 <stat-grid
