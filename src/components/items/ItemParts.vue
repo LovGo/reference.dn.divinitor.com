@@ -7,7 +7,7 @@
             <div class="overlay">
                 <div class="active-skn-name">
                     <span v-if="selectedPart.sknName">
-                        {{ selectedPart.sknName }}
+                        {{ selectedPart.sknName.toLowerCase() }}
                     </span>
                     <span v-else-if="selectedPart.decalName">
                         {{ selectedPart.decalName }}

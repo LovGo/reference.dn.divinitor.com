@@ -71,7 +71,8 @@ export default {
 @import "less/core2.less";
 
 html {
-    background-image: url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged.png");
+    // background-image: url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged.png");
+    background-image: url("assets/dv-masthead-bg-static-merged-bloomed.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 62.5% 70%;
