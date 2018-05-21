@@ -77,9 +77,12 @@
             </transition>
             <server-pop-chart :popData="serverPop.data" :range="range"/>
         </div>
+
+        <div class="refresh">
+            Refreshing in {{ refreshCountdown }}s {{ new Array(3 - (refreshCountdown % 4)).fill('.').join('') }}
+        </div>
     </div>
 
-    
     <div class="section">
         <h2 class="head">Saint's Haven Breakdown</h2>
 
@@ -108,23 +111,54 @@
             </transition>
             <channel-pop-chart :popData="channelPop.data" :range="range"/>
         </div>
-        <div class="summary">
-            <!-- <div class="sum-stat">
-                <div class="title">Min</div>
-                <div class="value">{{summary.min | thousands}}</div>
+
+        <div class="refresh">
+            Refreshing in {{ refreshCountdown }}s {{ new Array(3 - (refreshCountdown % 4)).fill('.').join('') }}
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 class="head">Response Time</h2>
+
+        <div class="info toast">
+            <div class="icon">
+                <i class="fa fa-clock-o"></i>
             </div>
-            <div class="sum-stat">
-                <div class="title">Max</div>
-                <div class="value">{{summary.max | thousands}}</div>
+            <div class="content">
+                <div class="heading">
+                    Ping pong ding dong
+                </div>
+                <p>
+                    This displays the response time (roughly speaking, ping) from the server to connect, log in, and
+                    retrieve the list of channels.
+                </p>
             </div>
-            <div class="sum-stat">
-                <div class="title">Mean</div>
-                <div class="value">{{summary.mean | thousandsFloor}}</div>
+        </div>
+
+        <div>
+            Range: 
+            <select v-model="range">
+                <option disabled value="">Please select one</option>
+                <option :value="v" v-for="v in options" :key="v.id">
+                    {{ v.name }}
+                </option>
+            </select>
+            <div class="interval">
+                Showing 
+                <strong v-if="lastChEntry">{{ moment().subtract(this.range.d, this.range.uu).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
+                to 
+                <strong v-if="lastChEntry">{{ moment(lastChEntry.t).format("MMM DD YYYY HH:mm")}}</strong><strong v-else>-</strong> 
             </div>
-            <div class="sum-stat">
-                <div class="title">Median</div>
-                <div class="value">{{summary.median | thousandsFloor}}</div>
-            </div> -->
+        </div>
+
+        <div v-if="serverPop.data" class="chart-container">
+            <transition name="fade">
+                <div v-if="serverPop.loading" class="loading">
+                    <load-indicator inline
+                    loadText="Pulling fresh data" altText="Please wait" class="loader"/>
+                </div>
+            </transition>
+            <ping-chart :pingData="serverPop.data" :range="range"/>
         </div>
 
         <div class="refresh">
@@ -144,9 +178,11 @@ import Region from '@/api/region'
 
 import ServerPopChart from './ServerPopChart';
 import ChannelPopChart from './ChannelPopChart';
+import PingChart from './PingChart';
 
 Vue.component("server-pop-chart", ServerPopChart);
 Vue.component("channel-pop-chart", ChannelPopChart);
+Vue.component("ping-chart", PingChart);
 
 const RANGE_OPTIONS = [
     {
@@ -311,7 +347,18 @@ export default {
         loadServer() {
             this.serverPop.loading = true;
             Region.getServerStats(null, this.range).then((d) => {
-                this.serverPop.data = d.body;
+                let data = d.body;
+                // Remove most recent datapoint if the time block hasn't completed enough to have data (prevent showing
+                // 0 players online erroneously)
+                if (data.length > 2) {
+                    let p0 = data[data.length - 1];
+                    let p1 = data[data.length - 2];
+                    if (p0.cp == 0 && p1.cp != 0) {
+                        data = data.slice(0, data.length - 2);
+                    }
+                }
+
+                this.serverPop.data = data;
                 this.serverPop.loading = false;
                 this.refreshCountdown = refreshDuration;
             }, (err) => {

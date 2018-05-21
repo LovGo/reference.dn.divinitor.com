@@ -1,22 +1,63 @@
 import { Line } from 'vue-chartjs';
 import moment from 'moment';
 
+const colors = [
+    "rgb(49, 192, 246)",
+    "rgb(49, 145, 245)",
+    "rgb(137, 78, 205)",
+    "rgb(208, 0, 141)",
+    "rgb(253, 48, 89)",
+    "rgb(255, 126, 39)"
+];
+
+const colorsTrans = [
+    "rgba(49, 192, 246, 0.1)",
+    "rgba(49, 145, 245, 0.1)",
+    "rgba(137, 78, 205, 0.1)",
+    "rgba(208, 0, 141, 0.1)",
+    "rgba(253, 48, 89, 0.1)",
+    "rgba(255, 126, 39, 0.1)"
+];
+
 export default {
     extends: Line,
-    props: ["popData", "range"],
-    name: "server-pop-chart",
+    props: ["pingData", "range"],
+    name: "ping-chart",
     watch: {
-        popData: function(oldVal, newVal) {
+        pingData: function(oldVal, newVal) {
             let chart = this.$data._chart;
-            let ds = chart.data.datasets[0].data;
             let nv = this.genDatasets();
-            ds = ds.slice(0, nv.length);
-            for (let k = 0; k < nv.length; ++k)
+            let con = nv.connect;
+
+            let ds = chart.data.datasets[0].data;
+            ds = ds.slice(0, con.length);
+            for (let k = 0; k < con.length; ++k)
             {
-                ds[k] = nv[k];
+                ds[k] = con[k];
             }
 
             chart.data.datasets[0].data = ds;
+
+            let log = nv.login;
+            ds = chart.data.datasets[1].data;
+            ds = ds.slice(0, log.length);
+            for (let k = 0; k < log.length; ++k)
+            {
+                ds[k] = log[k];
+            }
+
+            chart.data.datasets[1].data = ds;
+
+            let ch = nv.channel;
+            ds = chart.data.datasets[2].data;
+            ds = ds.slice(0, ch.length);
+            for (let k = 0; k < ch.length; ++k)
+            {
+                ds[k] = ch[k];
+            }
+
+            chart.data.datasets[2].data = ds;
+            
             let start = moment().subtract(this.range.d, this.range.uu);
             chart.options.scales.xAxes[0].time.min = start;
             chart.options.scales.xAxes[0].time.max = moment();
@@ -34,7 +75,21 @@ export default {
     },
     methods: {
         genDatasets() {
-            return this.popData.map(d => ({t: d.t, y: d.cp})).reverse();
+            let ret = {
+                connect: [],
+                login: [],
+                channel: [],
+            };
+
+            let d = this.pingData.slice().reverse();
+            for (const v of d) {
+                ret.connect.push({t: v.t, y: v.pc});
+                ret.login.push({t: v.t, y: v.pl});
+                ret.channel.push({t: v.t, y: v.ph});
+            }
+
+            console.log(ret.connect);
+            return ret;
         },
         onMount() {
             let data = this.genDatasets();
@@ -43,13 +98,34 @@ export default {
             this.renderChart({
                 datasets: [
                     {
-                        label: `Players`,
-                        backgroundColor: "rgba(58, 110, 150, 0.25)",
-                        borderColor: "#5AA9E5",
-                        data: data,
+                        label: `Connect`,
+                        backgroundColor: colorsTrans[0],
+                        borderColor: colors[0],
+                        data: data.connect,
                         pointRadius: 0.001,
                         borderWidth: 1,
                         lineTension: 0.2,
+                        id: "connect",
+                    },
+                    {
+                        label: `Login`,
+                        backgroundColor: colorsTrans[1],
+                        borderColor: colors[1],
+                        data: data.login,
+                        pointRadius: 0.001,
+                        borderWidth: 1,
+                        lineTension: 0.2,
+                        id: "login",
+                    },
+                    {
+                        label: `Channel`,
+                        backgroundColor: colorsTrans[2],
+                        borderColor: colors[2],
+                        data: data.channel,
+                        pointRadius: 0.001,
+                        borderWidth: 1,
+                        lineTension: 0.2,
+                        id: "channel",
                     }
                 ]
             },
@@ -68,7 +144,7 @@ export default {
                             return moment(items[0].xLabel).format("MMM DD YYYY HH:mm");
                         },
                         label: function(item, data) {
-                            return item.yLabel.toLocaleString() + " players";
+                            return item.yLabel.toLocaleString() + "ms";
                         }
                     }
                 },
@@ -112,7 +188,7 @@ export default {
                             },
                             scaleLabel: {
                                 display: true,
-                                labelString: "Players"
+                                labelString: "Ping (ms)"
                             }
                         }
                     ]

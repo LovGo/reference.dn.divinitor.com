@@ -42,6 +42,10 @@ export default {
                 chart.data.datasets[i].data = ds;
             }
 
+            let start = moment().subtract(this.range.d, this.range.uu);
+            chart.options.scales.xAxes[0].time.min = start;
+            chart.options.scales.xAxes[0].time.max = moment();
+            chart.options.scales.xAxes[0].time.unit = this.range.du;
             chart.update();
         },
         range: function(oldVal, newVal) {
