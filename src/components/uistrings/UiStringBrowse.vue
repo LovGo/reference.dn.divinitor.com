@@ -203,6 +203,7 @@ export default {
             height: 100%;
             padding-right: 16px;
             z-index: 10;
+            pointer-events: none;
             
             .loader-box {
                 position: fixed;

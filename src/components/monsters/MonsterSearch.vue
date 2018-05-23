@@ -27,7 +27,7 @@
             </div>
 
             <div class="name-class-filter">
-                <input id="filter-name" type="text" v-model="filter.nameSearch" placeholder="Item name"/>
+                <input id="filter-name" type="text" v-model="filter.nameSearch" placeholder="Monster name"/>
             </div>
         </div>
 
@@ -233,6 +233,7 @@ export default {
             height: 100%;
             padding-right: 16px;
             z-index: 10;
+            pointer-events: none;
             
             .loader-box {
                 position: fixed;

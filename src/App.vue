@@ -12,18 +12,15 @@
         </div>
         <update-toast v-if="authenticated"></update-toast>
         <locale-select></locale-select>
-        <div class="auth">
+        <div class="auth-box">
             <div class="hello" v-if="authenticated">
-                Hello, {{authInfo.username}} 
-                <button class="small-button" v-on:click="logOut">Log Out</button>
-                <br/>
-                If you see 401 Unauthorized, relog.
-                <div class="test-overlay">
-                    AUTHORIZED TEST ACCOUNT
+                <div class="welcome">
+                    Hello, {{authInfo.username}}
                 </div>
+                <button class="small-button" v-on:click="logOut">Log Out</button>
             </div>
-            <div v-else>
-                <router-link to="/auth">DV-Testers log in here</router-link>
+            <div v-else class="log-in-container">
+                <router-link to="/auth" class="small-button button">Log In</router-link>
             </div>
         </div>
         <div class="flex-box">
@@ -153,6 +150,15 @@ body {
     }
 }
 
+.auth-box {
+    position: absolute;
+    top: 34px;
+    right: 20px;
+    .log-in-container {
+        padding-top: 10px;
+    }
+}
+
 .copyright {
   font-size: 10px;
   font-family: @dv-f-lato;
@@ -217,8 +223,8 @@ body {
     left: 0;
     right: 0;
     top: 28px;
-    font-size: 60px;
-    opacity: 0.05;
+    font-size: 16px;
+    opacity: 0.025;
     // opacity: 0.0;
     pointer-events: none;
 }
@@ -231,21 +237,6 @@ body {
 }
 
 .hello {
-    border: 1px solid @dv-c-foreground;
-    padding: 8px 12px;
     position: relative;
-    margin-bottom: 20px;
-
-    .test-overlay {
-        position: absolute;
-        color: @dv-c-green;
-        font-size: 48px;
-        top: 0;
-        bottom: 0;
-        right: 14px;
-        text-align: right;
-        pointer-events: none;
-        opacity: 0.1;
-    }
 }
 </style>

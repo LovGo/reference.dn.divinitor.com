@@ -25,7 +25,7 @@
             <div class="tuning-list">
                 <div class="list-entry" v-for="v in data.tunings" :key="v.tunerId">
                     <div class="tuner" v-if="trimTuners(v).length">
-                        <div class="col-title">Tuning #{{v.tunerId}}</div>
+                        <div class="col-title">Tuning #{{v.tunerId}} Options</div>
                         <div class="item-entry" v-for="t in trimTuners(v)" :key="t.id">
                             <item-card
                                 :itemId="t.id"
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="tuner" v-else>
-                        <div class="col-title">Tuning #{{v.tunerId}}</div>
+                        <div class="col-title">Tuning #{{v.tunerId}} Options</div>
 
                         
                     <small-error-box 
@@ -42,7 +42,6 @@
                         iconClass="fa-exclamation-triangle"></small-error-box>
                     </div>
                     <div class="options" :long="v.options.length > 4">
-                        <div class="col-title">Options</div>
                         <div class="item-entry" v-for="t in v.options" :key="t.id">
                             <item-card
                                 :itemId="t.id"
@@ -170,7 +169,7 @@ export default {
 
             border-bottom: 1px solid @dv-c-idle;
             // border: 1px solid @dv-c-accent-2;
-            padding: 8px 0 16px 0;
+            padding: 12px 0 16px 0;
 
             &:last-child {
                 border-bottom: none;
@@ -178,7 +177,7 @@ export default {
             
             .col-title {
                 position: absolute;
-                top: -20px;
+                top: -26px;
                 left: 0;
                 right: 0;
                 font-family: @dv-f-geomanist;

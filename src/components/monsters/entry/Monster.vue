@@ -240,18 +240,40 @@
             <div class="section">
                 <div class="title">Actor Info</div>
 
-                <div>
-                    Skin file: {{monsterData.actor.skn.name}}
-                </div>
-                <div>
-                    Action file: {{monsterData.actor.act.name}}
-                </div>
-                <div>
-                    Animation file: {{monsterData.actor.ani.name}}
-                </div>
-                <div v-if="monsterData.actor.cam.name">
-                    Camera file: {{monsterData.actor.cam.name}}
-                </div>
+                <table>
+                    <thead>
+                        <th class="first smaller">Resource</th>
+                        <th>File</th>
+                    </thead>
+                    <tr>
+                        <th>Skin</th>
+                        <td>
+                            {{monsterData.actor.skn.name}} 
+                            <span class="fid">{{monsterData.actor.skn.id}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Action</th>
+                        <td>
+                            {{monsterData.actor.act.name}} 
+                            <span class="fid">{{monsterData.actor.act.id}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Animation</th>
+                        <td>
+                            {{monsterData.actor.ani.name}} 
+                            <span class="fid">{{monsterData.actor.ani.id}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Camera</th>
+                        <td>
+                            {{monsterData.actor.cam.name}} 
+                            <span class="fid">{{monsterData.actor.cam.id}}</span>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="section">
                 <div class="title">Weapons</div>
@@ -610,6 +632,15 @@ export default {
             }
         }
         
+    }
+
+    .fid {
+        color: @dv-c-accent-2;
+        font-size: 0.75em;
+        &::before {
+            content: "#";
+            color: fade(@dv-c-accent-2, 20%);
+        }
     }
 }
 </style>
