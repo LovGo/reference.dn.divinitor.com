@@ -34,7 +34,12 @@ export default new Vuex.Store({
     },
     getters: {
         isAuthed: state => {
-            return state.auth != null;
+            var currentTime = new Date().getTime() / 1000;
+            return state.auth != null && JwtDecode(state.auth.access_token).exp >= currentTime;
+        },
+        isExpired: state => {
+            var currentTime = new Date().getTime() / 1000;
+            return state.auth == null || JwtDecode(state.auth.access_token).exp < currentTime;
         },
         authToken: state => {
             return state.auth.token_type + " " + state.auth.access_token;

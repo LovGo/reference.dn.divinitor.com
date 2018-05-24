@@ -1,6 +1,9 @@
 <template>
 <div class="auth">
-    <p>
+    <p v-if="expired">
+        Your session has expired. Please log in again.
+    </p>
+    <p v-else>
         This resource requires a Divinitor Test Account to access.
     </p>
     <button v-on:click="logIn">Log in with Discord</button>
@@ -9,6 +12,11 @@
 
 <script>
 export default {
+    computed: {
+        expired() {
+            return this.$store.getters.isExpired;
+        }
+    },
     methods: {
         logIn() {
             let redirectUrl = "https://reference.dn.divinitor.com/auth/discordcb";
