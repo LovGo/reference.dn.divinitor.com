@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Package delivery",
+            "timestamp": "May 25 21:34",
+            "body": "- Added support for cash shop packages to item acquisition<br/>- Fixed some cash shop info logic<br/>- Cash shop viewing coming soon!"
+        },
+        {
             "title": "Filter ALL the (item) options",
             "timestamp": "May 05 16:44",
             "body": "- Added the ability to filter item options by stat<br/>- Item cards with stat options no longer exceed their bounds<br/>- Fixed a crowding issue with item skill options if the skill name was obnoxiously long<br/>- Tuner options now have a maximum height and will scroll so your page doesn't get soooper long<br/>- I like adding this dash before each changelog option, it makes it easier to read"
