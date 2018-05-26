@@ -292,7 +292,6 @@
                                 </div>
                             </div>
 
-                            C {{ e.creditable }} L {{e.minCreditLevel}}
                             <div class="params">
                                 <div class="param" v-if="e.period > 0">
                                     <i class="fa fa-clock-o"></i> <strong>{{ e.period }}</strong> days
@@ -353,7 +352,6 @@
                                 </div>
                             </div>
 
-                            C {{ e.creditable }} L {{e.minCreditLevel}}
                             <div class="params">
                                 <div class="param" v-if="e.period > 0">
                                     <i class="fa fa-clock-o"></i> <strong>{{ e.period }}</strong> days
