@@ -252,31 +252,27 @@
                     <form class="options">
                         <div class="checkbox">
                             <input type="checkbox" v-model="showCashUnavailable" id="cash-unavailable" />
-                            <label for="cash-unavailable">Show unavailable packages</label>
+                            <label for="cash-unavailable">Show unavailable</label>
                         </div>
                     </form>
 
                     <div class="cash-list">
-                        <div class="cash-entry"
+                        <router-link class="cash-entry"
                             v-for="e in acqData.cash"
                             :key="e.serialNumber"
-                            v-if="(showCashUnavailable || e.available)">
+                            v-if="(showCashUnavailable || (e.available && !isPackagedOnly(e)))"
+                            :to="{path: `/items/cash/${e.serialNumber}`}">
                             <div class="serial">
                                 {{e.serialNumber}}
                             </div>
 
+                            <div class="package-tag" v-if="isPackagedOnly(e)">
+                            </div>
+
                             <div class="name">{{e.name}}</div>
 
-                            <div class="count" v-if="!e.shopPackage">
+                            <div class="count">
                                 <span v-if="e.count > 1">x{{e.count}}</span>
-                            </div>
-                            <div v-else>
-                                <div class="name">
-                                    {{e.name}} <span v-if="e.count > 1">x{{e.count}}</span>
-                                </div>
-                                <div class="desc" v-if="e.desc">
-                                    {{e.desc}}
-                                </div>
                             </div>
 
                             <div class="price">
@@ -296,6 +292,7 @@
                                 </div>
                             </div>
 
+                            C {{ e.creditable }} L {{e.minCreditLevel}}
                             <div class="params">
                                 <div class="param" v-if="e.period > 0">
                                     <i class="fa fa-clock-o"></i> <strong>{{ e.period }}</strong> days
@@ -303,10 +300,10 @@
                                 <div class="param" v-else>
                                     <i class="fa fa-clock-o"></i> <strong>Permanent</strong>
                                 </div>
-                                <div class="param" v-if="e.minCreditLevel > 0">
+                                <div class="param" v-if="e.minCreditLevel > 1 && (e.creditable || e.useCoupon)">
                                     <i class="fa fa-credit-card"></i> Lv <strong>{{e.minCreditLevel}}</strong>+ to purchase with credit
                                 </div>
-                                <div class="param" v-else-if="e.minCreditLevel == 0">
+                                <div class="param" v-else-if="e.minCreditLevel == 0 || (!e.creditable && !e.useCoupon)">
                                     <i class="fa negative fa-ban"></i> Cannot use credit
                                 </div>
                                 <div class="param" v-else>
@@ -322,11 +319,76 @@
                                      <i class="fa negative fa-ban"></i> Cannot gift
                                 </div>
                             </div>
-
                             <div class="unavailable" v-if="!e.available">
                             </div>
+                        </router-link>
+                        <router-link class="cash-entry"
+                            v-for="e in cashShopPackages"
+                            :key="e.serialNumber"
+                            v-if="(showCashUnavailable || e.available)"
+                            :to="{path: `/items/cash/${e.serialNumber}`}">
+                            <div class="serial">
+                                {{e.serialNumber}}
+                            </div>
 
-                            <!-- {{e}} -->
+                            <div class="package-tag" v-if="isPackagedOnly(e)">
+                            </div>
+
+                            <div class="name">{{e.name}}</div>
+
+                            <div class="price">
+                                <div v-if="!(e.useCoupon && e.price == 0)">
+                                    <i class="fa fa-shopping-cart"></i> <strong>{{ e.price | thousands}}</strong> EC
+                                </div>
+                                <div v-if="e.useCoupon">
+                                    <div v-if="e.couponItem" class="coupon">
+                                        <item-icon-tooltip
+                                            :itemId="e.couponItem.id"
+                                            :itemStub="e.couponItem">
+                                        </item-icon-tooltip>
+                                    </div>
+                                    <div v-else class="no-coupon">
+                                        <i class="fa fa-exclamation-triangle"></i>Coupon unavailable
+                                    </div>
+                                </div>
+                            </div>
+
+                            C {{ e.creditable }} L {{e.minCreditLevel}}
+                            <div class="params">
+                                <div class="param" v-if="e.period > 0">
+                                    <i class="fa fa-clock-o"></i> <strong>{{ e.period }}</strong> days
+                                </div>
+                                <div class="param" v-else>
+                                    <i class="fa fa-clock-o"></i> <strong>Permanent</strong>
+                                </div>
+                                <div class="param" v-if="e.minCreditLevel > 1 && (e.creditable || e.useCoupon)">
+                                    <i class="fa fa-credit-card"></i> Lv <strong>{{e.minCreditLevel}}</strong>+ to purchase with credit
+                                </div>
+                                <div class="param" v-else-if="e.minCreditLevel == 0 || (!e.creditable && !e.useCoupon)">
+                                    <i class="fa negative fa-ban"></i> Cannot use credit
+                                </div>
+                                <div class="param" v-else>
+                                    <i class="fa fa-credit-card"></i> Purchasable with credit
+                                </div>
+                                <div class="param" v-if="!e.canUseDnp">
+                                     <i class="fa negative fa-ban"></i> Cannot use DNP
+                                </div>
+                                <div class="param" v-if="e.giftable">
+                                     <i class="fa fa-gift"></i> Giftable
+                                </div>
+                                <div class="param" v-else>
+                                     <i class="fa negative fa-ban"></i> Cannot gift
+                                </div>
+                            </div>
+                            <div class="unavailable" v-if="!e.available">
+                            </div>
+                        </router-link>
+                        <div class="no-results" v-if="!showCashUnavailable">
+                            <small-error-box
+                                errorTitle="No Results"
+                                iconClass="fa-question-circle"
+                                errorContent="Currently unavailable from the cash shop. Check the 'Show unavailable' checkbox to see unavailable packages">
+                            </small-error-box>
                         </div>
                         
                     </div>
@@ -436,6 +498,22 @@ export default {
 
             return ret;
         },
+        cashShopPackages() {
+            if (!this.acqData.cash) {
+                return [];
+            }
+
+            let boxSet = {};
+            for (let v of this.acqData.cash) {
+                if (v.containingPackages && v.containingPackages.length) {
+                    for (let pkg of v.containingPackages) {
+                        boxSet[String(pkg.serialNumber)] = pkg;
+                    }
+                }
+            }
+
+            return Object.values(boxSet);
+        }
     },
     methods: {
         fetchData() {
@@ -625,6 +703,11 @@ export default {
         },
         shouldBoxRender(item) {
             return ItemFilter.shouldRender(this.boxFilter, item);
+        },
+
+        isPackagedOnly(cashEntry) {
+            return cashEntry.containingPackages && cashEntry.containingPackages.length > 0 &&
+                cashEntry.category == 0 && cashEntry.subcategory == 0;
         },
     }
 }
@@ -952,6 +1035,8 @@ export default {
                 flex: 1 1 400px;
                 border: 1px solid @dv-c-foreground;
                 border-top-color: transparent;
+                display: block;
+                color: @dv-c-body;
 
                 &:first-child {
                     border-top-color: @dv-c-foreground;
@@ -959,21 +1044,26 @@ export default {
                 position: relative;
                 padding: 10px 14px;
                 padding-right: 40px;
+                transition: background-color 0.125s ease-in;
+
+                &:hover {
+                    background-color: fade(@dv-c-foreground, 20%);
+                }
 
                 @media only screen and (min-width:@min-desktop-wide-width) {
-                    border-right-color: transparent;
+                    border-left-color: transparent;
                     &:first-child,
                     &:nth-child(2) {
                         border-top-color: @dv-c-foreground;
                     }
-                    &:nth-child(2n) {
-                        border-right-color: @dv-c-foreground;
+                    &:nth-child(2n - 1) {
+                        border-left-color: @dv-c-foreground;
                     }
                     &:last-child {
-                        border-right-color: @dv-c-foreground;
+                        border-left-color: @dv-c-foreground;
                     }
                     &:first-child:last-child {
-                        border-right-color: @dv-c-foreground;
+                        border-left-color: @dv-c-foreground;
                     }
 
                 }
@@ -986,6 +1076,24 @@ export default {
                     text-align: right;
                     font-size: 12px;
                     letter-spacing: 0.1em;
+                }
+
+                .package-tag {
+                    height: 22px;
+                    &::after {
+                        content: "AVAILABLE IN PACKAGE ONLY";
+                        position: absolute;
+                        background-color: fade(@dv-c-accent-2, 20%);
+                        left: 0;
+                        right: 0;
+                        top: 0;
+                        text-align: center;
+                        font-family: @dv-f-geomanist;
+                        color: @dv-c-body;
+                        letter-spacing: 0.2em;
+                        padding: 4px 0;
+                        // border-bottom: 2px solid @dv-c-red;
+                    }
                 }
 
                 .unavailable{
