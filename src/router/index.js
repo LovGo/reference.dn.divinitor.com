@@ -15,7 +15,7 @@ import Items from '@/components/items/Items';
 import Item from '@/components/items/Item';
 import ItemSearch from '@/components/items/ItemSearch';
 import ItemHome from '@/components/items/ItemHome';
-import ItemCashShop from '@/components/items/ItemCashShop';
+import ItemCashShop from '@/components/items/cashshop/ItemCashShop';
 import ItemNpcShops from '@/components/items/ItemNpcShops';
 import ItemCrafting from '@/components/items/ItemCrafting';
 
@@ -120,11 +120,6 @@ export default new Router({
           component: ItemSearch
         },
         {
-          path: ':itemId',
-          name: 'item-view',
-          component: Item
-        },
-        {
           path: 'cash',
           name: 'item-cash-shop',
           component: ItemCashShop
@@ -159,6 +154,11 @@ export default new Router({
               component: ItemDrop
             }
           ]
+        },
+        {
+          path: ':itemId',
+          name: 'item-view',
+          component: Item
         }
       ]
     },

@@ -180,7 +180,7 @@ body {
         width: 100%;
         border: none;
         padding: 0;
-        background-image: linear-gradient(rgba(5, 10, 13, 0.75), rgba(5, 10, 13, 0.75)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
+        background-image: linear-gradient(rgba(5, 10, 13, 0.75), rgba(5, 10, 13, 0.75)), url("assets/dv-masthead-bg-static-merged-darkblur.png");
     }
 
     .copyright {

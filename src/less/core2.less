@@ -920,11 +920,19 @@ button, .button {
 }
 
 .checkbox {
+    .checkbox(@dv-c-green);
+
+    &.red {
+        .checkbox(@dv-c-red);
+    }
+}
+
+.checkbox(@pc) {
     display: inline-block;
     margin-right: 10px;
-    border-left: 2px @dv-c-green solid;
+    border-left: 2px @pc solid;
     padding-left: 6px;
-
+    cursor: default;
     input[type="checkbox"] {
         opacity: 0;
     }
@@ -956,20 +964,20 @@ button, .button {
     
     &:hover {
         label {
-            color: @dv-c-green;
+            color: @pc;
 
             &:before {
-                border-color: lighten(@dv-c-green, -20%);
-                background-color: fade(@dv-c-green, 20%);
+                border-color: lighten(@pc, -20%);
+                background-color: fade(@pc, 20%);
             }
         }
 
         input:checked ~ label {
-            color: @dv-c-green;
+            color: @pc;
         }
 
         input:checked ~ label:before {
-            background-color: @dv-c-green;
+            background-color: @pc;
         }
     }
 
@@ -979,14 +987,14 @@ button, .button {
         left: -18px;
         width: 10px;
         height: 10px;
-        border-color: @dv-c-green;
-        background-color: fade(@dv-c-green, 50%);
+        border-color: @pc;
+        background-color: fade(@pc, 50%);
         content: " ";
         transform: translateY(-50%);
     }
 
     input:checked ~ label {
-        color: @dv-c-green;
+        color: @pc;
     }
 }
 
