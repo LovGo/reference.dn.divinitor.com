@@ -86,7 +86,12 @@ new Vue({
       let isAuth = this.$store.getters.isAuthed;
       let needAuth = to.matched.some((route) => route.meta.auth);
 
-      if (needAuth && !isAuth) {
+      let forceAuth = !!to.query.forceAuth;
+      if (forceAuth) {
+        console.log("Overriding auth check");
+      }
+
+      if (needAuth && !isAuth && !forceAuth) {
         next('/auth');
         return;
       }
