@@ -90,86 +90,10 @@
 
             <div class="desc-model-container">
                 <div class="info-top">
-                    <div class="attributes">
-                        <div class="attrib" v-if="itemData.durationDays">
-                            <div class="icon"><i class="fa fa-clock-o"></i></div>
-                            {{ itemData.durationDays }} days
-                        </div>
-                        <div v-if="itemData.cashItem">
-                            <div class="attrib yes" v-if="itemData.canTrade">
-                                <div class="icon"><i class="fa fa-exchange"></i></div>
-                                <span v-if="itemData.listings">{{ itemData.listings }} listings</span>
-                                <span v-else>Need warranty</span>
-                            </div>
-                            <div class="attrib no" v-else>
-                                <div class="icon"><i class="fa fa-chain"></i></div>
-                                Untradable
-                            </div>
-                        </div>
-                        <div v-else>
-                            <div class="attrib yes" v-if="itemData.canTrade && !forceBound">
-                                <div class="icon"><i class="fa fa-exchange"></i></div>
-                                Tradable
-                            </div>
-                            <div class="" v-else>
-                                <div class="attrib yes tooltip" v-if="itemData.unstampCount > 0">
-                                    <div class="icon"><i class="fa fa-unlink"></i></div>
-                                    Unbind {{ itemData.unstampCount }}x
-                                    <div class="tooltext">
-                                        <div class="content">Uses {{ unstampAmt }} stamps</div>
-                                    </div>
-                                </div>
-                                <div class="attrib no" v-else>
-                                    <div class="icon"><i class="fa fa-chain"></i></div>
-                                    Untradable
-                                </div>
-                            </div>
-                        </div>
-                        <div class="attrib yes" v-if="itemData.canServerStorage && !forceBound">
-                            <div class="icon"><i class="fa fa-suitcase"></i></div>
-                            Server storagable
-                        </div>
-                        <div class="attrib no" v-else>
-                            <div class="icon"><i class="fa fa-lock"></i></div>
-                            Character bound
-                        </div>
-                        <div class="attrib no" v-if="!itemData.canDestroy && !itemData.cashItem">
-                            <div class="icon"><i class="fa fa-minus-circle"></i></div>
-                            Cannot be destroyed
-                        </div>
-                        <div class="attrib tooltip" v-if="itemData.npcSellAmount">
-                            <div class="icon">
-                                <i class="fa fa-dollar"></i>
-                                <!-- More dollars for more gold -->
-                                <i class="fa fa-dollar" v-if="itemData.npcSellAmount >= 10000000"></i>
-                                <i class="fa fa-dollar" v-if="itemData.npcSellAmount >= 100000000"></i>
-                            </div>
-                            <!-- NPC for {{ itemData.npcSellAmount | gold }} -->
-                            NPC for {{ itemData.npcSellAmount | goldG }}
-                            <div class="tooltext">
-                                <div class="content">Sell to an NPC for <strong>{{ itemData.npcSellAmount | gold }}</strong><br/>Golden Goose (+15%): <strong>{{ Math.round(itemData.npcSellAmount * 1.15, 1) | gold }}</strong></div>
-                            </div>
-                        </div>
-                        <div class="attrib yes tooltip" v-if="itemData.gearScore">
-                            <div class="icon">
-                                <i class="fa fa-diamond"></i>
-                                <i class="fa fa-diamond" v-if="itemData.gearScore >= 300"></i>
-                                <i class="fa fa-diamond" v-if="itemData.gearScore >= 600"></i>
-                            </div>
-                            <strong>+{{ combinedGearScore.total | thousands }}</strong> GS
-                            <div class="tooltext">
-                                <div class="content">Gear Score (GS) is a rough rating of an item's strength<br/>
-                                <span v-if="combinedGearScore.total != combinedGearScore.base">Base <strong>{{itemData.gearScore}} GS</strong> + Variant <strong>{{combinedGearScore.potential}} GS</strong> + Enhance <strong>{{combinedGearScore.enhance}} GS</strong></span></div>
-                            </div>
-                        </div>
-                        <div class="attrib tooltip" v-if="itemData.equipPoints">
-                            <div class="icon"><i class="fa fa-balance-scale"></i></div>
-                            <strong>{{ itemData.equipPoints | thousands }}</strong> EP
-                            <div class="tooltext">
-                                <div class="content">Equipment Points (EP) is an item's weight.<br/>Max <strong>50 EP</strong> of equipment can be worn.</div>
-                            </div>
-                        </div>
-                    </div>
+                    <item-attribs
+                        :itemData="itemData"
+                        :forceBound="forceBound"
+                        :combinedGearScore="combinedGearScore"/>
                     <!-- {{ itemData.type.type }} -->
 
                     <div class="stat-stack">
@@ -469,8 +393,7 @@ import ItemTunings from "@/components/items/ItemTunings";
 import ItemParts from "@/components/items/ItemParts";
 import BigErrorBox from '@/components/util/BigErrorBox';
 import ItemDropListComponent from "@/components/items/ItemDropListComponent";
-
-
+import ItemAttribs from "@/components/items/ItemAttribs";
 
 import Item from "@/api/item/item";
 import ItemStat from "@/api/item/itemstat";
@@ -490,6 +413,7 @@ Vue.component('mobile-enhance', MobileEnhance);
 Vue.component('item-acquire', ItemAcquire);
 Vue.component('item-parts', ItemParts);
 Vue.component('item-drop-list', ItemDropListComponent);
+Vue.component('item-attribs', ItemAttribs);
 
 Vue.component('big-error-box', BigErrorBox);
 
