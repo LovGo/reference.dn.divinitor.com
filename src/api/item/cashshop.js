@@ -24,6 +24,7 @@ export default {
         return ret.then((v) => 
         {
             delete this.pendingRequests[`tabs-${region}`];
+            this.tabCache = v;
             return v;
         }, (err) => {
             delete this.pendingRequests[`tabs-${region}`];
