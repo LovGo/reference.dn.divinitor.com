@@ -4,6 +4,7 @@ import Store from '@/store';
 export default {
 
     tabCache: null,
+    pendingRequests: {},
 
     getTabs(region) {
         if (!region) region = Store.state.regionCode;
@@ -12,8 +13,22 @@ export default {
             return Promise.resolve(this.tabCache);
         }
 
-        return Vue.http.get(`server/${region}/items/cashshop/tabs`,
+        if (this.pendingRequests[`tabs-${region}`]) {
+            return this.pendingRequests[`tabs-${region}`];
+        }
+
+        let ret = Vue.http.get(`server/${region}/items/cashshop/tabs`,
         {
         });
+
+
+        return ret.then((v) => 
+        {
+            delete this.pendingRequests[`tabs-${region}`];
+            return v;
+        }, (err) => {
+            delete this.pendingRequests[`tabs-${region}`];
+            return Promise.reject(err);
+        })
     }
 };
