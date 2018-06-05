@@ -21,7 +21,6 @@ export default {
         {
         });
 
-
         return ret.then((v) => 
         {
             delete this.pendingRequests[`tabs-${region}`];
