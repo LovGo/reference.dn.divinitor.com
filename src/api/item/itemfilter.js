@@ -68,7 +68,8 @@ export default {
                 epic: true,
                 unique: true,
                 legendary: true,
-                divine: true
+                divine: true,
+                ancient: true,
             }
         };
     }

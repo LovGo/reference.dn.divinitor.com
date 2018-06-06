@@ -424,6 +424,9 @@ button, .button {
     transform: scaleY(0);
 }
 
+.rank-ancient {
+    color: @rank-ancient;
+}
 .rank-divine {
     color: @rank-divine;
 }
@@ -658,6 +661,34 @@ button, .button {
                     color: @ct;
                 }
                 
+                border-left-color: @ct;
+
+                &:hover {
+                    label {
+                        color: @ct;
+
+                        &:before {
+                            border-color: lighten(@ct, -20%);
+                            background-color: fade(@ct, 20%);
+                        }
+                    }
+                    
+                    input:checked ~ label:before {
+                        background-color: @ct;
+                    }
+                }
+
+                input:checked ~ label:before {
+                    border-color: @ct;
+                    background-color: fade(@ct, 50%);
+                }
+            }
+            &.ancient {
+                @ct: @rank-ancient;
+                input:checked ~ label {
+                    color: @ct;
+                }
+
                 border-left-color: @ct;
 
                 &:hover {
