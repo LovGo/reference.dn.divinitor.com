@@ -108,11 +108,12 @@ body {
 }
 
 #app {
+    transition: opacity ease-in 1s;
     padding: 20px 20px;
 }
 
 .startup {
-    opacity: 0;
+    opacity: 0.0;
 }
 
 .flex-box {

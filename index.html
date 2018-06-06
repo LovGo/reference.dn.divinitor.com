@@ -38,9 +38,9 @@
             pointer-events: none;
             margin-left: calc(100vw - 100%);
             opacity: 1.0;
-            transition: opacity ease-in 0.25s;
+            z-index: 300;
+            transition: opacity ease-in 1s;
             background-color: #131315;
-            animation: 0.25s ease-in 0s 1 startup-fade-in;
         }
         .startup > .container {
             position: absolute;
@@ -55,6 +55,7 @@
 
             border-left: 4px solid #98BCD4;
             padding: 8px 16px;
+            animation: 0.25s ease-in 0s 1 startup-fade-in;
         }
         .startup > .container > .title {
             font-weight: normal;
