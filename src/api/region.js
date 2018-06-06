@@ -2,37 +2,29 @@ import Vue from 'vue';
 import Store from '@/store';
 
 const Regions = {
-    "local": {
+    "na": {
         id: "local",
         name: "North America",
-        localizedName: "North America",
-        version: 674,
-        patched: "2018-02-08",
-        language: "English (US)",
-        levelCap: 95
+        localizedName: "North America"
     },
     "kr": {
         id: "kr",
         name: "Korea",
-        localizedName: "대한민국",
-        version: 866,
-        patched: "2017-09-27",
-        language: "Korean",
-        levelCap: 95
+        localizedName: "대한민국"
     }
 };
 
 export default {
-
+    SUPPORTED_REGIONS: ["na", "ko"],
     regionCache: {},
 
     getDefaultRegionCode() {
-        return "local";
+        return "na";
     },
 
     normalizeName(shortName) {
         if (!shortName) {
-            shortName = this.getDefaultRegionCode();
+            shortName = Store.state.regionCode || this.getDefaultRegionCode();
         }
         if (shortName == "local") {
             shortName = "na";
@@ -45,21 +37,37 @@ export default {
         shortName = this.normalizeName(shortName);
 
         if (this.regionCache[shortName]) {
-            okcb(this.regionCache[shortName]);
+            if (okcb) {
+                console.error("Use getRegionByShortName as a Promise");
+                okcb(this.regionCache[shortName]);
+            }
+
+            return Promise.resolve(this.regionCache[shortName]);
         }
 
-        Vue.http.get(`https://regionservice-dn.arcsat.divinitor.com/regions/shortname/${shortName}`,
+        return Vue.http.get(`https://regionservice-dn.arcsat.divinitor.com/regions/shortname/${shortName}`,
         {
         }).then(
         (res) => {
             this.regionCache[shortName] = res.body;
-            okcb(res.body);
+            if (okcb) {
+                console.error("Use getRegionByShortName as a Promise");
+                okcb(res.body);
+            }
+
+            return res.body;
         }, 
-        errcb);
+        (err) => {
+            if (errcb) {
+                errcb(err);
+            }
+            
+            return Promise.reject(err);
+        });
     },
 
     getRegions(okcb, errcb) {
-        Vue.http.get(`https://regionservice-dn.arcsat.divinitor.com/regions/`,
+        return Vue.http.get(`https://regionservice-dn.arcsat.divinitor.com/regions/`,
         {
         }).then(
         (res) => {
@@ -69,9 +77,20 @@ export default {
                 this.regionCache[v.shortName] = v;
             }
 
-            okcb(d);
+            if (okcb) {
+                console.error("Use getRegionByShortName as a Promise");
+                okcb(d);
+            }
+
+            return d;
         }, 
-        errcb);
+        (err) => {
+            if (errcb) {
+                errcb(err);
+            }
+            
+            return Promise.reject(err);
+        });
     },
 
     getServerStats(shortName, rangeOption) {

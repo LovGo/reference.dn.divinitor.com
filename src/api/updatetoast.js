@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "이 텍스트 번역",
+            "timestamp": "Jun 5 22:29",
+            "body": "- Added support for multiple regions! You can now select between NA and Korea by clicking on the region selector in the top right corner"
+        },
+        {
             "title": "Package delivery",
             "timestamp": "May 25 21:34",
             "body": "- Added support for cash shop packages to item acquisition<br/>- Fixed some cash shop info logic<br/>- Cash shop viewing coming soon!"
