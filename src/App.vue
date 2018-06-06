@@ -111,6 +111,10 @@ body {
     padding: 20px 20px;
 }
 
+.startup {
+    opacity: 0;
+}
+
 .flex-box {
     display: flex;
     width: 100%;
@@ -130,6 +134,7 @@ body {
 }
 
 .header {
+    display: block;
     padding: 14px 20px;
     width: 50%;
     h1 {
@@ -160,6 +165,7 @@ body {
 }
 
 .copyright {
+  display: block;
   font-size: 10px;
   font-family: @dv-f-lato;
   color: @dv-c-disabled;
