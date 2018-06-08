@@ -59,7 +59,7 @@
       </div> -->
     </div>
 
-    <server-time big="true" />
+    <server-time big="true" v-if="$fOn($f.RegionTimeInfo)"/>
   </div>
 </template>
 
