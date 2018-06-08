@@ -15,7 +15,7 @@ const Regions = {
 };
 
 export default {
-    SUPPORTED_REGIONS: ["na", "ko"],
+    SUPPORTED_REGIONS: ["na", "ko", "eu"],
     regionCache: {},
 
     getDefaultRegionCode() {
