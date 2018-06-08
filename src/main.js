@@ -21,6 +21,8 @@ import StatEqualLineChart from '@/components/general/stat/StatEqualLineChart';
 import ItemEnhanceRateChart from "@/components/items/ItemEnhanceRateChart";
 import ItemEnhanceMaterialChart from "@/components/items/ItemEnhanceMaterialChart";
 
+import Features from "@/api/features";
+
 Vue.config.productionTip = false;
 
 Vue.use(require("vue-moment"));
@@ -34,6 +36,7 @@ Vue.use(VueAnalytics, {
     exception: true
   }
 });
+Vue.use(Features);
 
 Vue.component('stat-line-chart', StatLineChart);
 Vue.component('stat-equal-line-chart', StatEqualLineChart);

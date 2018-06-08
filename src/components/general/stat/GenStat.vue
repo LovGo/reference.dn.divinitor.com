@@ -13,8 +13,10 @@
             Set all to Lvl {{ globalLvl }}
         </button> -->
         
-        <h2>Final Damage</h2>
-        <gen-stat-small stat="fd"></gen-stat-small>
+        <div v-if="!$fOn($f.HideExpFd)">
+            <h2>Final Damage</h2>
+            <gen-stat-small stat="fd"></gen-stat-small>
+        </div>
 
         <h2>Final Damage (Linear)</h2>
         <gen-stat-small stat="fdlin"></gen-stat-small>
