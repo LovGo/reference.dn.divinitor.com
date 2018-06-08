@@ -45,6 +45,7 @@ export default {
     name: 'locale-select',
     data () {
         return {
+            initialRegion: null,
             selectedRegion: null,
             showSelect: false,
             availableRegions: null,
@@ -56,7 +57,10 @@ export default {
     },
     created() {
         let rc = this.$store.state.regionCode;
-        Region.getRegionByShortName(rc).then((r) => this.selectedRegion = r);
+        Region.getRegionByShortName(rc).then((r) => {
+            this.selectedRegion = r;
+            this.initialRegion = r;
+        });
     },
     methods: {
         showSelector() {
@@ -66,7 +70,6 @@ export default {
             }
         },
         loadRegions() {
-            console.log(Region.SUPPORTED_REGIONS);
             this.loading.available = true;
             Promise.all(Region.SUPPORTED_REGIONS.map((s) => Region.getRegionByShortName(s))).then((regions) => {
                 this.availableRegions = regions;
@@ -87,10 +90,11 @@ export default {
         handleOk() {
             this.$store.dispatch("updateRegion", this.selectedRegion.shortName);
             this.reloading = true;
+            this.initialRegion = this.selectedRegion;
             window.setTimeout(() => window.location.reload(), 1000);
         },
         handleCancel() {
-
+            this.selectedRegion = this.initialRegion;
             this.showSelect = false;
         }
     }
