@@ -296,6 +296,11 @@ const STATES = {
         abbv: "% MP REGEN",
         type: "percent",
     },
+    FINAL_DAMAGE_PERCENT: {
+        name: "% Final Damage",
+        abbv: "% FD",
+        type: "percent",
+    },
     SAFE_ZONE_MOVEMENT_SPEED_PERCENT: {
         name: "% Safe Zone Movement Speed",
         abbv: "% SAFE MOVE",
