@@ -84,6 +84,18 @@ new Vue({
       }
     }
 
+    //  Region override
+    if (this.$route.query) {
+      let region = this.$route.query.region;
+      if (region) {
+        this.$store.dispatch("softUpdateRegion", region);
+        let newQuery = {};
+        Object.assign(newQuery, this.$route.query);
+        delete newQuery.region;
+        this.$router.replace({ path: this.$route.path, query: newQuery, params: this.$route.params });
+      }
+    }
+
     //  Navigation guards
     this.$router.beforeResolve((to, from, next) => {
       let isAuth = this.$store.getters.isAuthed;
@@ -92,6 +104,19 @@ new Vue({
       if (needAuth && !isAuth) {
         next('/auth');
         return;
+      }
+
+      // Region overrides
+      if (to.query) {
+        let region = to.query.region;
+        if (region) {
+          this.$store.dispatch("softUpdateRegion", region);
+          let newQuery = {};
+          Object.assign(newQuery, to.query);
+          delete newQuery.region;
+          next({ path: to.path, query: newQuery, params: to.params });
+          return;
+        }
       }
 
       next();

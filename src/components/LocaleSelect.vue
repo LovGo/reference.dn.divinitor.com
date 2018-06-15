@@ -90,6 +90,11 @@ export default {
         handleOk() {
             this.$store.dispatch("updateRegion", this.selectedRegion.shortName);
             this.reloading = true;
+
+            // Remove any lingering region overrides
+            delete this.$route.query.region;
+            this.$router.replace({ path: this.$route.path, query: this.$route.query, params: this.$route.params });
+
             this.initialRegion = this.selectedRegion;
             window.setTimeout(() => window.location.reload(), 1000);
         },
