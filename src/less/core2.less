@@ -1155,3 +1155,43 @@ input[type="text"] {
         transition: color ease-in 0.125s;
     }
 }
+
+.share {
+    margin-left: 8px;
+    margin-bottom: 4px;
+
+    .share-link {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-family: @dv-f-geomanist;
+        font-size: 12px;
+        position: relative;
+        color: transparent;
+        white-space: nowrap;
+
+        & > span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: fade(@dv-c-foreground, 50%);
+
+            .label, .fa {
+                transition: color 0.125s ease-in;
+            }
+
+            &:hover {
+                color: @dv-c-foreground;
+            }
+
+            &.ok {
+                color: @dv-c-green;
+            }
+
+            &.err {
+                color: @dv-c-red;
+            }
+        }
+
+    }
+}
+
