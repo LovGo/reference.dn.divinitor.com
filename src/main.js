@@ -21,6 +21,8 @@ import StatEqualLineChart from '@/components/general/stat/StatEqualLineChart';
 import ItemEnhanceRateChart from "@/components/items/ItemEnhanceRateChart";
 import ItemEnhanceMaterialChart from "@/components/items/ItemEnhanceMaterialChart";
 
+import Features from "@/api/features";
+
 Vue.config.productionTip = false;
 
 Vue.use(require("vue-moment"));
@@ -34,6 +36,7 @@ Vue.use(VueAnalytics, {
     exception: true
   }
 });
+Vue.use(Features);
 
 Vue.component('stat-line-chart', StatLineChart);
 Vue.component('stat-equal-line-chart', StatEqualLineChart);
@@ -81,6 +84,18 @@ new Vue({
       }
     }
 
+    //  Region override
+    if (this.$route.query) {
+      let region = this.$route.query.region;
+      if (region) {
+        this.$store.dispatch("softUpdateRegion", region);
+        let newQuery = {};
+        Object.assign(newQuery, this.$route.query);
+        delete newQuery.region;
+        this.$router.replace({ path: this.$route.path, query: newQuery, params: this.$route.params });
+      }
+    }
+
     //  Navigation guards
     this.$router.beforeResolve((to, from, next) => {
       let isAuth = this.$store.getters.isAuthed;
@@ -94,6 +109,19 @@ new Vue({
       if (needAuth && !isAuth && !forceAuth) {
         next('/auth');
         return;
+      }
+
+      // Region overrides
+      if (to.query) {
+        let region = to.query.region;
+        if (region) {
+          this.$store.dispatch("softUpdateRegion", region);
+          let newQuery = {};
+          Object.assign(newQuery, to.query);
+          delete newQuery.region;
+          next({ path: to.path, query: newQuery, params: to.params });
+          return;
+        }
       }
 
       next();

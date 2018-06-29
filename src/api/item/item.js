@@ -196,6 +196,17 @@ export default {
             }
         }
 
+        if (rank === "ANCIENT" || rank === 7) {
+            ret.url = `${Vue.http.options.root}/server/${region}/dds/uit_itemslotbutton.dds/png`;
+            if (isWeap) {
+                ret.x = 1 * UNIT_SIZE;
+                ret.y = 3 * UNIT_SIZE;
+            } else {
+                ret.x = 0 * UNIT_SIZE;
+                ret.y = 3 * UNIT_SIZE;
+            }
+        }
+
         return ret;
     },
 

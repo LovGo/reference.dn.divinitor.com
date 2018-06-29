@@ -72,6 +72,10 @@
                             <input id="filter-grade-divine" type="checkbox" v-model="filter.grades.divine" />
                             <label for="filter-grade-divine">Divine</label>
                         </span>
+                        <span class="ancient" v-if="hasGrade.ancient">
+                            <input id="filter-grade-ancient" type="checkbox" v-model="filter.grades.ancient" />
+                            <label for="filter-grade-ancient">Ancient</label>
+                        </span>
                     </div>
                     
                 </form>
@@ -205,7 +209,8 @@ export default {
                 epic: false,
                 unique: false,
                 legendary: false,
-                divine: false
+                divine: false,
+                ancient: false,
             };
             
             if (!this.tunerData) {
@@ -235,6 +240,9 @@ export default {
                         break;
                     case "DIVINE":
                         ret.divine = true;
+                        break;
+                    case "ANCIENT":
+                        ret.ancient = true;
                         break;
                 }
             }

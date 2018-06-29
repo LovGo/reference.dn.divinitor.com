@@ -62,6 +62,10 @@
                     <input id="filter-grade-divine" type="checkbox" v-model="filter.grades.divine" />
                     <label for="filter-grade-divine">Divine</label>
                 </span>
+                <span class="ancient">
+                    <input id="filter-grade-ancient" type="checkbox" v-model="filter.grades.ancient" />
+                    <label for="filter-grade-ancient">Ancient</label>
+                </span>
             </div>
         </div>
 
@@ -182,6 +186,7 @@ export default {
                 this.filter.grades.unique = g.indexOf("u") == -1;
                 this.filter.grades.legendary = g.indexOf("l") == -1;
                 this.filter.grades.divine = g.indexOf("d") == -1;
+                this.filter.grades.ancient = g.indexOf("a") == -1;
             }
 
         },

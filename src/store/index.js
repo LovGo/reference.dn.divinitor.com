@@ -16,9 +16,11 @@ export default new Vuex.Store({
     actions: {
         init({ commit, state }) {
             let savedRegionCode = localStorage.getItem('dv.ref.dn.regionCode');
-            if (!savedRegionCode) {
+            // Migration
+            if (!savedRegionCode || savedRegionCode == "local") {
                 savedRegionCode = region.getDefaultRegionCode();
             }
+
             commit(MT.REGION_SET, savedRegionCode);
 
             let savedAuth = localStorage.getItem('dv.ref.dn.auth');
@@ -30,6 +32,14 @@ export default new Vuex.Store({
             if (savedAck) {
                 commit(MT.ACK_UPDATE, savedAck);
             }
+        },
+        updateRegion({ commit, state }, regionCode) {
+            console.log("Updating region to " + regionCode);
+            commit(MT.REGION_SET, regionCode);
+        },
+        softUpdateRegion({ commit, state }, regionCode) {
+            console.log("Updating region to " + regionCode);
+            commit(MT.REGION_SOFT_SET, regionCode);
         }
     },
     getters: {
@@ -55,6 +65,9 @@ export default new Vuex.Store({
         [MT.REGION_SET] (state, regionCode) {
             state.regionCode = regionCode;
             localStorage.setItem('dv.ref.dn.regionCode', regionCode);
+        },
+        [MT.REGION_SOFT_SET] (state, regionCode) {
+            state.regionCode = regionCode;
         },
         [MT.AUTH_SET] (state, auth) {
             state.auth = auth;

@@ -17,23 +17,91 @@
     <meta property="og:description" content="Reference information for Dragon Nest">
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700" rel="stylesheet"> 
     <!-- Prevent white flash -->
     <style>
         html {
-            background-color: black;
+            background-color: #131315;
+        }
+        .header, .copyright {
+            display: none;
+        }
+        .startup {
+            color: white;
+            font-family: Lato, "Segoe UI", Tahoma, Verdana, sans-serif;
+            font-weight: normal;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+            margin-left: calc(100vw - 100%);
+            opacity: 1.0;
+            z-index: 300;
+            transition: opacity ease-in 1s;
+            background-color: #131315;
+        }
+        .startup > .container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: normal;
+            padding: 0;
+            margin: 0;
+
+            text-transform: uppercase;
+
+            border-left: 4px solid #98BCD4;
+            padding: 8px 16px;
+            animation: 0.25s ease-in 0s 1 startup-fade-in;
+        }
+        .startup > .container > .title {
+            font-weight: normal;
+            padding: 0;
+            margin: 0;
+            letter-spacing: 0.3em;
+            color: #98BCD4;
+            font-size: 48px;
+        }
+        .startup > .container > .sub {
+            letter-spacing: 0.3em;
+            padding-left: 3px;
+            color: #3B6E96;
+        }
+        .startup > .container > .detail {
+            margin-top: 10px;
+            padding-left: 3px;
+            letter-spacing: 0.4em;
+            color: #3D4B54;
+        }
+        @keyframes startup-fade-in {
+            0% {
+                opacity: 0.0;
+            }
+            100% {
+                opacity: 1.0;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="startup">
+        <div class="container">
+            <div class="sub">Divinitor</div>
+            <div class="title">Minerva</div>
+            <div class="detail">Now loading</div>
+        </div>
+    </div>
     <div class="header">
         <a href="/">
         <h1>Divinitor Minerva</h1>
         <div class="subtitle">Dragon Nest Game Reference</div>
         </a>
     </div>
-    
-    <div id="app"></div>
+    <div id="app">
+    </div>
     <!-- built files will be auto injected -->
 
     <div class="copyright">

@@ -2,13 +2,13 @@
 <div class="resources-home">
     <h1>Game Resources</h1>
     <div class="options-grid">
-        <router-link :to="{name: 'resource-chat'}" class="option">
+        <router-link :to="{name: 'resource-chat'}" class="option" v-if="$fOn($f.ResourceGameChat)">
             <h2 class="heading">
                 Game Chat
                 <div class="icon fa fa-comments"></div>
             </h2>
         </router-link>
-        <router-link :to="{name: 'game-pop'}" class="option">
+        <router-link :to="{name: 'game-pop'}" class="option" v-if="$fOn($f.ResourceServerStats)">
             <h2 class="heading">
                 Server Stats
                 <div class="icon fa fa-area-chart"></div>
@@ -18,7 +18,7 @@
 
     <h2>Client Resources</h2>
     <div class="options-list">
-        <router-link to="/resources/downloadgame" class="option">
+        <router-link to="/resources/downloadgame" class="option" v-if="$fOn($f.ResourceDownloadGameClient)">
             <div class="icon fa fa-download"></div>
             <div class="content">
                 <div class="title">Download game client</div>

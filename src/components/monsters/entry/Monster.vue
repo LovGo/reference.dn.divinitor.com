@@ -55,6 +55,23 @@
                     </div>
                 </div>
             </div>
+                
+            <div class="share">
+                <a class="share-link" v-on:click.prevent="copyLink" :href="link">
+                    Link copied!
+                    <transition name="fade">
+                    <span class="ok" v-if="copyStatus == 'ok'" key="ok">
+                        <i class="fa fa-check"></i> <span class="label">Link copied!</span>
+                    </span>
+                    <span class="err" v-else-if="copyStatus == 'err'" key="err">
+                        <i class="fa fa-exclamation-triangle"></i> <span class="label">Link copy failed</span>
+                    </span><span v-else key="o3o">
+                        <i class="fa fa-share-square-o"></i> <span class="label">Copy link</span>
+                    </span>
+                    </transition>
+                    <input class="hidden" type="text" ref="copyLink" />
+                </a>
+            </div>
 
             <div class="info toast">
                 <div class="icon">
@@ -344,6 +361,7 @@ export default {
             loading: true,
             monsterData: null,
             error: null,
+            copyStatus: null,
         }
     },
     created() {
@@ -373,6 +391,15 @@ export default {
             }
             
             return "Monster #" + this.monsterId;
+        },
+        link() {
+            let query = "region=" + this.$store.state.regionCode;
+            if (Object.keys(this.$route.query) != 0) {
+                query = "&" + query;
+            } else {
+                query = "?" + query;
+            }
+            return window.location.href + query;
         }
     },
     methods: {
@@ -422,6 +449,20 @@ export default {
         },
         stateEffectName(stateEffect) {
             return StateEffect.getStateEffectName(stateEffect.stateEffectId);
+        },
+        copyLink() {
+            let box = this.$refs['copyLink'];
+            box.value = this.link;
+            box.focus();
+            box.select();
+            let success = document.execCommand('copy');
+            if (success) {
+                this.copyStatus = 'ok';
+            } else {
+                this.copyStatus = 'err';
+            }
+
+            setTimeout(() => this.copyStatus = null, 2000);
         }
     }
 }

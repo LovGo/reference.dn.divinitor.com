@@ -3,7 +3,7 @@
     <h1>Server Stats</h1>
 
     <div class="section">
-        <h2 class="head">Players Online</h2>
+        <h2 class="head">Concurrent Players Online</h2>
 
         <div class="info toast">
             <div class="icon">
@@ -15,7 +15,8 @@
                 </div>
                 <p>
                     This displays the number of accounts (aggregate) logged in to DN at a given point in time. 
-                    Data is updated approximately every 15 minutes although sampling gaps exist due to server reliability.
+                    Data is updated approximately every 15 minutes although sampling gaps exist due to server reliability. 
+                    Scheduled Thursday maintenances will display as a few hours of no data between two datapoints.
                 </p>
             </div>
         </div>
@@ -38,19 +39,19 @@
 
         <div class="summary">
             <div class="sum-stat">
-                <div class="title">Min</div>
+                <div class="title">Min Concurrent Players</div>
                 <div class="value">{{summaryServer.min | thousands}}</div>
             </div>
             <div class="sum-stat">
-                <div class="title">Max</div>
+                <div class="title">Max Concurrent Players</div>
                 <div class="value">{{summaryServer.max | thousands}}</div>
             </div>
             <div class="sum-stat">
-                <div class="title">Mean</div>
+                <div class="title">Mean Concurrent Players</div>
                 <div class="value">{{summaryServer.mean | thousandsFloor}}</div>
             </div>
             <div class="sum-stat">
-                <div class="title">Median</div>
+                <div class="title">Median Concurrent Players</div>
                 <div class="value">{{summaryServer.median | thousandsFloor}}</div>
             </div>
         </div>

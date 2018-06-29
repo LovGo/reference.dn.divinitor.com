@@ -72,7 +72,7 @@
             </div>
 
             <div class="share">
-                <a class="share-link" v-on:click.prevent="copyLink" href="">
+                <a class="share-link" v-on:click.prevent="copyLink" :href="link">
                     Link copied!
                     <transition name="fade">
                     <span class="ok" v-if="copyStatus == 'ok'" key="ok">
@@ -572,6 +572,15 @@ export default {
             }
 
             return 0;
+        },
+        link() {
+            let query = "region=" + this.$store.state.regionCode;
+            if (Object.keys(this.$route.query) != 0) {
+                query = "&" + query;
+            } else {
+                query = "?" + query;
+            }
+            return window.location.href + query;
         }
     },
     methods: {
@@ -636,7 +645,7 @@ export default {
         },
         copyLink() {
             let box = this.$refs['copyLink'];
-            box.value = window.location.href;
+            box.value = this.link;
             box.focus();
             box.select();
             let success = document.execCommand('copy');
@@ -810,45 +819,6 @@ export default {
                     }
                 }
             }
-        }
-    }
-
-    .share {
-        margin-left: 8px;
-        margin-bottom: 4px;
-
-        .share-link {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-family: @dv-f-geomanist;
-            font-size: 12px;
-            position: relative;
-            color: transparent;
-            white-space: nowrap;
-
-            & > span {
-                position: absolute;
-                left: 0;
-                top: 0;
-                color: fade(@dv-c-foreground, 50%);
-
-                .label, .fa {
-                    transition: color 0.125s ease-in;
-                }
-
-                &:hover {
-                    color: @dv-c-foreground;
-                }
-
-                &.ok {
-                    color: @dv-c-green;
-                }
-
-                &.err {
-                    color: @dv-c-red;
-                }
-            }
-
         }
     }
 
