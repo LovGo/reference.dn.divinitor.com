@@ -4,6 +4,7 @@ import Store from '@/store';
 export default {
     
     cache: {},
+    requests: {},
 
     getPointIconCoordinates(pointIconIndex) {
         let row = Math.floor(pointIconIndex / 8);
@@ -23,21 +24,30 @@ export default {
         return `${Vue.http.options.root}/server/${region}/dds/pointicon.dds/png`;
     },
 
-    getPoint(pointId, region, okcb, errcb) {
+    getPoint(pointId, region) {
         if (!region) region = Store.state.regionCode;
         let cacheKey = `${pointId}:${region}`;
         if (this.cache[cacheKey]) {
-            okcb(this.cache[cacheKey]);
-            return;
+            return Promise.resolve(this.cache[cacheKey]);
         }
 
-        Vue.http.get(`server/${region}/points/${pointId}`,
+        if (this.requests[cacheKey]) {
+            return this.requests[cacheKey];
+        }
+
+        const requestPromise = Vue.http.get(`server/${region}/points/${pointId}`,
         {
-        }).then(
-        (res) => {
+        }).then((res) => {
             this.cache[cacheKey] = res.body;
-            okcb(res.body);
-        }, 
-        errcb);
+            delete this.requests[cacheKey];
+            return res.body;
+        }, (err) => {
+            delete this.requests[cacheKey];
+            return Promise.reject(err);
+        });
+
+        this.requests[cacheKey] = requestPromise;
+
+        return requestPromise;
     },
 };

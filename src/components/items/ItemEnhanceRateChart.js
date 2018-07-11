@@ -79,6 +79,7 @@ export default {
                             return (lbl * 100).toLocaleString() + "%";
                         },
                         max: 1,
+                        min: 0,
                     },
                     scaleLabel: {
                         display: true,

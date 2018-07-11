@@ -1,9 +1,11 @@
 <template>
 <div class="points">
     <div v-if="pointData">
-        <div class="icon"  
+        <div v-if="big" class="big icon"  
+            :style="`background-image: url(${url}); background-position: -${coords.x}px -${coords.y}px;`"></div>
+        <div v-else class="icon"  
             :style="`background:url(${url}) -${coords.x * 0.75 / 2}px -${coords.y * 0.75 / 2}px; background-size: 800% 800%;`"></div>
-        <span class="pts">{{ amount | thousands }} {{ pointData.name }}</span>
+        <span class="pts" v-if="!hideText"><span v-if="amount">{{ amount | thousands }} </span><span v-if="!hideName">{{ pointData.name }}</span></span>
         <div class="point-tooltip">
             <h2>
                 <div class="icon"  
@@ -13,13 +15,18 @@
             <div v-html="pointData.desc"></div>
         </div>
     </div>
+    <div v-else-if="amount">
+        <div v-if="big" class="big icon"></div>
+        <div v-else class="icon"></div>
+        <span class="pts" v-if="!hideText"><span v-if="amount">{{ amount | thousands }}</span></span>
+    </div>
 </div>
 </template>
 
 <script>
 import Points from '@/api/points';
 export default {
-    props: ["pointId", "amount"],
+    props: ["pointId", "amount", "hideText", "hideName", "big"],
     data: function() {
         return {
             pointData: null,
@@ -39,14 +46,15 @@ export default {
     },
     methods: {
         fetchData() {
-            Points.getPoint(this.pointId, this.$store.state.regionCode,
-            (r) => {
-                this.coords = Points.getPointIconCoordinates(r.iconIndex);
-                this.pointData = r;
-            },
-            (e) => {
-                console.error(e);
-            });
+            Points.getPoint(this.pointId, this.$store.state.regionCode).then(
+                (r) => {
+                    this.coords = Points.getPointIconCoordinates(r.iconIndex);
+                    this.pointData = r;
+                },
+                (e) => {
+                    console.error(e);
+                }
+            );
         }
     }
 }
@@ -63,7 +71,13 @@ export default {
         display: inline-block;
         transform: translateY(6px);
         width: 24px;
-        height: 24px;;
+        height: 24px;
+
+        &.big {
+            width: 64px;
+            height: 64px;
+            transform: scale(0.8125);
+        }
     }
 
     .pts {

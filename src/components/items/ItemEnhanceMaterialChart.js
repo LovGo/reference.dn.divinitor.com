@@ -166,6 +166,7 @@ export default {
                                     minimumFractionDigits: 0
                                 }) + "g";
                             },
+                            min: 0,
                         },
                         scaleLabel: {
                             display: true,
@@ -184,7 +185,6 @@ export default {
                                 return lbl.toLocaleString() + "x";
                             },
                             min: 0,
-
                         },
                         scaleLabel: {
                             display: true,

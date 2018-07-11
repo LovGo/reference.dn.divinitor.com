@@ -48,6 +48,9 @@ export default {
 
     gold: function(value) {
         let amt = value;
+        if (amt == 0) {
+            return "0g";
+        }
         let copper = amt % 100;
         let silver = Math.floor(amt / 100) % 100;
         let gold = Math.floor((amt / 10000));
@@ -67,7 +70,7 @@ export default {
     goldG: function(value) {
         let amt = value;
         let gold = Math.floor((amt * 100 / 10000)) / 100;
-        if (gold > 100) {
+        if (gold > 100 || amt == 0) {
             gold = Math.floor(gold);
             return gold.toLocaleString() + "g";
         }

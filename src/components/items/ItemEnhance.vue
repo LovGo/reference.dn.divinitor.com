@@ -90,6 +90,7 @@
                                 <th class="fixed">Rate</th>
                                 <th class="fixed">Gold Cost</th>
                                 <th class="fixed" v-if="canUseJelly">Jelly Cost</th>
+                                <th class="fixed" v-if="hasPoints">Point Cost</th>
                                 <th class="fixed" v-if="showBreakChance">Break Chance</th>
                                 <th class="fixed" v-if="showFailDropAmount">Max Fail Lvl Drop</th>
                             </thead>
@@ -102,6 +103,7 @@
                                 <td v-if="canUseJelly">&#8210;</td>
                                 <td v-if="showBreakChance">&#8210;</td>
                                 <td v-if="showFailDropAmount">&#8210;</td>
+                                <td v-if="hasPoints">&#8210;</td>
                             </tr>
                             <tr 
                                 v-for="e in enhanceData" 
@@ -112,6 +114,9 @@
                                 <td>{{ rateMod(e.successRate, e.level) | enhancePercent}}</td>
                                 <td>{{ e.cost * (useGoldenGoose ? 0.5 : 1) | goldG }}</td>
                                 <td v-if="canUseJelly">{{ e.jellyUseCount | zeroDash }}</td>
+                                <td class="point-td" v-if="hasPoints">
+                                    <point-tag :pointId="e.requiredPointId" :amount="e.requiredPointCount" hideName="true" />
+                                </td>
                                 <td v-if="showBreakChance">{{ breakRateMod(e.breakRate, e.level) | enhancePercent}}</td>
                                 <td v-if="showFailDropAmount">{{ e.maxDown | zeroDash }}</td>
                             </tr>
@@ -138,6 +143,11 @@
                                             ></item-card>
                                         </div>
                                     </transition-group>
+                                </div>
+                                <div v-if="level > 0 && enhanceData[level - 1].requiredPointId != 0 && enhanceData[level - 1].requiredPointCount > 0">
+                                    <transition name="fadecollapse-item">
+                                        <point-tag :pointId="enhanceData[level - 1].requiredPointId" :amount="enhanceData[level - 1].requiredPointCount" />
+                                    </transition>
                                 </div>
                             </div>
                         </transition>
@@ -183,6 +193,9 @@
                                 :itemStub="v.item.stub">
                             </item-icon-tooltip>
                         </th>
+                        <th class="item-head" v-for="v in pointSet" :key="v">
+                            <point-tag :pointId="v" hideText="true" big="true"/>
+                        </th>
                     </thead>
                     <tr v-for="e in enhanceData" 
                         :key="e.level"
@@ -198,6 +211,9 @@
                         <td v-for="v in materialsSet" :key="v.item.id">
                             {{ v.amount[String(e.level)] | zeroDash }}
                         </td>
+                        <td v-for="v in pointSet" :key="v">
+                            {{ e.requiredPointId == v ? e.requiredPointCount : 0 | zeroDash | thousands }}
+                        </td>
                     </tr>
                     <tr class="total">
                         <th>Total</th>
@@ -208,6 +224,9 @@
                             <span v-else>
                                 {{ e | thousandsFloor }}
                             </span>
+                        </td>
+                        <td v-for="(e, i) in totalPoints" :key="i">
+                            {{ e | thousandsFloor }}
                         </td>
                     </tr>
                 </table>
@@ -281,7 +300,7 @@
                                 itemId="1073750029">
                             </item-icon-tooltip>
                         </th>
-                        <th v-if="canUseJelly">
+                        <th>
                             <item-icon-tooltip
                                 itemId="1107302400">
                             </item-icon-tooltip>
@@ -291,6 +310,9 @@
                                 :itemId="v.item.id"
                                 :itemStub="v.item.stub">
                             </item-icon-tooltip>
+                        </th>
+                        <th class="item-head" v-for="v in pointSet" :key="v">
+                            <point-tag :pointId="v" hideText="true" big="true"/>
                         </th>
                     </thead>
                     <tr>
@@ -303,6 +325,9 @@
                                 {{ v | thousandsFloor }}
                             </span>
                         </td>
+                        <td v-for="(v, i) in estimatedPoints.total" :key="i">
+                            {{ v| thousandsFloor }}
+                        </td>
                     </tr>
                     <tr v-if="level > 1">
                         <th>From +{{level - 1}}</th>
@@ -313,6 +338,9 @@
                             <span v-else>
                                 {{ v | thousandsFloor }}
                             </span>
+                        </td>
+                        <td v-for="(v, i) in estimatedPoints.prev" :key="i">
+                            {{ v| thousandsFloor }}
                         </td>
                     </tr>
                 </table>
@@ -340,13 +368,14 @@ import ItemIcon from "@/components/game/ItemIcon";
 import ItemIconTooltip from "@/components/items/ItemIconTooltip";
 import ItemStat from "@/api/item/itemstat";
 import StatGrid from "@/components/game/StatGrid";
-
+import Points from "@/components/game/Points";
 
 import Item from "@/api/item/item";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('stat-grid', StatGrid);
+Vue.component('point-tag', Points);
 
 export default {
     props: ["enhanceLevel", "itemData"],
@@ -413,6 +442,23 @@ export default {
             }
 
             return hasDropChance;
+        },
+        pointSet() {
+            let pts = {};
+            for (let k in this.enhanceData) {
+                let d = this.enhanceData[k];
+                if (d.requiredPointId != 0 && d.requiredPointCount > 0) {
+                    pts[String(d.requiredPointId)] = true;
+                }
+            }
+
+            return Object.keys(pts).map((v) => Number(v));
+        },
+        hasPoints() {
+            return this.pointSet.length > 0;
+        },
+        hasMultiplePoints() {
+            return this.pointSet.length > 1;
         },
         canUseJelly() {
             //  Check if this item can even usejellies
@@ -567,16 +613,77 @@ export default {
         },
         totalMaterials() {
             let mset = this.materialsSet;
-            let ret = Array.from(new Array(2 + mset.length), (x, i) => 0);
+            let offset = 1;
+            if (this.canUseJelly) {
+                offset = 2;
+            }
+            let ret = Array.from(new Array(offset + mset.length), (x, i) => 0);
             for (let k in this.enhanceData) {
                 let v = this.enhanceData[k];
                 ret[0] += v.cost * (this.useGoldenGoose ? 0.5 : 1);
-                ret[1] += v.jellyUseCount;
+                if (this.canUseJelly) {
+                    ret[1] += v.jellyUseCount;
+                }
             }
 
             for (let m in mset) {
                 let v = mset[m];
-                ret[2 + Number(m)] = Object.values(v.amount).reduce((total, n) => n + total);
+                ret[offset + Number(m)] = Object.values(v.amount).reduce((total, n) => n + total);
+            }
+
+            return ret;
+        },
+        estimatedPoints() {
+            let ret = {
+                prev: [],
+                total: []
+            };
+            if (!this.hasPoints) {
+                return ret;
+            }
+            let accum = new Array(this.pointSet.length);
+            let prev = new Array(this.pointSet.length);
+
+            for (let i = 0; i < accum.length; ++i) {
+                accum[i] = 0;
+                prev[i] = 0;
+            }
+
+            for (let k in this.enhanceData) {
+                let e = this.enhanceData[k];
+                if (e.level > this.level) {
+                    break;
+                }
+                let rate = this.rateMod(e.successRate, e.level);
+                let invRate = 1 / rate;
+
+                const pointId = e.requiredPointId;
+                const points = e.requiredPointCount;
+                const pointIdx = this.pointSet.indexOf(pointId);
+                if (pointIdx == -1) {
+                    continue;
+                }
+                let expPts = points * invRate;
+                prev[pointIdx] = accum[pointIdx];
+                accum[pointIdx] += expPts;
+            }
+
+            ret.total = accum;
+            ret.prev = accum.map((v, i) => v - prev[i]);
+
+            return ret;
+        },
+        totalPoints() {
+            const pset = this.pointSet;
+            let ret = Array.from(new Array(pset.length), (x, i) => 0);
+            for (let k in this.enhanceData) {
+                const v = this.enhanceData[k];
+                if (v.requiredPointId != 0 && v.requiredPointCount > 0) {
+                    const idx = pset.indexOf(v.requiredPointId);
+                    if (idx != -1) {
+                        ret[idx] += v.requiredPointCount;
+                    }
+                }
             }
 
             return ret;
@@ -694,10 +801,12 @@ export default {
         .left {
             flex: 0 1 auto;
             margin-right: 20px;
+            z-index: 1;
         }
 
         .right {
             flex: 1 1 250px;
+            z-index: 0;
         }
     }
 
@@ -748,6 +857,7 @@ export default {
     }
 
     table {
+        z-index: 10;
         margin: 0.5em 0;
         border-collapse: collapse;
         text-align: center;
@@ -798,6 +908,9 @@ export default {
 
         td {
             padding-right: 0.5em;
+            &.point-td {
+                transform: translateY(-4px);
+            }
         }
 
         td:first-child,
