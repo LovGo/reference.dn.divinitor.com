@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Lost in a Labyrinth",
+            "timestamp": "Jul 11 15:55",
+            "body": "- Added support for point costs for enhancing<br/>- Added estimated point costs for enhancing<br/>- Exponential FD has been hidden for all regions except NA, which will automatically hide after the Jul 12th patch<br/>- Hid various currently not-working features in Resources"
+        },
+        {
             "title": "이 텍스트 번역",
             "timestamp": "Jun 5 22:29",
             "body": "- Added support for multiple regions! You can now select between NA and Korea by clicking on the region selector in the top right corner"
