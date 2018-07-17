@@ -1,21 +1,8 @@
 import Vue from 'vue';
 import Store from '@/store';
 
-const Regions = {
-    "na": {
-        id: "local",
-        name: "North America",
-        localizedName: "North America"
-    },
-    "kr": {
-        id: "kr",
-        name: "Korea",
-        localizedName: "대한민국"
-    }
-};
-
 export default {
-    SUPPORTED_REGIONS: ["na", "ko", "eu"],
+    SUPPORTED_REGIONS: ["na", "ko", "eu", "sea"],
     regionCache: {},
 
     getDefaultRegionCode() {

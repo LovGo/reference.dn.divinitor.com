@@ -5,6 +5,11 @@ import * as MT from '@/store/mutation-types';
 export default {
     updates: [
         {
+            "title": "Sail the high SEAs",
+            "timestamp": "Jul 17 16:35",
+            "body": "- Added SEA as a region"
+        },
+        {
             "title": "Lost in a Labyrinth",
             "timestamp": "Jul 11 15:55",
             "body": "- Added support for point costs for enhancing<br/>- Added estimated point costs for enhancing<br/>- Exponential FD has been hidden for all regions except NA, which will automatically hide after the Jul 12th patch<br/>- Hid various currently not-working features in Resources"
