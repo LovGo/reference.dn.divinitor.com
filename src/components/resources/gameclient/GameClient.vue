@@ -146,6 +146,11 @@ export default {
         },
         setDownloaded(file) {
             file.downloaded = true;
+            appInsights.trackEvent(`resources.gameclient.download`,
+            {
+                file: file.Name,
+                region: this.$store.state.regionCode,
+            });
         }
     }
 }

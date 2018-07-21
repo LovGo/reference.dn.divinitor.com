@@ -59,17 +59,17 @@ export default new Router({
     // },
     {
       path: '/',
-      name: 'Home',
+      name: 'home',
       component: Home,
     },
     {
       path: '/auth',
-      name: 'Auth',
+      name: 'auth',
       component: Auth
     },
     {
       path: '/auth/discordcb',
-      name: 'DiscordAuthCb',
+      name: 'auth-cb-discord',
       component: AuthCallback
     },
     {
@@ -79,22 +79,27 @@ export default new Router({
         {
           path: '',
           component: GeneralIndex,
+          name: 'general',
         },
         {
           path: 'stat/:statName?',
           component: GenStat,
+          name: 'general-stat',
         },
         {
           path: 'damage',
           component: GenDamage,
+          name: 'general-damage',
         },
         {
           path: 'guild',
           component: GenGuild,
+          name: 'general-guild',
         },
         {
           path: 'taxes',
           component: GenTaxes,
+          name: 'general-taxes',
         },
         {
           path: '*',
@@ -203,11 +208,12 @@ export default new Router({
             },
             {
               path: 'browse',
-              component: UiStringBrowse
+              component: UiStringBrowse,
+              name: 'uistring-browse',
             },
             {
               path: 'midlup',
-              name: 'mid-lup',
+              name: 'uistring-midlup',
               component: UiStringMidLup
             },
             {
@@ -253,7 +259,7 @@ export default new Router({
         },
         {
           path: 'gamepop',
-          name: 'game-pop',
+          name: 'resources-game-pop',
           component: Resources.GamePop.GamePop,
           meta: {
             auth: true
@@ -261,7 +267,7 @@ export default new Router({
         },
         {
           path: 'downloadgame',
-          name: 'game-client',
+          name: 'resources-game-client',
           component: Resources.GameClient.GameClient
         }
       ]

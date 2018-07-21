@@ -60,6 +60,11 @@ export default {
             },
             inputType: "STAT",
             caps: [],
+            interacted: {
+                percent: false,
+                value: false,
+                level: false,
+            },
         };
     },
     props: ["stat"],
@@ -76,15 +81,45 @@ export default {
     watch: {
         percent: function(to, from) {
             if (this.inputType == "PERCENT") {
+                if (!this.interacted.percent) {
+                    appInsights.trackEvent(`interaction.gen.stat.small.percent`, {
+                        stat: this.stat,
+                        value: to,
+                        region: this.$store.state.regionCode,
+                    });
+
+                    this.interacted.percent = true;
+                }
+
                 this.calculate();
             }
         },
         value: function(to, from) {
             if (this.inputType == "STAT") {
+                if (!this.interacted.value) {
+                    appInsights.trackEvent(`interaction.gen.stat.small.value`, {
+                        stat: this.stat,
+                        value: to,
+                        region: this.$store.state.regionCode,
+                    });
+
+                    this.interacted.value = true;
+                }
+                
                 this.calculate();
             }
         },
         level: function(to, from) {
+            if (!this.interacted.level) {
+                appInsights.trackEvent(`interaction.gen.stat.small.level`, {
+                    stat: this.stat,
+                    value: to,
+                    region: this.$store.state.regionCode,
+                });
+                
+                this.interacted.level = true;
+            }
+            
             this.fetchData();
             this.calculate();
         }

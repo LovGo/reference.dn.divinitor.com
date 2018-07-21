@@ -708,6 +708,13 @@ export default {
         },
         updateLevel(newLevel) {
             this.level = newLevel;
+
+            appInsights.trackEvent(`interaction.item.enhance.selectLevel`,
+            {
+                itemId: this.itemData.id,
+                level: this.level,
+                region: this.$store.state.regionCode,
+            });
             this.$emit("levelUpdate", this.level, this.currentStatSet, this.enhanceData);
         },
         test() {
@@ -744,11 +751,26 @@ export default {
         },
         selectPage(page) {
             this.page = page;
+            
+            let pageName = null;
+            switch (page) {
+                case 0:
+                    pageName = "overview";
+                    break;
+                case 1:
+                    pageName = "material";
+                    break;
+                case 2:
+                    pageName = "stat";
+                    break;
+            }
 
-            this.$ga.event({
-                eventCategory: 'enhancement',
-                eventAction: 'change-page',
-                eventValue: page
+            appInsights.trackEvent(`interaction.item.enhance.selectPage`,
+            {
+                itemId: this.itemData.id,
+                pageId: page,
+                page: pageName,
+                region: this.$store.state.regionCode,
             });
         },
         firstProperty(obj) {

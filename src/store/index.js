@@ -25,6 +25,7 @@ export default new Vuex.Store({
 
             let savedAuth = localStorage.getItem('dv.ref.dn.auth');
             if (savedAuth) {
+                console.log("Loading saved auth token");
                 commit(MT.AUTH_SET, JSON.parse(savedAuth));
             }
 
@@ -73,11 +74,21 @@ export default new Vuex.Store({
             state.auth = auth;
             localStorage.setItem('dv.ref.dn.auth', JSON.stringify(auth));
             Vue.http.headers.common["Authorization"] = this.getters.authToken;
+            const authInfo = JwtDecode(state.auth.access_token);
+            let authId = "E:" + btoa(authInfo.sub).replace(/[,;=| ]+/g, "_");
+            if (authInfo.dsid) {
+                authId = "D:" + authInfo.dsid;
+            }
+            
+            if (!this.getters.isExpired) {
+                appInsights.setAuthenticatedUserContext(authId, authInfo.dsid, true);
+            }
         },
         [MT.AUTH_CLEAR] (state) {
             state.auth = null;
             localStorage.removeItem('dv.ref.dn.auth');
             Vue.http.headers.common["Authorization"] = undefined;
+            appInsights.clearAuthenticatedUserContext();
         },
         [MT.ACK_UPDATE](state, updateNum) {
             state.lastAckedUpdate = updateNum;

@@ -143,6 +143,7 @@ export default {
             marketListVal: 0,
             marketSelLVal: 0,
             error: null,
+            interacted: false,
         }
     },
     created() {
@@ -160,6 +161,17 @@ export default {
             }
 
             return ret;
+        }
+    },
+    watch: {
+        inputVal(to, from) {
+            if (!this.interacted) {
+                appInsights.trackEvent(`interaction.gen.taxes`, {
+                    region: this.$store.state.regionCode,
+                });
+                
+                this.interacted = true;
+            }
         }
     },
     methods: {

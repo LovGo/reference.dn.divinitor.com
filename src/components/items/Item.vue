@@ -644,6 +644,10 @@ export default {
             this.$router.back();
         },
         copyLink() {
+            appInsights.trackEvent(`interaction.item.item.copyLink`, {
+                itemId: this.itemId,
+                region: this.region
+            });
             let box = this.$refs['copyLink'];
             box.value = this.link;
             box.focus();
