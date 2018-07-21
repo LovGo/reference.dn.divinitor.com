@@ -27,7 +27,7 @@ export default {
             let url = "https://discordapp.com/api/oauth2/authorize";
             url += "?response_type=code";
             url += "&client_id=383108341196390401";
-            url += "&scope=identify%20email";
+            url += "&scope=identify%20email%20guilds";
             url += "&redirect_uri=" + encodeURIComponent(redirectUrl);
 
             window.location.href = url;
