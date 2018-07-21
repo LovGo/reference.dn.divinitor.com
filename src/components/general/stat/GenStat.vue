@@ -66,6 +66,9 @@ export default {
             globalLvl: 95,
             stat: '',
             value: 0,
+            interacted: {
+                value: false,
+            }
         };
     },
     watch: {
@@ -73,6 +76,16 @@ export default {
             if (to.params.statName !== from.params.statName) {
                 this.value = 0;
                 this.fetchData();
+            }
+        },
+        value(to, from) {
+            if (!this.interacted.value) {
+                appInsights.trackEvent(`interaction.gen.stat.graph.value`, {
+                    stat: this.stat,
+                    region: this.$store.state.regionCode,
+                });
+                
+                this.interacted.value = true;
             }
         }
     },

@@ -12,7 +12,7 @@
         <!-- <div class="col strip" v-html="result.strip">
         </div> -->
         <div class="col raw">
-            <textarea v-model="result.raw" readonly onclick="this.focus();this.select()">
+            <textarea v-model="result.raw" readonly onclick="selectText(this)">
             </textarea>
         </div>
     </div>
@@ -26,7 +26,7 @@ const COPIED_TEXT = "Copied!";
 
 export default {
     name: 'uistring-midresult',
-    props: ['result'],
+    props: ['result', 'mid'],
     data: function() {
         return {
             copyText: COPY_TEXT
@@ -34,6 +34,11 @@ export default {
     },
     methods: {
         copyHtml() {
+            appInsights.trackEvent(`interaction.uistrings.result.html.copy`, {
+                mid: this.mid,
+                region: this.$store.state.regionCode
+            });
+
             let hiddenArea = this.$refs.htmltext;
             hiddenArea.focus();
             hiddenArea.select();
@@ -51,6 +56,15 @@ export default {
             let text = div.textContent;
             let url = `https://translate.google.com/#ko/en/${(text)}`;
             window.open(url);
+        },
+        selectText(entity) {
+            appInsights.trackEvent(`interaction.uistrings.result.raw.select`, {
+                mid: this.mid,
+                region: this.$store.state.regionCode
+            });
+
+            entity.focus();
+            entity.select();
         }
     }
 };

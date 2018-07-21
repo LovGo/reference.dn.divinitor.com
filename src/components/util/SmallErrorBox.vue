@@ -23,7 +23,14 @@ export default {
   props: ["errorTitle", "errorContent", "iconClass", "secondaryInfo", "canRetry"],
   methods: {
       retry() {
-          this.$emit('retry');
+            appInsights.trackEvent(`interaction.errorbox.retry`, {
+                title: this.errorTitle,
+                content: this.errorContent,
+                displayType: "small",
+                region: this.$store.state.regionCode,
+            });
+
+            this.$emit('retry');
       }
   }
 }

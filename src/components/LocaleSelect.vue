@@ -40,6 +40,8 @@
 </template>
 
 <script>
+const METRIC_PREFIX = "interaction.localeSelect"
+
 import Region from "@/api/region";
 export default {
     name: 'locale-select',
@@ -65,6 +67,7 @@ export default {
     methods: {
         showSelector() {
             this.showSelect = true;
+            appInsights.trackEvent(`${METRIC_PREFIX}.region.ui.enter`);
             if (!this.availableRegions) {
                 this.loadRegions();
             }
@@ -88,6 +91,11 @@ export default {
             return loc;
         },
         handleOk() {
+            appInsights.trackEvent(`${METRIC_PREFIX}.region.select`, {
+                from: this.initialRegion.shortName,
+                to: this.selectedRegion.shortName,
+            });
+            appInsights.trackEvent(`${METRIC_PREFIX}.region.ui.exit.ok`);
             this.$store.dispatch("updateRegion", this.selectedRegion.shortName);
             this.reloading = true;
 
@@ -99,6 +107,7 @@ export default {
             window.setTimeout(() => window.location.reload(), 1000);
         },
         handleCancel() {
+            appInsights.trackEvent(`${METRIC_PREFIX}.region.ui.exit.cancel`);
             this.selectedRegion = this.initialRegion;
             this.showSelect = false;
         }

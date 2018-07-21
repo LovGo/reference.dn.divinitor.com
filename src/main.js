@@ -9,7 +9,6 @@ import store from './store';
 import VueResource from 'vue-resource';
 import infiniteScroll from 'vue-infinite-scroll';
 import filters from './filters';
-import VueAnalytics from 'vue-analytics'
 
 import Chart from 'chart.js';
 Chart.defaults.global.defaultFontFamily = `Lato, "Segoe UI", Tahoma, Verdana, sans-serif`;
@@ -29,13 +28,6 @@ Vue.use(require("vue-moment"));
 Vue.use(VueResource);
 Vue.use(infiniteScroll);
 Vue.use(filters);
-Vue.use(VueAnalytics, {
-  id: 'UA-83957964-4',
-  router,
-  autoTracking: {
-    exception: true
-  }
-});
 Vue.use(Features);
 
 Vue.component('stat-line-chart', StatLineChart);
@@ -104,6 +96,12 @@ new Vue({
       if (needAuth && !isAuth) {
         next('/auth');
         return;
+      }
+
+      let toName = to.name ? to.name : "unknown";
+      let fromName = from.name ? from.name : "unknown";
+      if (toName != fromName) {
+        appInsights.trackPageView(toName);
       }
 
       // Region overrides

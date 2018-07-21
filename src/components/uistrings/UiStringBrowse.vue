@@ -20,7 +20,7 @@
                         <div class="active-result" v-if="activeResultId">
                             <div class="container">
                                 <h1>MID {{ activeResultId }}</h1>
-                                <uistring-midresult :result="activeResult"></uistring-midresult>
+                                <uistring-midresult :result="activeResult" :mid="activeResultId"></uistring-midresult>
                                 <router-link class="permalink" :to="{name: 'mid-lup', query: {q: activeResultId}}">
                                     <i class="fa fa-link"></i> Permalink
                                 </router-link>
