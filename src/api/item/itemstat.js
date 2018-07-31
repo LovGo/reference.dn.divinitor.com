@@ -342,6 +342,28 @@ const STATES = {
         type: "stat",
         obsolete: true
     },
+    STAT: {
+        name: "STR/AGI/INT/VIT",
+        abbv: "STAT",
+        type: "stat",
+        children: [
+            "STRENGTH",
+            "AGILITY",
+            "INTELLECT",
+            "VITALITY"
+        ]
+    },
+    ELE: {
+        name: "Elemental ATK",
+        abbv: "ELE",
+        type: "percent",
+        children: [
+            "LIGHT_ATTACK",
+            "DARK_ATTACK",
+            "FIRE_ATTACK",
+            "ICE_ATTACK"
+        ]
+    }
 };
 
 export default {
@@ -415,6 +437,16 @@ export default {
                 } else {
                     ret.MAGICAL_DAMAGE_MAX_PERCENT = val;
                 }
+            } else if (stat.state === "STAT") {
+                ret.STRENGTH = (ret.STRENGTH ? ret.STRENGTH : 0) + val;
+                ret.AGILITY = (ret.AGILITY ? ret.AGILITY : 0) + val;
+                ret.INTELLECT = (ret.INTELLECT ? ret.INTELLECT : 0) + val;
+                ret.VITALITY = (ret.VITALITY ? ret.VITALITY : 0) + val;
+            } else if (stat.state === "ELE") {
+                ret.LIGHT_ATTACK = (ret.LIGHT_ATTACK ? ret.LIGHT_ATTACK : 0) + val;
+                ret.DARK_ATTACK = (ret.DARK_ATTACK ? ret.DARK_ATTACK : 0) + val;
+                ret.FIRE_ATTACK = (ret.FIRE_ATTACK ? ret.FIRE_ATTACK : 0) + val;
+                ret.ICE_ATTACK = (ret.ICE_ATTACK ? ret.ICE_ATTACK : 0) + val;
             } else if (info.obsolete) {
                 continue;
             } else {
