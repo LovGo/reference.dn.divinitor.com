@@ -342,12 +342,49 @@ const STATES = {
         type: "stat",
         obsolete: true
     },
+    STAT: {
+        name: "STR/AGI/INT/VIT",
+        abbv: "STAT",
+        type: "stat",
+        children: [
+            "STRENGTH",
+            "AGILITY",
+            "INTELLECT",
+            "VITALITY"
+        ]
+    },
+    ELE: {
+        name: "Elemental ATK",
+        abbv: "ELE",
+        type: "percent",
+        children: [
+            "LIGHT_ATTACK",
+            "DARK_ATTACK",
+            "FIRE_ATTACK",
+            "ICE_ATTACK"
+        ]
+    }
+};
+
+const UnknownStateMap = {
+    "88": "ELE",
+    "37": "STAT",
 };
 
 export default {
     getStateInfo(state) {
+        let stateId = -1;
         if (typeof state === "object") {
+            stateId = state.id;
             state = state.state;
+        }
+
+        let unknownOverride = -1;
+        if (state.toUpperCase() == "UNKNOWN") {
+            var repl = UnknownStateMap[String(stateId)];
+            if (repl) {
+                state = repl;
+            }
         }
 
         let n = state.toUpperCase();
@@ -370,8 +407,15 @@ export default {
             let stat = stats[k];
             let val = Number(stat[statKey]);
             let state = stat.state;
+            if (state.toUpperCase() == "UNKNOWN") {
+                var repl = UnknownStateMap[String(stat.id)];
+                if (repl) {
+                    state = repl;
+
+                }
+            }
             let info = this.getStateInfo(state);
-            if (stat.state === "PHYSICAL_DAMAGE_MINMAX") {
+            if (state === "PHYSICAL_DAMAGE_MINMAX") {
                 if (ret.PHYSICAL_DAMAGE_MIN) {
                     ret.PHYSICAL_DAMAGE_MIN += val;
                 } else {
@@ -382,7 +426,7 @@ export default {
                 } else {
                     ret.PHYSICAL_DAMAGE_MAX = val;
                 }
-            } else if (stat.state === "MAGICAL_DAMAGE_MINMAX") {
+            } else if (state === "MAGICAL_DAMAGE_MINMAX") {
                 if (ret.MAGICAL_DAMAGE_MIN) {
                     ret.MAGICAL_DAMAGE_MIN += val;
                 } else {
@@ -393,7 +437,7 @@ export default {
                 } else {
                     ret.MAGICAL_DAMAGE_MAX = val;
                 }
-            } else if (stat.state === "PHYSICAL_DAMAGE_MINMAX_PERCENT") {
+            } else if (state === "PHYSICAL_DAMAGE_MINMAX_PERCENT") {
                 if (ret.PHYSICAL_DAMAGE_MIN_PERCENT) {
                     ret.PHYSICAL_DAMAGE_MIN_PERCENT += val;
                 } else {
@@ -404,7 +448,7 @@ export default {
                 } else {
                     ret.PHYSICAL_DAMAGE_MAX_PERCENT = val;
                 }
-            } else if (stat.state === "MAGICAL_DAMAGE_MINMAX_PERCENT") {
+            } else if (state === "MAGICAL_DAMAGE_MINMAX_PERCENT") {
                 if (ret.MAGICAL_DAMAGE_MIN_PERCENT) {
                     ret.MAGICAL_DAMAGE_MIN_PERCENT += val;
                 } else {
@@ -415,6 +459,16 @@ export default {
                 } else {
                     ret.MAGICAL_DAMAGE_MAX_PERCENT = val;
                 }
+            } else if (state === "STAT") {
+                ret.STRENGTH = (ret.STRENGTH ? ret.STRENGTH : 0) + val;
+                ret.AGILITY = (ret.AGILITY ? ret.AGILITY : 0) + val;
+                ret.INTELLECT = (ret.INTELLECT ? ret.INTELLECT : 0) + val;
+                ret.VITALITY = (ret.VITALITY ? ret.VITALITY : 0) + val;
+            } else if (state === "ELE") {
+                ret.LIGHT_ATTACK = (ret.LIGHT_ATTACK ? ret.LIGHT_ATTACK : 0) + val;
+                ret.DARK_ATTACK = (ret.DARK_ATTACK ? ret.DARK_ATTACK : 0) + val;
+                ret.FIRE_ATTACK = (ret.FIRE_ATTACK ? ret.FIRE_ATTACK : 0) + val;
+                ret.ICE_ATTACK = (ret.ICE_ATTACK ? ret.ICE_ATTACK : 0) + val;
             } else if (info.obsolete) {
                 continue;
             } else {
