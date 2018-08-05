@@ -21,7 +21,7 @@
                             <div class="container">
                                 <h1>MID {{ activeResultId }}</h1>
                                 <uistring-midresult :result="activeResult" :mid="activeResultId"></uistring-midresult>
-                                <router-link class="permalink" :to="{name: 'mid-lup', query: {q: activeResultId}}">
+                                <router-link class="permalink" :to="{name: 'uistring-midlup', query: {q: activeResultId}}">
                                     <i class="fa fa-link"></i> Permalink
                                 </router-link>
                                 <div class="buttonbox">
@@ -31,9 +31,9 @@
                         </div>
                     </transition>
                     <div class="count">Found <span class="val">{{ approxResultCount | thousands }} results</span></div>
-                    <div v-for="item in results" :key="item.mid" class="midresult" v-on:click.self="setActiveResult" :data-id="item.mid">
+                    <div v-for="item in results" :key="item.mid" class="midresult" v-on:click.self="setActiveResult" :data-id="item.id">
                         <div class="mid">
-                            {{ item.mid }}
+                            {{ item.id }}
                         </div>
                         <div class="text" v-html="item.message">
                         </div>
