@@ -1,6 +1,6 @@
 <template>
   <div class="locale-select">
-    <div class="selector" v-on:click="showSelector">
+    <div class="selector" v-on:click="showSelector" :noclick="noclick">
         <i class="fa fa-globe"></i> <span v-if="selectedRegion">{{ selectedRegion.displayNames.default }} v{{selectedRegion.version}}</span>
     </div>
 
@@ -45,6 +45,7 @@ const METRIC_PREFIX = "interaction.localeSelect"
 import Region from "@/api/region";
 export default {
     name: 'locale-select',
+    props: ["noclick"],
     data () {
         return {
             initialRegion: null,
@@ -66,6 +67,10 @@ export default {
     },
     methods: {
         showSelector() {
+            if (this.noclick) {
+                return;
+            }
+
             this.showSelect = true;
             appInsights.trackEvent(`${METRIC_PREFIX}.region.ui.enter`);
             if (!this.availableRegions) {
@@ -139,6 +144,13 @@ export default {
 
         &:hover {
             color: @dv-c-foreground;
+        }
+
+        &[noclick] {
+            cursor: default;
+            &:hover {
+                color: @dv-c-accent-2;
+            }
         }
     }
 
