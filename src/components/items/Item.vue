@@ -578,12 +578,23 @@ export default {
         },
         link() {
             let query = "region=" + this.$store.state.regionCode;
-            if (Object.keys(this.$route.query) != 0) {
-                query = "&" + query;
-            } else {
-                query = "?" + query;
+            let queries = {};
+            queries = Object.assign(queries, this.$route.query);
+            delete queries["embed"];
+
+            const port = window.location.port;
+            let portStr = ":";
+            if (port != 0 && !!port) {
+                portStr += port;
             }
-            return window.location.href + query;
+            let url = window.location.protocol + "//" + window.location.hostname + portStr + this.$route.path;
+
+            let qString = Object.keys(queries).map(k => `${k}=${queries[k]}`).join("&");
+            if (qString.length > 0) {
+                url += "?" + qString;
+            }
+
+            return url;
         }
     },
     methods: {
