@@ -168,8 +168,10 @@
                     </div>
                 </div>
 
-                <div class="graph-appendix">
-                    <item-enhance-rate-line-chart :itemData="itemData" :enhanceData="enhanceData" />
+                <div class="width-container">
+                    <div class="graph-appendix">
+                        <item-enhance-rate-line-chart :itemData="itemData" :enhanceData="enhanceData" />
+                    </div>
                 </div>
             </div>
 
@@ -231,14 +233,16 @@
                     </tr>
                 </table>
                 
-                <div class="graph-appendix">
-                    <item-enhance-material-line-chart 
-                        :itemData="itemData" 
-                        :enhanceData="enhanceData" 
-                        :goldenGoose="useGoldenGoose"
-                        :materialsSet="materialsSet" />
-                    <div class="help">
-                        <i class="fa fa-question-circle"></i> Click on a legend entry (at the bottom of the chart) to toggle visibility
+                <div class="width-container">
+                    <div class="graph-appendix">
+                        <item-enhance-material-line-chart 
+                            :itemData="itemData" 
+                            :enhanceData="enhanceData" 
+                            :goldenGoose="useGoldenGoose"
+                            :materialsSet="materialsSet" />
+                        <div class="help">
+                            <i class="fa fa-question-circle"></i> Click on a legend entry (at the bottom of the chart) to toggle visibility
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1016,6 +1020,12 @@ export default {
     .graph-appendix {
         margin-top: 10px;
         font-family: @dv-f-lato;
+        position: absolute;
+        height: 420px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
 
         .help {
             text-align: left;
@@ -1031,6 +1041,12 @@ export default {
                 padding-right: 6px;
             }
         }
+    }
+
+    .width-container {
+        position: relative;
+        width: 100%;
+        height: 420px;
     }
 
     .loading {

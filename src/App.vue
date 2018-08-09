@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" :embed="embedded">
         <div class="wip-overlay">
             WORK IN PROGRESS<br/>
             <!-- WORK IN PROGRESS<br/>
@@ -10,9 +10,12 @@
             WORK IN PROGRESS<br/>
             WORK IN PROGRESS<br/> -->
         </div>
-        <update-toast v-if="authenticated"></update-toast>
-        <locale-select></locale-select>
-        <div class="auth-box">
+        <div class="embedded-header" v-if="embedded">
+            Divinitor Minerva
+        </div>
+        <update-toast v-if="authenticated && !embedded"></update-toast>
+        <locale-select :noclick="embedded"></locale-select>
+        <div class="auth-box" v-if="!embedded">
             <div class="hello" v-if="authenticated">
                 <div class="welcome">
                     Hello, {{authInfo.username}}
@@ -24,7 +27,7 @@
             </div>
         </div>
         <div class="flex-box">
-            <div class="left-pane mobile-hide">
+            <div class="left-pane mobile-hide" v-if="!embedded">
                 <navigation-pane></navigation-pane>
             </div>
             <div class="main-pane">
@@ -53,6 +56,9 @@ export default {
         },
         authInfo() {
             return this.$store.getters.authInfo;
+        },
+        embedded() {
+            return !!this.$route.query.embed;
         }
     },
     methods: {
@@ -110,6 +116,27 @@ body {
 #app {
     transition: opacity ease-in 1s;
     padding: 20px 20px;
+
+    &[embed] {
+        padding-top: 20px;
+        transform: translateY(-90px);
+        background-color: @dv-c-background;
+
+        .locale-select {
+            top: 40px;
+        }
+    }
+
+    .embedded-header {
+        position: absolute;
+        top: 24px;
+        left: 34px;
+
+        font-family: @dv-f-geomanist;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: @dv-c-accent-1;
+    }
 }
 
 .startup {
