@@ -577,10 +577,10 @@ export default {
             return 0;
         },
         link() {
-            let query = "region=" + this.$store.state.regionCode;
             let queries = {};
             queries = Object.assign(queries, this.$route.query);
             delete queries["embed"];
+            queries.region = this.$store.state.regionCode;
 
             const port = window.location.port;
             let portStr = ":";
