@@ -68,10 +68,12 @@ new Vue({
       Vue.http.options.root = "/api";
     }
 
+    let isEmbed = !!this.$route.query.embed;
+
     //  Redirect on direct link if auth required
     if (this.$route.matched.some((route) => route.meta.auth)) {
       let isAuth = this.$store.getters.isAuthed;
-      if (!isAuth) {
+      if (!isAuth && !isEmbed) {
         this.$router.push('/auth');
       }
     }
@@ -93,7 +95,36 @@ new Vue({
       let isAuth = this.$store.getters.isAuthed;
       let needAuth = to.matched.some((route) => route.meta.auth);
 
-      if (needAuth && !isAuth) {
+      let isEmbed = !!to.query.embed || !!from.query.embed;
+
+      if (isEmbed) {
+        // Sketchy logic for item friendly names
+        const toId = to.params.itemId;
+        const fromId = from.params.itemId;
+        let shouldOpenNewWindow = true;
+        if (toId != null && fromId != null) {
+          // Check that its the same
+          const splitTo = toId.split("-", 2);
+          const splitFrom = fromId.split("-", 2);
+          if (splitTo[0] == splitFrom[0]) {
+            console.log(splitTo[0], splitFrom[0]);
+            shouldOpenNewWindow = false;
+          }
+        }
+
+        if (shouldOpenNewWindow) {
+          const port = window.location.port;
+          let portStr = ":";
+          if (port != 0 && !!port) {
+            portStr += port;
+          }
+          window.open(window.location.protocol + "//" + window.location.hostname + portStr + to.fullPath, "_blank");
+          next(false);
+          return;
+        }
+      }
+
+      if (needAuth && !isAuth && !isEmbed) {
         next('/auth');
         return;
       }

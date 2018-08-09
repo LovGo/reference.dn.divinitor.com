@@ -37,7 +37,8 @@
          -->
         <div v-if="!loading && itemData">
             <div class="go-back"
-                v-on:click="goBack">
+                v-on:click="goBack"
+                v-if="!$route.query.embed">
                 <i class="fa fa-angle-double-left"></i>Back
             </div>
 
@@ -278,7 +279,7 @@
                         </div>                        
                     </div>
                 </div>
-                <div class="model-view" v-if="hasModel">
+                <div class="model-view" v-if="hasModel && !$route.query.embed">
                     <item-parts 
                         :itemId=itemData.id
                         :parts=itemData.parts></item-parts>
@@ -342,7 +343,8 @@
                     <item-drop-list :dropId="enhanceData[effectiveEnhanceLevel - 1].disjointDropId" />
                 </transition>
 
-                <div class="info toast">
+                <div class="info toast"
+                    v-if="!$route.query.embed">
                     <div class="icon">
                         <i class="fa fa-exclamation-triangle"></i>
                     </div>
@@ -357,7 +359,8 @@
                 </div>
             </div>
 
-            <div class="section">
+            <div class="section"
+                v-if="!$route.query.embed">
                 <div class="title">Procurement</div>
                 <!-- <div v-if="itemData.gainText" class="game-tooltip">
                     <div class="title">Game Tooltip</div>
@@ -623,6 +626,10 @@ export default {
 
             if (this.potentialId > 0) {
                 query.p = this.potentialId;
+            }
+
+            if (this.$route.query.embed) {
+                query.embed = this.$route.query.embed;
             }
 
             this.$router.replace({ 

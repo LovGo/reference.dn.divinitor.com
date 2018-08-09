@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" :embed="embedded">
         <div class="wip-overlay">
             WORK IN PROGRESS<br/>
             <!-- WORK IN PROGRESS<br/>
@@ -10,9 +10,9 @@
             WORK IN PROGRESS<br/>
             WORK IN PROGRESS<br/> -->
         </div>
-        <update-toast v-if="authenticated"></update-toast>
+        <update-toast v-if="authenticated && !embedded"></update-toast>
         <locale-select></locale-select>
-        <div class="auth-box">
+        <div class="auth-box" v-if="!embedded">
             <div class="hello" v-if="authenticated">
                 <div class="welcome">
                     Hello, {{authInfo.username}}
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="flex-box">
-            <div class="left-pane mobile-hide">
+            <div class="left-pane mobile-hide" v-if="!embedded">
                 <navigation-pane></navigation-pane>
             </div>
             <div class="main-pane">
@@ -53,6 +53,9 @@ export default {
         },
         authInfo() {
             return this.$store.getters.authInfo;
+        },
+        embedded() {
+            return !!this.$route.query.embed;
         }
     },
     methods: {
@@ -110,6 +113,15 @@ body {
 #app {
     transition: opacity ease-in 1s;
     padding: 20px 20px;
+
+    &[embed] {
+        padding-top: 0;
+        transform: translateY(-30px);
+
+        .locale-select {
+            top: -34px;
+        }
+    }
 }
 
 .startup {
