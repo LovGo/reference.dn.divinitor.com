@@ -2,6 +2,7 @@
   <div class="locale-select">
     <div class="selector" v-on:click="showSelector" :noclick="noclick">
         <i class="fa fa-globe"></i> <span v-if="selectedRegion">{{ selectedRegion.displayNames.default }} v{{selectedRegion.version}}</span>
+        <span v-else>Local</span>
     </div>
 
     <div class="region-selector" v-if="showSelect">
