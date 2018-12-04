@@ -46,9 +46,9 @@
         Divinitor makes no claims of ownership<br/>
         of content sourced from Dragon Nest
     </div>
-    <div class="in-dev">
+    <!-- <div class="in-dev">
         UNDER DEVELOPMENT
-    </div>
+    </div> -->
     <div class="startup" :started="started">
         <div class="container">
             <div class="sub">Divinitor</div>
