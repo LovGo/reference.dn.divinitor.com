@@ -1,4 +1,6 @@
+@import "geomanist.less";
 @import "core.less";
+@import "old.less";
 
 ::selection {
     background: #AAA;
@@ -18,6 +20,10 @@ h1 {
 
     &:first-child {
         margin: 0 0 6px 0;
+    }
+
+    &.divided {
+        border-bottom: 1px solid @dv-c-foreground;
     }
 }
 
@@ -153,12 +159,10 @@ strong {
 
     .content {
         font-family: @dv-f-lato;
-        p {
-            font-size: 16px;
-            word-wrap: break-word;
-            padding: 0;
-            margin: 0.25em 0;
-        }
+        font-size: 16px;
+        word-wrap: break-word;
+        padding: 0;
+        margin: 0.25em 0;
     }
 
     &.warn {
@@ -179,6 +183,9 @@ strong {
         }
     }
 
+    p {
+        margin: 0;
+    }
 }
 
 .uistring {
@@ -314,6 +321,16 @@ button, .button {
         position: relative;
         top: 0;
         left: 0;
+    }
+
+    &.ok {
+        color: @dv-c-green;
+        border-color: @dv-c-green;
+
+        &:hover {
+            background: @dv-c-green;
+            color: @dv-c-background;
+        }
     }
 }
 
@@ -550,31 +567,6 @@ button, .button {
       background-color: @base;
     }
   }
-}
-
-
-.go-back {
-    margin: 10px 0;
-    font-size: 18px;
-    border: 1px solid @dv-c-foreground;
-    cursor: pointer;
-    width: 70px;
-    padding: 8px 10px 8px 6px;
-    text-align: center;
-    background: fade(@dv-c-background, 50%);
-    transition: background-color ease-in 0.125s, color ease-in 0.125s;
-    text-transform: uppercase;
-    font-size: 14px;
-
-    .fa {
-        margin-right: 0.5em;
-        color: @dv-c-accent-2;
-    }
-
-    &:hover {
-        background: fade(@dv-c-foreground, 50%);
-        color: white;
-    }
 }
 
 .filter {
@@ -1195,3 +1187,152 @@ input[type="text"] {
     }
 }
 
+.modal-shade {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: fade(@dv-c-background, 80%);
+}
+
+.modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loading-blinker {
+    @c-color: @dv-c-foreground;
+    @c-shadow-color: fade(@dv-c-accent-2, 100%);
+    @c-block-color: @dv-c-foreground;
+    @c-block-shadow-color: fade(@dv-c-foreground, 80%);
+
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+    margin-left: 12px;
+    
+    &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: -4px;
+        left: 0px;
+        width: 20px;
+        height: 20px;
+        background: @c-block-color;
+        box-shadow: 0 0 20px 3px @c-block-shadow-color;
+        animation: blinker 7s infinite linear;
+    }
+    
+    @keyframes blinker {
+        0% {opacity: 0.0;}
+        5% {opacity: 0.6;}
+        10% {opacity: 0.2;}
+        15% {opacity: 0.4;}
+        20% {opacity: 0.3;}
+        25% {opacity: 0.9;background-color:saturate(@c-block-color, 50%);}
+        30% {opacity: 0.1;}
+        35% {opacity: 0.6;}
+        40% {opacity: 0.3;}
+        45% {opacity: 0.8;}
+        50% {opacity: 0.5;background-color:saturate(@c-block-color, 100%);}
+        55% {opacity: 1.0;}
+        60% {opacity: 0.2;}
+        65% {opacity: 1.0;}
+        70% {opacity: 0.4;background-color:saturate(@c-block-color, 0%);}
+        75% {opacity: 0.8;}
+        80% {opacity: 0.3;}
+        85% {opacity: 0.5;}
+        90% {opacity: 0.2;}
+        95% {opacity: 1.0;}
+        100% {opacity: 0.0;}
+    }
+}
+
+table {
+    margin: 0.5em 0;
+    border-collapse: collapse;
+    text-align: center;
+    thead {
+        th {
+            border-bottom: 2px solid @dv-c-body;
+            color: @dv-c-foreground;
+            font-size: 12px;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: center;
+
+            &:first-child {
+                border-right: 2px solid @dv-c-body;
+                min-width: 50px;
+                text-align: right;
+            }
+
+            &.fixed {
+                width: 80px;
+            }
+        }
+
+        tr:hover {
+            background: none;
+        }
+    }
+
+    tr {
+        padding-left: 0.125em;
+        transition: background-color 0.125s ease-in, color 0.125s ease-in;
+    }
+
+    tr:hover,
+    tr.active:hover {
+        background: fade(@dv-c-foreground, 30%);
+        color: @dv-c-foreground;
+    }
+
+    tr.active {
+        background: fade(@dv-c-foreground, 20%);
+        color: @dv-c-foreground;
+    }
+
+    tr th {
+        border-right: 2px solid @dv-c-body;
+        border-bottom-color: transparent;
+        padding: 4px 12px 4px 0;
+        text-align: right;
+        color: @dv-c-foreground;
+        font-size: 12px;
+        font-weight: normal;
+        text-transform: uppercase;
+        // min-width: 68px;
+
+    }
+
+    th, td {
+        border-bottom: 1px solid @dv-c-idle;
+        padding: 4px 4px 4px 4px;
+    }
+
+    td {
+        padding: 0 1em;
+    }
+
+    td:first-child,
+    th:first-child {
+        padding-left: 0.25em;
+        padding-right: 0.5em;
+    }
+    tr:last-child td {
+        border-bottom-color: transparent;
+    }
+}
+
+.fa {
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+}

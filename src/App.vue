@@ -1,74 +1,120 @@
 <template>
-    <div id="app" :embed="embedded">
-        <div class="wip-overlay">
-            WORK IN PROGRESS<br/>
-            <!-- WORK IN PROGRESS<br/>
-            WORK IN PROGRESS<br/>
-            WORK IN PROGRESS<br/>
-            WORK IN PROGRESS<br/>
-            WORK IN PROGRESS<br/>
-            WORK IN PROGRESS<br/>
-            WORK IN PROGRESS<br/> -->
+<div id="app" :embed="embedded">
+    <div class="header" v-if="!embedded">
+        <div class="header-left">
+            <router-link to="/" class="header-link">
+                <h1>Divinitor Minerva</h1>
+                <div class="subtitle">Dragon Nest Game Reference</div>
+            </router-link>
         </div>
+        <div class="mobile-header-right mobile-only">
+            <navigation-pane />
+        </div>
+    </div>
+
+    <div class="auth-box" v-if="!hideAuth">
+        <site-auth-header />
+    </div>
+
+    <div class="region-indicator">
+        <region-header />
+    </div>
+
+
+
+    <first-run v-if="showFirstRun" />
+
+    <div class="appbody" :embed="embedded">
         <div class="embedded-header" v-if="embedded">
             Divinitor Minerva
         </div>
-        <update-toast v-if="authenticated && !embedded"></update-toast>
-        <locale-select :noclick="embedded"></locale-select>
-        <div class="auth-box" v-if="!embedded">
-            <div class="hello" v-if="authenticated">
-                <div class="welcome">
-                    Hello, {{authInfo.username}}
-                </div>
-                <button class="small-button" v-on:click="logOut">Log Out</button>
-            </div>
-            <div v-else class="log-in-container">
-                <router-link to="/auth" class="small-button button">Log In</router-link>
-            </div>
-        </div>
+        
         <div class="flex-box">
             <div class="left-pane mobile-hide" v-if="!embedded">
-                <navigation-pane></navigation-pane>
+                <navigation-pane />
             </div>
             <div class="main-pane">
-                <router-view></router-view>
+                <loader v-if="showRouteLoader" load-text="Fetching bits and pieces" />
+                <router-view v-else/>
             </div>
         </div>
     </div>
+
+    <div class="copyright">
+        Vahrhedral and Divinitor &copy; 2018 Vahrheit<br/>
+        Dragon Nest &copy; 2018 Eyedentity Games, Inc.<br/>
+        Divinitor makes no claims of ownership<br/>
+        of content sourced from Dragon Nest
+    </div>
+    <div class="in-dev">
+        UNDER DEVELOPMENT
+    </div>
+    <div class="startup" :started="started">
+        <div class="container">
+            <div class="sub">Divinitor</div>
+            <div class="title">Minerva</div>
+            <div class="detail">Now loading</div>
+        </div>
+    </div>
+</div>
 </template>
 
-<script>
-import Vue from 'vue';
-import NavigationPane from '@/components/NavigationPane';
-import LocaleSelect from '@/components/LocaleSelect';
-import UpdateToast from '@/components/UpdateToast';
-import * as MT from '@/store/mutation-types';
+<script lang="ts">
+import Vue from "vue";
+import store from "./store";
 
-Vue.component('navigation-pane', NavigationPane);
-Vue.component('locale-select', LocaleSelect);
-Vue.component('update-toast', UpdateToast);
+import FirstRun from "@/views/FirstRun.vue";
+import NavigationPane from "@/components/site/NavigationPane.vue";
+import SiteAuthHeader from "@/components/auth/SiteAuthHeader.vue";
+import RegionHeader from "@/components/region/RegionHeader.vue";
+import Loader from "@/components/util/Loader.vue";
 
-export default {
-    name: 'app',
+export default Vue.extend({
+    name: "app",
+    components: {
+        FirstRun,
+        NavigationPane,
+        SiteAuthHeader,
+        RegionHeader,
+        Loader,
+    },
+    data() {
+        return {
+            started: false,
+        };
+    },
     computed: {
-        authenticated() {
-            return this.$store.getters.isAuthed;
-        },
-        authInfo() {
-            return this.$store.getters.authInfo;
-        },
-        embedded() {
+        embedded(): boolean {
             return !!this.$route.query.embed;
+        },
+        showFirstRun(): boolean {
+            return !this.embedded && this.$store.getters.showFirstRun && !this.isRedeemingCode;
+        },
+        isRedeemingCode(): boolean {
+            return this.$route.matched.some((r) => r.meta.redemption);
+        },
+        showRouteLoader(): boolean {
+            return this.$store.state.pageLoading;
+        },
+        hideAuth(): boolean {
+            return this.$route.meta.redemption;
         }
     },
-    methods: {
-        logOut() {
-            this.$store.commit(MT.AUTH_CLEAR);
-            this.$router.replace("/");
+    mounted() {
+        const shade = document.getElementById("startup-shade");
+        if (shade) {
+            window.setTimeout(() => {
+                shade.classList.add("hidden");
+            }, 500);
         }
+
+        this.started = true;
+    },
+    methods: {
     }
-}
+});
 </script>
+
 
 <style lang="less">
 @import "less/core2.less";
@@ -96,14 +142,15 @@ body {
     position: relative;
     min-height: 100vh;
     padding: 0;
-    padding-right: 20px;
     width: 900px;
     border-left: @dv-c-foreground solid 1px;
     border-right: @dv-c-foreground solid 1px;
     margin: 0 auto;
 
     // background-image: linear-gradient(rgba(5, 10, 13, 0.5), rgba(5, 10, 13, 0.9)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
-    background-image: url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur-darkened.png");
+    // background-image: url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur-darkened.png");
+    
+    background-image: url("assets/dv-masthead-bg-static-merged-darkblur-darkened.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 62.5% 70%;
@@ -113,15 +160,21 @@ body {
     overflow-y: auto;
 }
 
-#app {
+#app[embed] {
+    background-color: @dv-c-background;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.appbody {
     transition: opacity ease-in 1s;
     padding: 20px 20px;
+    padding-right: 40px;
 
     &[embed] {
-        padding-top: 20px;
-        transform: translateY(-90px);
-        background-color: @dv-c-background;
-
         .locale-select {
             top: 40px;
         }
@@ -129,8 +182,9 @@ body {
 
     .embedded-header {
         position: absolute;
-        top: 24px;
-        left: 34px;
+        top: 12px;
+        left: 24px;
+        white-space: nowrap;
 
         font-family: @dv-f-geomanist;
         text-transform: uppercase;
@@ -139,8 +193,9 @@ body {
     }
 }
 
-.startup {
+.startup[started="true"] {
     opacity: 0.0;
+    transition: opacity ease-in 0.5s;
 }
 
 .flex-box {
@@ -158,13 +213,15 @@ body {
         padding-left: 14px;
         flex: 1;
         margin-bottom: 70px;
+        min-width: 0;
     }
 }
 
 .header {
     display: block;
-    padding: 14px 20px;
-    width: 50%;
+    margin: 14px 20px;
+    position: relative;
+    user-select: none;
     h1 {
         margin: 0;
         color: @dv-c-foreground;
@@ -181,51 +238,103 @@ body {
         letter-spacing: 0.1em;
         margin: 0;
     }
+
+    .header-left {
+        .header-link {
+            display: block;
+            max-width: 300px;
+        }
+    }
+
+    .mobile-header-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 }
 
 .auth-box {
     position: absolute;
-    top: 34px;
+    top: 46px;
     right: 20px;
     .log-in-container {
         padding-top: 10px;
     }
 }
 
-.copyright {
-  display: block;
-  font-size: 10px;
-  font-family: @dv-f-lato;
-  color: @dv-c-disabled;
-  text-align: right;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
+.region-indicator {
+    position: absolute;
+    top: 14px;
+    right: 20px;
 }
 
-@media only screen and (min-width:@min-desktop-wide-width) {
+.copyright {
+    display: block;
+    font-size: 10px;
+    font-family: @dv-f-lato;
+    color: @dv-c-disabled;
+    text-align: right;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.in-dev {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: @dv-c-red;
+    color: @dv-c-background;
+    font-size: 18px;
+    padding: 4px 0;
+    z-index: 9999;
+    font-weight: bold;
+}
+
+.mobile-only {
+    display: none;
+}
+
+@media @wide-desktop {
     body {
         width: 1200px;
     }
+
+    .header {
+        width: 300px;
+    }
+    
+    .auth-box {
+        right: 40px;
+    }
+
+    .region-indicator {
+        right: 40px;
+    }
 }
 
-@media only screen and (max-width: 1024px) {
+@media @tablet {
     body {
         width: 100%;
         border: none;
         padding: 0;
-        background-image: linear-gradient(rgba(5, 10, 13, 0.75), rgba(5, 10, 13, 0.75)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
+        // background-image: linear-gradient(rgba(5, 10, 13, 0.75), rgba(5, 10, 13, 0.75)), url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged-darkblur.png");
+        background-image: linear-gradient(rgba(5, 10, 13, 0.75), rgba(5, 10, 13, 0.75)), url("assets/dv-masthead-bg-static-merged-darkblur-darkened.png");
     }
-
+    
     .copyright {
         right: 20px;
     }
 }
 
-@media only screen and (max-width: 650px) {
+@media @mobile {
     .header {
-        width: 100%;
-
+        margin-bottom: 70px;
+        .header-link {
+            width: 210px;
+        }
         h1 {
             font-size: 14px;
         }
@@ -248,6 +357,17 @@ body {
     .copyright {
         margin-top: 20px;
         position: relative;
+    }
+
+    .auth-box {
+        left: 20px;
+        top: 80px;
+    }
+
+    .region-indicator {
+        top: 58px;
+        left: 20px;
+        right: initial;
     }
 }
 
