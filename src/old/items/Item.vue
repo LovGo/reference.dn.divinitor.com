@@ -67,7 +67,7 @@
                         <template v-if="itemData.tier">
                             <span class="tier" v-html="itemData.tier"></span>
                         </template>
-                        <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
+                        <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }} </span> 
                         <span v-if="canUse" class="can-use">{{ canUse }}</span>
                         <span v-if="itemData.cashItem" class="cash">Cash</span>
                         {{ category }}
