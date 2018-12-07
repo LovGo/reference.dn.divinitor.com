@@ -1,6 +1,6 @@
 <template>
 <div id="app" :embed="embedded">
-    <div class="header" v-if="!embedded">
+    <div class="site-header" v-if="!embedded">
         <div class="header-left">
             <router-link to="/" class="header-link">
                 <h1>Divinitor Minerva</h1>
@@ -217,7 +217,7 @@ body {
     }
 }
 
-.header {
+.site-header {
     display: block;
     margin: 14px 20px;
     position: relative;
