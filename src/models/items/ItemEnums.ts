@@ -8,3 +8,10 @@ export enum ItemRank {
     ANCIENT,
 };
 
+export enum ItemType {
+
+}
+
+export enum ItemState {
+
+}
