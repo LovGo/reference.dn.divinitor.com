@@ -63,7 +63,7 @@
             <i class="fa fa-dollar" v-if="itemData.npcSellAmount >= 100000000"></i>
         </div>
         NPC for {{ itemData.npcSellAmount | goldG }}
-        <div class="tooltext">
+        <div class="tooltext" v-if="!$fOn($f.DisableGoldenGoose)">
             <div class="content">Sell to an NPC for <strong>{{ itemData.npcSellAmount | gold }}</strong><br/>Golden Goose (+15%): <strong>{{ Math.round(itemData.npcSellAmount * 1.15, 1) | gold }}</strong></div>
         </div>
     </div>

@@ -17,7 +17,7 @@
                 <div class="subsection" v-if="acqData.shop && acqData.shop.length">
                     <h4>Shops</h4>
                     <p>Can be purchased from the following NPC shops:</p>
-                    <form class="options">
+                    <form class="options" v-if="!$fOn($f.DisableGoldenGoose)">
                         <div class="checkbox">
                             <input type="checkbox" v-model="useGoldenGoose" id="goldenGoose" />
                             <label for="goldenGoose">Use Golden Goose discount (30%)</label>
@@ -534,6 +534,10 @@ export default {
             this.tunerData = null;
             this.activeCraftGroup = 0;
             this.useGoldenGoose = true;
+            if (this.$fOn(this.$f.DisableGoldenGoose) || this.$fOn(this.$f.GoldenGooseDefaultOff)) {
+                this.useGoldenGoose = false;
+            }
+            
             Item.getItemAcquire(this.itemId, this.$store.state.regionCode,
                 (res) => {
                     //  Perform a copy since we're going to be editing directly

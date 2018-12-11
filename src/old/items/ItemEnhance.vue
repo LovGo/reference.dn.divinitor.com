@@ -26,7 +26,7 @@
             <!-- Can be enhanced up to <b>+{{maxLevel }}</b> -->
 
             <form class="options">
-                <div class="checkbox">
+                <div class="checkbox" v-if="!$fOn($f.DisableGoldenGoose)">
                     <input type="checkbox" v-model="useGoldenGoose" id="goldenGoose" />
                     <label for="goldenGoose">Use Golden Goose discount (50%)</label>
                 </div>
@@ -397,6 +397,7 @@ export default {
     props: ["enhanceLevel", "itemData"],
     data: function() {
         let isGem = this.itemData.type.type === 'DRAGON_GEM';
+        console.log(this.$fOn(this.$f.DisableGoldenGoose));
         return {
             level: this.enhanceLevel,
             enhanceId: this.itemData.enchantId,
@@ -412,6 +413,10 @@ export default {
         };
     },
     created() {
+        if (this.$fOn(this.$f.DisableGoldenGoose) || this.$fOn(this.$f.GoldenGooseDefaultOff)) {
+            this.useGoldenGoose = false;
+        }
+
         this.fetchData();
     },
     watch: {

@@ -12,7 +12,15 @@ export const netFeatures: ITypedMap<IFeature> = {
     ResourceDownloadGameClient: {
         regions: ["na"],
         enabled: true,
-    }
+    },
+    DisableGoldenGoose: {
+        regions: ["sea", "ko"],
+        enabled: true,
+    },
+    GoldenGooseDefaultOff: {
+        regions: ["eu"],
+        enabled: true,
+    },
 };
 
 export function getFeatureState(feature: IFeature): boolean {
