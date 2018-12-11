@@ -75,6 +75,9 @@ export default new Vuex.Store<IState>({
         [Actions.SetRegion]({ commit, state }, regionCode) {
             commit(MutationTypes.SetRegion, regionCode);
         },
+        [Actions.SetRegionSoft]({ commit, state }, regionCode) {
+            commit(MutationTypes.SetRegionSoft, regionCode);
+        },
         [Actions.SetAuthToken]({ commit, state }, auth: IRedeemedAuthResult) {
             commit(MutationTypes.SetAuthToken, auth);
         },
