@@ -224,7 +224,7 @@ export default {
             this.loading = true;
             this.error = null;
             this.setContents = null;
-            let jobIdList = this.jobs.map((v) => v.id);
+            let jobIdList = this.jobs ? this.jobs.map((v) => v.id) : [];
             Item.getItemSet(this.itemId, jobIdList, this.$store.state.regionCode,
                 (res) => {
                     this.setContents = res;
