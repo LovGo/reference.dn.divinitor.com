@@ -84,7 +84,7 @@ export default {
         ApiHttpClient.get(`server/${region}/items/${itemId}/set`,
         {
             params: {
-                'jobs': jobs.join(",")
+                'jobs': (jobs && jobs.length) ? jobs.join(",") : undefined,
             }
         }).then(
         (res) => {
