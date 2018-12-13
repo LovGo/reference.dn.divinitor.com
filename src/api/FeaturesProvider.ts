@@ -14,7 +14,7 @@ export const netFeatures: ITypedMap<IFeature> = {
         enabled: true,
     },
     DisableGoldenGoose: {
-        regions: ["sea", "ko"],
+        regions: ["sea", "ko", "na"],
         enabled: true,
     },
     GoldenGooseDefaultOff: {
