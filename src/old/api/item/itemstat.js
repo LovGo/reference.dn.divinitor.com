@@ -363,12 +363,24 @@ const STATES = {
             "FIRE_ATTACK",
             "ICE_ATTACK"
         ]
-    }
+    },
+    STAT_PERCENT: {
+        name: "STR%/AGI%/INT%/VIT%",
+        abbv: "STAT%",
+        type: "percent",
+        children: [
+            "STRENGTH_PERCENT",
+            "AGILITY_PERCENT",
+            "INTELLECT_PERCENT",
+            "VITALITY_PERCENT"
+        ]
+    },
 };
 
 const UnknownStateMap = {
     "88": "ELE",
     "37": "STAT",
+    "87": "STAT_PERCENT",
 };
 
 export default {
@@ -469,6 +481,11 @@ export default {
                 ret.DARK_ATTACK = (ret.DARK_ATTACK ? ret.DARK_ATTACK : 0) + val;
                 ret.FIRE_ATTACK = (ret.FIRE_ATTACK ? ret.FIRE_ATTACK : 0) + val;
                 ret.ICE_ATTACK = (ret.ICE_ATTACK ? ret.ICE_ATTACK : 0) + val;
+            } else if (state === "STAT_PERCENT") {
+                ret.STRENGTH_PERCENT = (ret.STRENGTH_PERCENT ? ret.STRENGTH_PERCENT : 0) + val;
+                ret.AGILITY_PERCENT = (ret.AGILITY_PERCENT ? ret.AGILITY_PERCENT : 0) + val;
+                ret.INTELLECT_PERCENT = (ret.INTELLECT_PERCENT ? ret.INTELLECT_PERCENT : 0) + val;
+                ret.VITALITY_PERCENT = (ret.VITALITY_PERCENT ? ret.VITALITY_PERCENT : 0) + val;
             } else if (info.obsolete) {
                 continue;
             } else {

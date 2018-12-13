@@ -78,7 +78,7 @@
         
         <tr v-if="pdmgPSet || pdmgPESet">
             <th class="stat">{{ statList['PHYSICAL_DAMAGE_MINMAX_PERCENT'].abbv }}</th>
-            <td v-if="pdmgPSet.min">
+            <td v-if="pdmgPSet.min || pdmgPSet.max">
                 <span v-if="pdmgPSet.min == pdmgPSet.max">
                     {{ pdmgPSet.min | statPercent }}
                 </span>
@@ -111,7 +111,7 @@
         </tr>
         <tr v-if="mdmgPSet || mdmgPESet">
             <th class="stat">{{ statList['MAGICAL_DAMAGE_MINMAX_PERCENT'].abbv }}</th>
-            <td v-if="mdmgPSet.min">
+            <td v-if="mdmgPSet.min || pdmgPSet.max">
                 <span v-if="mdmgPSet.min == mdmgPSet.max">
                     {{ mdmgPSet.min | statPercent }}
                 </span>
@@ -330,9 +330,12 @@ export default {
             ret.min = statSet.PHYSICAL_DAMAGE_MIN_PERCENT;
             ret.max = statSet.PHYSICAL_DAMAGE_MAX_PERCENT;
 
-            if (ret.min == undefined || ret.max == undefined) {
+            if (ret.min == undefined && ret.max == undefined) {
                 return null;
             }
+
+            ret.min = ret.min ? ret.min : 0;
+            ret.max = ret.max ? ret.max : 0;
 
             return ret;
         },
@@ -349,9 +352,12 @@ export default {
             ret.min = statSet.MAGICAL_DAMAGE_MIN_PERCENT;
             ret.max = statSet.MAGICAL_DAMAGE_MAX_PERCENT;
 
-            if (ret.min == undefined || ret.max == undefined) {
+            if (ret.min == undefined && ret.max == undefined) {
                 return null;
             }
+
+            ret.min = ret.min ? ret.min : 0;
+            ret.max = ret.max ? ret.max : 0;
 
             return ret;
         },
