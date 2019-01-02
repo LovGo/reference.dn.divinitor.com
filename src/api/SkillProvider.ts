@@ -154,7 +154,7 @@ class SkillProvider {
         }
 
         return this._skillLevelReqCache.tryCache(cacheKey, async () => {
-            const resp = await ApiHttpClient.get<ISkillLevelResponse>(`/server/${region}/skills/${skillId}/levels`);
+            const resp = await ApiHttpClient.get<ISkillLevelResponse>(`/server/${r}/skills/${skillId}/levels`);
             const ret = pvp ? resp.data.pvp : resp.data.pve;
             const other = pvp ? resp.data.pve : resp.data.pvp;
             this._skillLevelCache[cacheKey] = ret;
