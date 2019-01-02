@@ -45,6 +45,10 @@ class UiStringProvider implements IUiStringProvider {
         params?: string, 
         format: UiStringFormat = UiStringFormat.RAW): Promise<IUiStringMessage> {
         region = this._ensureRegion(region);
+        if (params) {
+            params = encodeURIComponent(params);
+        }
+
         let key = this._cacheKey(mid, region, params, format);
         let cached = this._cache[key];
         if (cached) {

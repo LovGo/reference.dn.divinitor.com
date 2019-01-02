@@ -79,6 +79,7 @@ import InfiniteScroll from "vue-infinite-scroll";
 Vue.use(InfiniteScroll);
 
 import UiStringMidResult from '@/old/uistrings/UiStringMidResult';
+import { axiosErrorToString } from '@/helpers/AxiosErrorUtils';
 Vue.component('uistring-midresult', UiStringMidResult);
 
 export default {
@@ -130,7 +131,23 @@ export default {
             },
             errcb: (err) => {
                 console.error(err);
-                this.error = err;
+                
+                if (err.response) {
+                    if (err.response.status >= 500) {
+                        this.error = {
+                            statusText: "Service error",
+                            bodyText: "There was an issue fetching data. Please try again later. " + axiosErrorToString(err),
+                        }
+                    } else {
+                        this.error = {
+                            statusText: "Unknown error",
+                            bodyText: axiosErrorToString(err),
+                        }
+                    }
+                } else {
+                    this.error = err;
+                }
+
                 this.loading = false;
                 this.end = true;
             }

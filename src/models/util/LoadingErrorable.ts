@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export default class LoadingErrorable<V, E> {
     public value?: V;
     public error?: E;
@@ -9,6 +11,11 @@ export default class LoadingErrorable<V, E> {
         this.loading = false;
         this.started = false;
         this.customStatus = "";
+        Vue.set(this, "loading", false);
+        Vue.set(this, "started", false);
+        Vue.set(this, "customStatus", "");
+        Vue.set(this, "value", null);
+        Vue.set(this, "error", null);
     }
 
     public startLoad() {

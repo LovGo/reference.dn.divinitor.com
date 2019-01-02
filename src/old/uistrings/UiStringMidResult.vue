@@ -47,7 +47,7 @@ export default {
                 this.copyText = COPIED_TEXT;
                 setTimeout(() => this.copyText = COPY_TEXT, 1000);
             } else {
-                console.log("KO");
+                // console.log("KO");
             }
         },
         googleTranslate() {

@@ -41,6 +41,14 @@
             </div>
         </div>
     </div>
+    <div class="error" v-else-if="jobs.error">
+        <big-error-box
+            :error-title="'Failed to load class tree'"
+            :error-content="jobs.error"
+            :icon-class="'fa-exclamation-triangle'"
+            :can-retry="true"
+            v-on:retry="fetchData" />
+    </div>
 </div>
 </template>
 
@@ -52,6 +60,9 @@ import IJob from '@/models/jobs/IJob';
 import Loader from "@/components/util/Loader.vue";
 import SpriteIcon from "@/components/util/SpriteIcon.vue";
 import UiString from "@/components/uistring/UiString.vue";
+import BigErrorBox from "@/components/util/BigErrorBox.vue";
+
+import { axiosErrorToString } from "@/helpers/AxiosErrorUtils";
 
 interface IBaseClass {
     base: IJob;
@@ -70,6 +81,7 @@ interface IData {
 
 export default Vue.extend({
     components: {
+        BigErrorBox,
         Loader,
         SpriteIcon,
         UiString,
@@ -90,6 +102,8 @@ export default Vue.extend({
                 this.classes = this.buildTree(all);
                 this.jobs.done(all);
                 this.$emit("done");
+            }, (err) => {
+                this.jobs.failed(axiosErrorToString(err));
             });
         },
         buildTree(jobs: IJob[]): IBaseClass[] {

@@ -1,6 +1,6 @@
 <template>
 <div id="app" :embed="embedded">
-    <div class="header" v-if="!embedded">
+    <div class="site-header" v-if="!embedded">
         <div class="header-left">
             <router-link to="/" class="header-link">
                 <h1>Divinitor Minerva</h1>
@@ -217,7 +217,7 @@ body {
     }
 }
 
-.header {
+.site-header {
     display: block;
     margin: 14px 20px;
     position: relative;
@@ -302,7 +302,7 @@ body {
         width: 1200px;
     }
 
-    .header {
+    .site-header {
         width: 300px;
     }
     
@@ -330,7 +330,7 @@ body {
 }
 
 @media @mobile {
-    .header {
+    .site-header {
         margin-bottom: 70px;
         .header-link {
             width: 210px;

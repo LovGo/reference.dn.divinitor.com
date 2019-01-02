@@ -397,7 +397,7 @@ export default {
     props: ["enhanceLevel", "itemData"],
     data: function() {
         let isGem = this.itemData.type.type === 'DRAGON_GEM';
-        console.log(this.$fOn(this.$f.DisableGoldenGoose));
+        // console.log(this.$fOn(this.$f.DisableGoldenGoose));
         return {
             level: this.enhanceLevel,
             enhanceId: this.itemData.enchantId,

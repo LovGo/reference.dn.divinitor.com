@@ -1,15 +1,10 @@
 import IJob from '@/models/jobs/IJob';
 import IJobApiResponse from '@/models/jobs/raw/IJobApiResponse';
-import IIconCoordinates from '@/models/util/IIconCoordinates';1
 import ITypedMap from '@/models/util/ITypedMap';
 import RequestCache from '@/models/util/RequestCache';
-import Vue from 'vue';
-import IJobTableRow from '@/models/jobs/raw/IJobTableRow';
 
 import { ApiHttpClient } from "@/globals";
-import UiStringProvider, { IBulkRequestEntry, IBulkResponse } from './UiStringProvider';
 import store from '@/store';
-import { range } from '@/helpers/ArrayUtils';
 import IIconInfo from '@/models/util/IIconInfo';
 import IJobScaling from '@/models/jobs/IJobScaling';
 import IJobScalingTableRow from '@/models/jobs/raw/IJobScalingTableRow';
@@ -27,17 +22,23 @@ export interface IJobProvider {
     getJobScaling(id: number, region?: string): Promise<IJobScaling>;
 
     getJobsScaling(ids: number[], region?: string): Promise<IJobScaling[]>;
+
+    getAllJobsScaling(region?: string): Promise<IJobScaling[]>;
 }
 
 class JobProvider implements IJobProvider {
     private _jobsCache: ITypedMap<IJob>;
     private _requestCache: RequestCache<IJob>;
+    private _allJobRequestCache: RequestCache<IJob[]>;
+    private _allJobsCache: ITypedMap<IJob[]>;
     private _jobStatCache: ITypedMap<IJobScaling>;
     private _statRequestCache: RequestCache<IJobScaling>;
 
     constructor() {
         this._jobsCache = {};
         this._requestCache = new RequestCache();
+        this._allJobRequestCache = new RequestCache();
+        this._allJobsCache = {};
 
         this._jobStatCache = {};
         this._statRequestCache = new RequestCache();
@@ -113,16 +114,26 @@ class JobProvider implements IJobProvider {
 
     public async getAllJobs(region: string): Promise<IJob[]> {
         region = this._ensureRegion(region);
-        const res = await ApiHttpClient.get<IJobApiResponse[]>(`server/${region}/jobs`, {});
-        const data = res.data;
 
-        const ret = data.map((d) => this._rawApiResultToData(d, region)!).filter((j) => j != null);
-        ret.forEach((j) => {
-            const key = this._cacheKey(j.id, region!);
-            this._jobsCache[key] = j;
+        let cached = this._allJobsCache[region];
+        if (cached) {
+            return cached;
+        }
+
+        return this._allJobRequestCache.tryCache("", async () => {
+            const res = await ApiHttpClient.get<IJobApiResponse[]>(`server/${region}/jobs`, {});
+            const data = res.data;
+    
+            const ret = data.map((d) => this._rawApiResultToData(d, region)!).filter((j) => j != null);
+            ret.forEach((j) => {
+                const key = this._cacheKey(j.id, region!);
+                this._jobsCache[key] = j;
+            });
+
+            this._allJobsCache[region] = ret;
+    
+            return ret;
         });
-
-        return ret;
     }
 
     public getIconInfo(iconIndex: number, region?: string): IIconInfo {
@@ -148,10 +159,8 @@ class JobProvider implements IJobProvider {
         }
         
         return this._statRequestCache.tryCache(key, async () => {
-            const res = await ApiHttpClient.get<IJobScalingTableRow>(`server/${region}/tables/rebootplayerweighttable/${id}`, {});
-            const data = res.data;
-
-            let ret = this._scalingDataToObject(data);
+            const res = await ApiHttpClient.get<IJobScaling>(`server/${region}/jobs/${id}/scalings`, {});
+            const ret = res.data;
 
             this._jobStatCache[key] = ret;
 
@@ -198,6 +207,18 @@ class JobProvider implements IJobProvider {
         return Promise.all(promises).then((p) => p.filter((v) => v != null)) as Promise<IJobScaling[]>;
     }
 
+    public async getAllJobsScaling(region?: string): Promise<IJobScaling[]> {
+        region = this._ensureRegion(region);
+        const res = await ApiHttpClient.get<IJobScaling[]>(`server/${region}/jobs/scalings`, {});
+        const ret = res.data;
+        ret.forEach((s) => {
+            const key = this._cacheKey(s.jobId, region!);
+            this._jobStatCache[key] = s;
+        });
+
+        return ret;
+    }
+
     private _getIconUrl(region?: string): string {
         region = this._ensureRegion(region);
         return `${ApiHttpClient.defaults.baseURL}/server/${region}/dds/jobicon_main/png`;
@@ -215,25 +236,6 @@ class JobProvider implements IJobProvider {
         return `${region}:${id}`;
     }
 
-    private _rawToData(data: IJobTableRow, strResp: IBulkResponse, region?: string): IJob {
-        const ret: IJob = {
-            id: data.id,
-            name: strResp[data._JobName],
-            icon: this.getIconInfo(data._JobIcon, region),
-            jobDescription: strResp[data._JobDescriptionID],
-            mainStatString: strResp[data._CoreStatusNameID],
-            baseClass: data._Class,
-            classType: data._DarkJob,
-            hasAwakening: data._AwakeningIcon != 0,
-            jobNumber: data._JobNumber,
-            parentJobId: data._ParentJob,
-            parentJob: null,
-            // movieUrl: data._JobMv ? `${ApiHttpClient.defaults.baseURL}/server/${region}/files/${data._JobMv}` : null,
-        };
-
-        return ret;
-    }
-
     private _rawApiResultToData(data: IJobApiResponse|null, region?: string): IJob|null {
         if (!data) {
             return null;
@@ -244,21 +246,6 @@ class JobProvider implements IJobProvider {
             ...data,
             parentJob: this._rawApiResultToData(data.parentJob, region),
         };
-    }
-
-    private _createBulkRequest(data: IJobTableRow): IBulkRequestEntry[] {
-        return [
-            {
-                id: data._JobName,
-            },
-            {
-                id: data._CoreStatusNameID,
-                params: data._CoreStatusNameIDParam,
-            },
-            {
-                id: data._JobDescriptionID,
-            }
-        ];
     }
 
     private _scalingDataToObject(data: IJobScalingTableRow): IJobScaling {

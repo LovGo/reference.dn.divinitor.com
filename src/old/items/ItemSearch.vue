@@ -136,6 +136,7 @@ import Item from "@/old/api/item/item";
 import ItemFilter from "@/old/api/item/itemfilter";
 
 import InfiniteScroll from "vue-infinite-scroll";
+import { axiosErrorToString } from '@/helpers/AxiosErrorUtils';
 Vue.use(InfiniteScroll);
 
 Vue.component('big-error-box', BigErrorBox);
@@ -214,7 +215,21 @@ export default {
                 },
                 (err) => {
                     console.error(err);
-                    this.error = err;
+                    if (err.response) {
+                        if (err.response.status >= 500) {
+                            this.error = {
+                                statusText: "Service error",
+                                bodyText: "There was an issue fetching data. Please try again later.",
+                            }
+                        } else {
+                            this.error = {
+                                statusText: "Unknown error",
+                                bodyText: axiosErrorToString(err),
+                            }
+                        }
+                    } else {
+                        this.error = err;
+                    }
                     this.loading = false;
                     this.end = true;
                 }

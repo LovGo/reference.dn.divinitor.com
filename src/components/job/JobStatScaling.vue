@@ -104,15 +104,8 @@ export default Vue.extend({
 @import "./../../less/core.less";
 
 .job-stat-scaling {
-
     .two-col {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-
         .col {
-            flex: 0 0;
-
             th:first-child {
                 width: 110px;
             }
