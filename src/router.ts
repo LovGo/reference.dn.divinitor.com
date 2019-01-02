@@ -1,19 +1,19 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
-import Blank from "./views/Blank.vue";
+import Home from "@/views/Home.vue";
+import Blank from "@/views/Blank.vue";
 
-const Auth = () => import(/* webpackChunkName: "auth" */ "./views/Auth.vue");
-const DiscordAuth = () => import(/* webpackChunkName: "auth" */ "./components/auth/DiscordAuth.vue");
-const StandaloneAuth = () => import(/* webpackChunkName: "auth" */ "./components/auth/StandaloneAuth.vue");
+const Auth = () => import(/* webpackChunkName: "auth" */ "@/views/Auth.vue");
+const DiscordAuth = () => import(/* webpackChunkName: "auth" */ "@/components/auth/DiscordAuth.vue");
+const StandaloneAuth = () => import(/* webpackChunkName: "auth" */ "@/components/auth/StandaloneAuth.vue");
 
-import General from "./views/General.vue";
-import StatCalc from "./components/general/StatCalc.vue";
+import General from "@/views/General.vue";
+import StatCalc from "@/components/general/StatCalc.vue";
 
-const Jobs = () => import(/* webpackChunkName: "jobs" */ "./views/Jobs.vue");
-const JobView = () => import(/* webpackChunkName: "jobs" */ "./components/job/JobView.vue");
+const Jobs = () => import(/* webpackChunkName: "jobs" */ "@/views/Jobs.vue");
+const JobView = () => import(/* webpackChunkName: "jobs" */ "@/components/job/JobView.vue");
 
-//const Items = () => import(/* webpackChunkName: "items" */ "./views/Items.vue");
+//const Items = () => import(/* webpackChunkName: "items" */ "@/views/Items.vue");
 const Items = () => import(/* webpackChunkName: "old-items" */ "@/old/items/Items.vue");
 const Item = () => import(/* webpackChunkName: "old-items" */ "@/old/items/Item.vue");
 const ItemSearch = () => import(/* webpackChunkName: "old-items" */ "@/old/items/ItemSearch.vue");
@@ -23,23 +23,24 @@ const ItemToolkitIndex = () => import(/* webpackChunkName: "old-items" */ "@/old
 const ItemDrop = () => import(/* webpackChunkName: "old-items" */ "@/old/items/ItemDrop.vue");
 const ItemDropGroup = () => import(/* webpackChunkName: "old-items" */ "@/old/items/ItemDropGroup.vue");
 
-const Maps = () => import(/* webpackChunkName: "maps" */ "./views/Maps.vue");
-const MapViewMock = () => import(/* webpackChunkName: "maps" */ "./components/map/MapViewMock.vue");
+const Maps = () => import(/* webpackChunkName: "maps" */ "@/views/Maps.vue");
+const MapViewMock = () => import(/* webpackChunkName: "maps" */ "@/components/map/MapViewMock.vue");
 
-const Monsters = () => import(/* webpackChunkName: "monsters" */ "./views/Monsters.vue");
+const Monsters = () => import(/* webpackChunkName: "monsters" */ "@/views/Monsters.vue");
 
-const Skills = () => import(/* webpackChunkName: "skills" */ "./views/Skills.vue");
+const Skills = () => import(/* webpackChunkName: "skills" */ "@/views/Skills.vue");
+const SkillView = () => import(/* webpackChunkName: "skills" */ "@/components/skill/SkillView.vue");
 
-// const Text = () => import(/* webpackChunkName: "text" */ "./views/Text.vue");
+// const Text = () => import(/* webpackChunkName: "text" */ "@/views/Text.vue");
 const UiStrings = () => import(/* webpackChunkName: "text" */ "@/old/uistrings/UiStrings.vue");
 const UiStringBrowse = () => import(/* webpackChunkName: "text" */ "@/old/uistrings/UiStringBrowse.vue");
 const UiStringMidLup = () => import(/* webpackChunkName: "text" */ "@/old/uistrings/UiStringMidLup.vue");
 
-const Resources = () => import(/* webpackChunkName: "resources" */ "./views/Resources.vue");
+const Resources = () => import(/* webpackChunkName: "resources" */ "@/views/Resources.vue");
 const ResourcesHome = () => import(/* webpackChunkName: "resources" */ "@/old/resources/ResourcesHome.vue");
 const GameClient = () => import(/* webpackChunkName: "resources" */ "@/old/resources/gameclient/GameClient.vue");
 
-import NotFound from "./views/NotFound.vue";
+import NotFound from "@/views/NotFound.vue";
 
 Vue.use(Router)
 
@@ -189,6 +190,12 @@ export default new Router({
                     path: "",
                     name: "skills",
                     component: Skills,
+                },
+                {
+                    path: ":skillSlug",
+                    name: "skill-view",
+                    props: true,
+                    component: SkillView,
                 },
             ],
         },

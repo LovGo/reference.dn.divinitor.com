@@ -1,6 +1,8 @@
 <template>
 <div class="potential-info">
-    This item has <strong>{{potentialData.length}}</strong> additional stat options:
+    <template v-if="potentialData.length > 1">
+        This item has <strong>{{potentialData.length}}</strong> additional stat options:
+    </template>
     <!-- TODO add filter by stat -->
     <form class="filter" v-if="potentialData.length > 6 && availableStats.length">
         <legend>Filter by</legend>
@@ -19,7 +21,16 @@
 
     </form>
 
-    <div class="potential-list" :scrollable="potentialData.length > 30">
+    <div class="skill-potential-list" v-if="isSkillOnly">
+        <div class="skill-entry" 
+            v-for="d in sortedData" :key="d.id"
+            :active="potentialId == d.id"
+            v-on:click="select(d.id)">
+            <skill-stub :skill-id="d.skill.id" :fill="true" />
+            <div class="pid">{{d.id}}:{{d.potentialNumber}}</div>
+        </div>
+    </div>
+    <div class="potential-list" v-else :scrollable="potentialData.length > 30">
         <div class="potential-entry" 
             v-for="d in sortedData" 
             :key="d.id" 
@@ -63,8 +74,13 @@ Vue.component('item-icon', ItemIcon);
 Vue.component('stat-grid', StatGrid);
 Vue.component('skill-icon', SkillIcon);
 
+import SkillStub from "@/components/skill/SkillStub.vue";
+
 export default {
     props: ["potentialData", "selection", "potentialNum"],
+    components: {
+        SkillStub,
+    },
     data: function() {
         return {
             potentialId: 0,
@@ -127,6 +143,9 @@ export default {
             }
 
             return ret;
+        },
+        isSkillOnly() {
+            return this.potentialData.filter((p) => p.skill).length == this.potentialData.length;
         }
     },
     methods: {
@@ -224,6 +243,40 @@ export default {
         margin-bottom: 10px;
     }
 
+    .skill-potential-list {
+        margin-top: 8px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        .skill-entry {
+            flex: 0 0 325px;
+            position: relative;
+            font-size: 0;
+            background: fade(@dv-c-background, 50%);
+            transition: background-color ease-in 0.125s;
+            cursor: pointer;
+
+            .pid {
+                position: absolute;
+                font-size: 10px;
+                top: 4px;
+                right: 6px;
+                color: transparent;
+                transition: color ease-in 0.125s;
+            }
+
+            &:hover,
+            &[active] {
+                background: fade(lighten(@dv-c-accent-3, -30%), 50%);
+
+                .pid {
+                    color: @dv-c-accent-1;
+                }
+            }
+        }
+    }
+
     .potential-list {
         display: flex;
         flex-direction: row;
@@ -241,6 +294,7 @@ export default {
             position: relative;
             background: fade(@dv-c-background, 50%);
             transition: background-color ease-in 0.125s;
+            width: 275px;
 
             &[active] {
                 background: fade(@dv-c-accent-3, 20%);
@@ -256,9 +310,6 @@ export default {
                 }
 
                 .skill-option {
-                    .skill-class {
-                        color: @dv-c-accent-2;
-                    }
                 }
             }
 
@@ -299,6 +350,10 @@ export default {
 
             .grid-cover {
                 pointer-events: none;
+            }
+
+            .skill-option {
+                width: 100%;
             }
 
             .skill-option {

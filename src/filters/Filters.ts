@@ -1,4 +1,5 @@
 import { __values } from 'tslib';
+import { SkillType } from '@/models/skills/SkillEnums';
 
 
 export interface Filter {
@@ -6,8 +7,8 @@ export interface Filter {
     filter: Function;
 }
 
-const filters = {
-    thousands: (v: any, k: any, f?: boolean) => {
+export const filters = {
+    thousands: (v: any, k?: any, f?: boolean) => {
         if (v == null) {
             return v;
         }
@@ -87,9 +88,11 @@ const filters = {
             return Math.floor(p) + "%";
         }
     },
-    percent: function(n: any) {
+    percent: function(n: any, maxDecimals?: number) {
         let p = n * 100;
-        return p;
+        return p.toLocaleString(undefined, {
+            maximumFractionDigits: maxDecimals,
+        });
     },
     ordinal: function(n: any) {
         if (n > 20) {
@@ -192,6 +195,37 @@ const filters = {
         return (sizeTb.toLocaleString(undefined, {
             maximumFractionDigits: 1
         })) + " TB";
+    },
+    skillType(v: any): string {
+        const type = v as SkillType;
+        switch (type) {
+            case SkillType.ACTIVE: return "active";
+            case SkillType.AUTOMATIC_ACTIVATION: return "use automatically";
+            case SkillType.AUTOMATIC_PASSIVE: return "auto-passive";
+            case SkillType.EX_PASSIVE: return "enhancement";
+            case SkillType.PASSIVE: return "passive";
+            default: return v;
+        }
+    },
+    milliseconds(v: any): string {
+        const duration = v as number;
+        const dSecs = duration / 1000;
+        const hasDeci = Math.floor(dSecs) * 100 !== Math.floor(dSecs * 100);
+        return dSecs.toLocaleString(undefined, {
+            useGrouping: true,
+            minimumFractionDigits: hasDeci ? 2 : 0,
+            maximumFractionDigits: hasDeci ? 2 : 0,
+        });
+    },
+    skillBoardDamage(v: any): string {
+        const percent = v as number;
+        const dispPercent = percent * 100;
+        const hasDeci = Math.floor(dispPercent) * 10 !== Math.floor(dispPercent * 10);
+        return dispPercent.toLocaleString(undefined, {
+            useGrouping: true,
+            minimumFractionDigits: hasDeci ? 1 : 0,
+            maximumFractionDigits: hasDeci ? 1 : 0,
+        });
     }
 }
 

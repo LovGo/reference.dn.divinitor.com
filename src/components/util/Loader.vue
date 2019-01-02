@@ -33,6 +33,7 @@ export default {
 
     .loading-blinker {
         flex: 0 0;
+        transform: translate(0, -1px);
     }
 
     .loader {

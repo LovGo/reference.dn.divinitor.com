@@ -93,7 +93,7 @@ export default Vue.extend({
             this.scalings.startLoad();
             JobProvider.getAllJobs().then((jobs) => {
                 this.groups = this.categorizeJobsByBase(jobs);
-                return JobProvider.getJobsScaling(jobs.map(j => j.id));
+                return JobProvider.getAllJobsScaling();
             }).then((scalings) => {
                 for (let g of this.groups) {
                     g.children.forEach(((j) => {

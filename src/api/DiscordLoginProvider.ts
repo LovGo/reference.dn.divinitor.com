@@ -16,21 +16,11 @@ export interface IDiscordLoginProvider {
 class DiscordLoginProvider implements IDiscordLoginProvider {
 
     public performDiscordOAuth2Flow(): Promise<string> {
-        return new Promise((resolve, reject) => {
-    
-            // let redirectUrl = "https://reference.divinitor.com/auth/discord";
-            // if (window.location.origin.indexOf("//localhost") !== -1) {
-            //     redirectUrl = window.location.origin + "/auth/discord";
-            // }
-            
-            
-            // let url = "https://discordapp.com/api/oauth2/authorize";
-            // url += "?response_type=code";
-            // url += "&client_id=383108341196390401";
-            // url += "&scope=identify%20email%20guilds";
-            // url += "&redirect_uri=" + encodeURIComponent(redirectUrl);
-
-            let url = "https://discordapp.com/api/oauth2/authorize?client_id=383108341196390401&redirect_uri=https%3A%2F%2Freference.dn.divinitor.com%2Fauth%2Fdiscord&response_type=code&scope=identify%20email%20guilds";
+        return new Promise((resolve, reject) => {            
+            let url = "https://discordapp.com/api/oauth2/authorize";
+            url += "?client_id=383108341196390401";
+            url += "&redirect_uri=" + encodeURIComponent(window.location.origin) + "/auth/discord";
+            url += "&response_type=code&scope=identify%20email%20guilds";
 
             const oAuthWindow = window.open(url, "dv.minerva.auth", "width=400,height=600,menubar=no");
             if (!oAuthWindow) {

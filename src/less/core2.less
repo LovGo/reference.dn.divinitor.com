@@ -1,6 +1,8 @@
 @import "geomanist.less";
 @import "core.less";
 @import "old.less";
+// only include if developing locally without internet
+@import "fontawesome.less";
 
 ::selection {
     background: #AAA;
@@ -1335,4 +1337,82 @@ table {
 .fa {
     margin-left: 0.2em;
     margin-right: 0.2em;
+}
+
+.page-section {
+    position: relative;
+    margin-top: 25px;
+    border-top: 1px solid @dv-c-accent-1;
+    padding-top: 4px;
+    .title {
+        font-size: 12px;
+        color: @dv-c-accent-1;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        position: absolute;
+        top: -1.3em;
+        left: 0;
+        user-select: none;
+    }
+
+    .side-remark {
+        font-size: 14px;
+        color: @dv-c-body;
+        .fa {
+            color: @dv-c-foreground;
+        }
+        margin: 8px 0;
+        // font-family: @dv-f-geomanist;
+        // letter-spacing: 0.05em;
+        // text-transform: uppercase;
+    }
+}
+
+
+.two-col {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .col {
+        flex: 0 0;
+    }
+}
+
+.element {
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.1em;
+    color: @dv-c-background;
+    
+    .right-pad {
+        padding-right: 0.25em;
+
+        &.fa {
+            padding-left: 0.4em;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+    }
+
+    .fire {
+        background-color: @dv-c-red;
+        .right-pad;
+    }
+    .ice {
+        background-color: @rank-ancient;
+        .right-pad;
+    }
+    .light {
+        background-color: @rank-divine;
+        .right-pad;
+    }
+    .dark {
+        background-color: @rank-unique;
+        .right-pad;
+    }
+    .nonelemental {
+        background-color: @dv-c-body;
+        padding-right: 0.5em;
+    }
 }

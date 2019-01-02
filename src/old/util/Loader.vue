@@ -43,7 +43,7 @@ export default {
             content: "";
             display: block;
             position: absolute;
-            top: 0;
+            top: -4px;
             left: 0px;
             width: 20px;
             height: 20px;

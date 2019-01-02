@@ -12,6 +12,12 @@
                     <span v-else-if="selectedPart.decalName">
                         {{ selectedPart.decalName }}
                     </span>
+                    <div v-if="selectedPart.actName">
+                        {{ selectedPart.actName.toLowerCase() }}
+                    </div>
+                    <div v-if="selectedPart.aniName">
+                        {{ selectedPart.aniName.toLowerCase() }}
+                    </div>
                 </div>
                 <div class="weapon" v-if="parts.type == 'WEAPON'">
 
@@ -82,7 +88,7 @@ export default {
         expand() {
             this.expanded = !this.expanded;
             if (this.expanded) {
-                console.log(this.$refs["renderbox"].getClientRects());
+                // console.log(this.$refs["renderbox"].getClientRects());
                 this.size.width = this.$refs["renderbox"].getClientRects().width;
                 this.size.height = this.$refs["renderbox"].getClientRects().height;
             } else {

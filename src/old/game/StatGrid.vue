@@ -422,7 +422,7 @@ export default {
     }
 
     .total {
-
+        color: @dv-c-foreground;
     }
 
     .stat-table {

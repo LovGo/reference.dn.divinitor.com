@@ -67,7 +67,7 @@
                         <template v-if="itemData.tier">
                             <span class="tier" v-html="itemData.tier"></span>
                         </template>
-                        <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
+                        <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }} </span> 
                         <span v-if="canUse" class="can-use">{{ canUse }}</span>
                         <span v-if="itemData.cashItem" class="cash">Cash</span>
                         {{ category }}
@@ -75,22 +75,10 @@
                 </div>
             </div>
 
-            <div class="share">
-                <a class="share-link" v-on:click.prevent="copyLink" :href="link">
-                    Link copied!
-                    <transition name="fade">
-                    <span class="ok" v-if="copyStatus == 'ok'" key="ok">
-                        <i class="fa fa-check"></i> <span class="label">Link copied!</span>
-                    </span>
-                    <span class="err" v-else-if="copyStatus == 'err'" key="err">
-                        <i class="fa fa-exclamation-triangle"></i> <span class="label">Link copy failed</span>
-                    </span><span v-else key="o3o">
-                        <i class="fa fa-share-square-o"></i> <span class="label">Copy link</span>
-                    </span>
-                    </transition>
-                    <input class="hidden" type="text" ref="copyLink" />
-                </a>
-            </div>
+            <copy-link :copyContent="link">
+                <i class="fa fa-share-square-o"></i> Copy link
+                <template slot="ok"><i class="fa fa-check"></i> Link copied!</template>
+            </copy-link>
 
             <div class="desc-model-container">
                 <div class="info-top">
@@ -109,7 +97,7 @@
                                 >
                             </stat-grid>
                             
-                            <div class="potential section" v-if="itemData.type.potentialId && itemData.potentials && itemData.potentials.length > 1">
+                            <div class="potential section" v-if="itemData.type.potentialId && itemData.potentials && (itemData.potentials.length > 1 || (itemData.potentials.length > 0 && isSkillOnly))">
                                 <div class="title">Variations</div>
                                 <item-potential
                                     :potentialData="itemData.potentials"
@@ -131,12 +119,16 @@
                         <div v-if="itemData.gainText" class="game-tooltip">
                             <div v-html="itemData.gainText" class="gain uistring"></div>
                         </div>
-                    
+
+                        <div class="skill" v-if="itemData.skillInfo">
+                            <skill-stub-link :skill-id="itemData.skillInfo.id" />
+                        </div>
+
                         <div class="gems" v-if="itemData.gemslots">
                             <div 
                                 class="skill gemslot tooltip" 
                                 v-if="itemData.gemslots.skill" 
-                                :style="`background: url('${baseURL}/server/${region}/dds/uit_re_itemjewelslot03/png') 1px 0, url('${baseUrl}/server/${region}/dds/uit_itemslot_re01_d/png') -4px -4px;`">
+                                :style="`background: url('${baseUrl}/server/${region}/dds/uit_re_itemjewelslot03/png') 1px 0, url('${baseUrl}/server/${region}/dds/uit_itemslot_re01_d/png') -4px -4px;`">
                                 <div class="count" v-if="itemData.gemslots.skill > 1">
                                     x{{itemData.gemslots.skill}}
                                 </div>
@@ -404,7 +396,11 @@ import ItemAttribs from "@/old/items/ItemAttribs";
 
 import Item from "@/old/api/item/item";
 import ItemStat from "@/old/api/item/itemstat";
+
+import CopyLink from "@/components/util/CopyLink.vue";
 import { ApiHttpClient } from "@/globals";
+
+import SkillStubLink from "@/components/skill/SkillStubLink.vue";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('point-tag', Points);
@@ -427,6 +423,10 @@ Vue.component('big-error-box', BigErrorBox);
 
 export default {
     name: "item-page",
+    components: {
+        SkillStubLink,
+        CopyLink,
+    },
     data: function() {
         return {
             itemId: this.extractItemId(this.$route.params.itemId),
@@ -583,12 +583,7 @@ export default {
             delete queries["embed"];
             queries.region = this.$store.state.regionCode;
 
-            const port = window.location.port;
-            let portStr = ":";
-            if (port != 0 && !!port) {
-                portStr += port;
-            }
-            let url = window.location.protocol + "//" + window.location.hostname + portStr + this.$route.path;
+            let url = window.location.origin + this.$route.path;
 
             let qString = Object.keys(queries).map(k => `${k}=${queries[k]}`).join("&");
             if (qString.length > 0) {
@@ -596,6 +591,9 @@ export default {
             }
 
             return url;
+        },
+        isSkillOnly() {
+            return this.itemData.potentials.filter((p) => p.skill).length == this.itemData.potentials.length;
         }
     },
     methods: {
@@ -619,7 +617,26 @@ export default {
                 },
                 (err) => {
                     this.loading = false;
-                    this.error = err;
+                    if (err.response) {
+                        if (err.response.status == 404) {
+                            this.error = {
+                                statusText: "Item not found",
+                                bodyText: "The item you are looking for does not exist in this region. Double check the ID or try another region."
+                            }
+                        } else if (err.response.status >= 500) {
+                            this.error = {
+                                statusText: "Service error",
+                                bodyText: "There was an issue fetching data for this item. Please try again later.",
+                            }
+                        } else {
+                            this.error = {
+                                statusText: "Unknown error",
+                                bodyText: axiosErrorToString(err),
+                            }
+                        }
+                    } else {
+                        this.error = err;
+                    }
                 });
         },
         onLevelUpdate(newLevel, enhanceStatSet, enhanceData)  {
@@ -689,7 +706,7 @@ export default {
 
 .itempage {
     position: relative;
-    min-height: 70px;
+    min-height: 1vh;
     margin-top: 0;
     padding-top: 0;
     width: 100%;
@@ -883,6 +900,10 @@ export default {
 
                 .gain {
                     margin-top: 0.5em;
+                }
+
+                .skill {
+                    margin-top: 16px;
                 }
             }
 
