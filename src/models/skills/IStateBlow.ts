@@ -479,7 +479,7 @@ export const Blows: ITypedMap<IStateBlow> = {
                 let bonusDamagePerPercentHpUnderThreshold = Number(split[1]);
 
                 return {
-                    text: `Upon striking an enemy under ${filters.percent(thresholdHpPercent)}% HP, deal an additional ${filters.percent(bonusDamagePerPercentHpUnderThreshold)}% max HP per 1% missing HP below ${filters.percent(thresholdHpPercent)}%`,
+                    text: `Upon striking an enemy under ${filters.percent(thresholdHpPercent)}% HP, deal ${filters.percent(bonusDamagePerPercentHpUnderThreshold)}% skill damage per 1% missing HP below ${filters.percent(thresholdHpPercent)}% as additional damage`,
                 };
             }
 
