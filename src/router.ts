@@ -30,6 +30,9 @@ const Monsters = () => import(/* webpackChunkName: "monsters" */ "@/views/Monste
 
 const Skills = () => import(/* webpackChunkName: "skills" */ "@/views/Skills.vue");
 const SkillView = () => import(/* webpackChunkName: "skills" */ "@/components/skill/SkillView.vue");
+const SkillSim = () => import(/* webpackChunkName: "skill-sim" */ "@/components/skill/sim/SkillSim.vue");
+const SkillSimClassSelect = () => import(/* webpackChunkName: "skill-sim" */ "@/components/skill/sim/SkillSimClassSelect.vue");
+const SkillSimTree = () => import(/* webpackChunkName: "skill-sim" */ "@/components/skill/sim/SkillSimTree.vue");
 
 // const Text = () => import(/* webpackChunkName: "text" */ "@/views/Text.vue");
 const UiStrings = () => import(/* webpackChunkName: "text" */ "@/old/uistrings/UiStrings.vue");
@@ -71,7 +74,11 @@ export default new Router({
                     meta: {
                         redemption: true,
                     },
-                }
+                },
+                {
+                    path: "*",
+                    component: NotFound,
+                },
             ],
         },
         {
@@ -86,6 +93,10 @@ export default new Router({
                     // path: "stat/:statName?",
                     path: "stat",
                     component: StatCalc,
+                },
+                {
+                    path: "*",
+                    component: NotFound,
                 },
             ],
         },
@@ -106,7 +117,11 @@ export default new Router({
                     name: "job-view",
                     component: JobView,
                     props: true,
-                }
+                },
+                {
+                    path: "*",
+                    component: NotFound,
+                },
             ],
         },
         {
@@ -149,9 +164,17 @@ export default new Router({
                     path: 'drop/:id?',
                     name: 'item-drop',
                     component: ItemDrop
-                  }
+                  },
+                  {
+                      path: "*",
+                      component: NotFound,
+                  },
                 ]
-              }
+              },
+              {
+                  path: "*",
+                  component: NotFound,
+              },
             ]
         },
         {
@@ -168,7 +191,11 @@ export default new Router({
                     name: "map-view",
                     props: true,
                     component: MapViewMock,
-                }
+                },
+                {
+                    path: "*",
+                    component: NotFound,
+                },
             ],
         },
         {
@@ -179,6 +206,10 @@ export default new Router({
                     path: "",
                     name: "monsters",
                     component: Monsters,
+                },
+                {
+                    path: "*",
+                    component: NotFound,
                 },
             ],
         },
@@ -192,10 +223,33 @@ export default new Router({
                     component: Skills,
                 },
                 {
+                    path: "sim",
+                    component: SkillSim,
+                    meta: {
+                        hideNav: true,
+                    },
+                    children: [
+                        {
+                            path: "",
+                            name: "skill-sim",
+                            component: SkillSimClassSelect,
+                        },
+                        {
+                            path: ":classSlug/:skillBuildCode?",
+                            props: true,
+                            component: SkillSimTree,
+                        }
+                    ]
+                },
+                {
                     path: ":skillSlug",
                     name: "skill-view",
                     props: true,
                     component: SkillView,
+                },
+                {
+                    path: "*",
+                    component: NotFound,
                 },
             ],
         },
@@ -234,6 +288,10 @@ export default new Router({
                       }
                     ]
                 },
+                {
+                    path: "*",
+                    component: NotFound,
+                },
             ],
         },
         {
@@ -249,7 +307,11 @@ export default new Router({
                   path: 'downloadgame',
                   name: 'resources-game-client',
                   component: GameClient
-                }
+                },
+                {
+                    path: "*",
+                    component: NotFound,
+                },
             ],
         },
         {

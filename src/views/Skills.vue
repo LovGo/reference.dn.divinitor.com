@@ -1,47 +1,27 @@
 <template>
 <div class="skills">
-    <h1>Skills</h1>
+    <h1 class="divided">Skills</h1>
+    <div class="options-grid">
+        <router-link to="/skills/sim" class="option">
+            <h2 class="heading">
+                Skill Sim
+                <div class="icon fa fa-gear"></div>
+            </h2>
+        </router-link>
+        <router-link to="/skills/search" class="option">
+            <h2 class="heading">
+                Search
+                <div class="icon fa fa-search"></div>
+            </h2>
+        </router-link>
+    </div>
 
-    <toast icon="fa-exclamation-triangle" type="warn">
+    <toast icon="fa-exclamation-triangle" type="">
         <template slot="header">
-            Coming soon
+            Monster Mash
         </template>
-        Sorry! This feature is currently under development.
+        To see the skillsets of monsters, please go to the <router-link to="/monsters">Monsters section</router-link>.
     </toast>
-
-    <!-- <div class="test">
-        <div>
-            <skill-stub-link :skill-id="77213" />
-        </div>
-        <div>
-            <skill-stub-link :skill-id="3602" />
-        </div>
-        <div>
-            <skill-stub-link :skill-id="3210" />
-        </div>
-        <skill-stub-link :skill-id="3227" :fill="true" />
-    </div> -->
-    <!-- <div>
-    <skill-stub :skill-id="503" />
-    </div>
-    <div>
-    <skill-stub :skill-id="3218" />
-    </div>
-    <div>
-    <skill-stub :skill-id="3305" />
-    </div>
-    <div>
-    <skill-stub :skill-id="3311" />
-    </div>
-    <div>
-    <skill-stub :skill-id="1013" />
-    </div>
-    <div>
-    <skill-stub :skill-id="3420" />
-    </div>
-    <div>
-    <skill-stub :skill-id="270051" />
-    </div> -->
 </div>
 </template>
 

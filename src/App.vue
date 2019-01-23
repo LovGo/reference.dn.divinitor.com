@@ -30,7 +30,7 @@
         </div>
         
         <div class="flex-box">
-            <div class="left-pane mobile-hide" v-if="!embedded">
+            <div class="left-pane mobile-hide" v-if="!embedded && !hideNavPane">
                 <navigation-pane />
             </div>
             <div class="main-pane">
@@ -81,7 +81,13 @@ export default Vue.extend({
     data() {
         return {
             started: false,
+            hideNavPane: false,
         };
+    },
+    watch: {
+        ['$route'](next, prev) {
+            this.hideNavPane = this.$route.matched.some((r) => r.meta.hideNav);
+        }
     },
     computed: {
         embedded(): boolean {
@@ -98,7 +104,7 @@ export default Vue.extend({
         },
         hideAuth(): boolean {
             return this.$route.meta.redemption;
-        }
+        },
     },
     mounted() {
         const shade = document.getElementById("startup-shade");
