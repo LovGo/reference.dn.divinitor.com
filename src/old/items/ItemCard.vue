@@ -39,6 +39,17 @@
                             <span v-if="itemData.cashItem" class="cash">Cash </span>
                             {{ category }}
                         </div>
+                        <div class="skill" v-if="itemData.skillInfo">
+                            <span v-if="itemData.skillInfo.name">
+                                {{ itemData.skillInfo.name.message }}
+                            </span>
+                            <span v-else>
+                                Skill {{ itemData.skillInfo.id }}
+                            </span>
+                            <span class="job" v-if="itemData.skillInfo.job">
+                                ({{ itemData.skillInfo.job.displayName }})
+                            </span>
+                        </div>
                     </div>
                     <div class="potential" v-if="potentialNum">
                         <div class="wrapper">
@@ -355,6 +366,21 @@ export default {
 
                 .cash {
                     color: #10A020;
+                }
+            }
+
+            .skill {
+                margin-top: 4px;
+                border-top: 1px solid @dv-c-idle;
+                padding-top: 4px;
+                font-size: 12px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                word-wrap: break-word;
+                color: @dv-c-foreground;
+
+                .job {
+                    color: @dv-c-accent-2;
                 }
             }
         }
