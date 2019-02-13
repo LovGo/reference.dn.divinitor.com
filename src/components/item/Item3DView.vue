@@ -206,6 +206,13 @@ export default Vue.extend({
                         this.group.position.z = 0;
                         break;
                     }
+                    case "SHIELD": {
+                        this.group.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), rads(90));
+                        this.group.position.x = 0;
+                        this.group.position.y = -zh;
+                        this.group.position.z = 0;
+                        break;
+                    }
                     case "CANNON":
                     case "BUBBLEBLASTER": {
                         this.group.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), rads(-90));
@@ -223,7 +230,8 @@ export default Vue.extend({
                         break;
                     }
                     case "SHORTBOW":
-                    case "LONGBOW": {
+                    case "LONGBOW":
+                    case "GAUNTLET": {
                         dist *= 2;
                         break;
                     }
