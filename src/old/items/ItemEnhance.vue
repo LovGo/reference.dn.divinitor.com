@@ -135,12 +135,12 @@
 
                                 <div class="item-list" v-if="level > 0 && enhanceData[level - 1].materials">
                                     <transition-group name="fadecollapse-item">
-                                        <div class="entry" v-for="(d, key) in enhanceData[level - 1].materials" :key="key">
+                                        <div class="entry" v-for="(d, key) in enhanceData[level - 1].materials" :key="`ic-${key}`">
                                             <item-card 
                                                 :itemId="d.itemId" 
                                                 :count="d.count"
                                                 :itemStub="d.stub"
-                                            ></item-card>
+                                            />
                                         </div>
                                     </transition-group>
                                 </div>

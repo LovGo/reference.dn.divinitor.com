@@ -277,8 +277,11 @@
                 </div>
                 <div class="model-view" v-if="hasModel && !$route.query.embed">
                     <item-parts 
-                        :itemId=itemData.id
-                        :parts=itemData.parts></item-parts>
+                        :itemId="itemData.id"
+                        :parts="itemData.parts"
+                        :type="itemData.type"
+                        :key="`parts-${itemData.id}`"
+                        />
                 </div>
             </div>
 

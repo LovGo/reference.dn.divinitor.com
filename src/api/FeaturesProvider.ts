@@ -21,6 +21,10 @@ export const netFeatures: ITypedMap<IFeature> = {
         regions: ["eu"],
         enabled: true,
     },
+    Three: {
+        regions: ["na"],
+        enabled: true,
+    }
 };
 
 export function getFeatureState(feature: IFeature): boolean {
