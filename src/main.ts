@@ -59,7 +59,7 @@ new Vue({
                 }
 
                 Globals.ApiHttpClient.defaults.baseURL = apiRouteName;
-                console.log(`Using ${Globals.ApiHttpClient.defaults.baseURL}`);
+                // console.log(`Using ${Globals.ApiHttpClient.defaults.baseURL}`);
 
                 if (apiRouteName !== Constants.DefaultApiPath) {
                     window.localStorage.setItem(Constants.ApiPathKey, apiRouteName);
@@ -68,7 +68,7 @@ new Vue({
                 }
             } else {
                 Globals.ApiHttpClient.defaults.baseURL = Constants.DefaultApiPath;
-                console.log(`Using ${Globals.ApiHttpClient.defaults.baseURL}`);
+                // console.log(`Using ${Globals.ApiHttpClient.defaults.baseURL}`);
             }
         },
         /**
