@@ -2,10 +2,23 @@
     <div class="item-parts" :expand="expanded">
         <div class="content">
             <div class="render" ref="renderbox">
+                <template v-if="!this.selectedPart.decalName">
+                    <item3-d-view
+                        v-if="active"
+                        :parts="this.parts"
+                        :part="this.selectedPart"
+                        :type="this.type"
+                        :width="this.size.width"
+                        :height="this.size.height"
+                    />
+                </template>
                 <canvas class="render-surface" ref="render" :width=size.width :height=size.height></canvas>
             </div>
             <div class="overlay">
-                <div class="active-skn-name">
+                <template v-if="!active && !this.selectedPart.decalName && $fOn($f.Three)">
+                    <button class="activate" @click="activate">Load Model</button>
+                </template>
+                <div class="active-skn-name" :always="!$fOn($f.Three) || expanded">
                     <span v-if="selectedPart.sknName">
                         {{ selectedPart.sknName.toLowerCase() }}
                     </span>
@@ -17,6 +30,13 @@
                     </div>
                     <div v-if="selectedPart.aniName">
                         {{ selectedPart.aniName.toLowerCase() }}
+                    </div>
+                    <div v-if="parts.parts.length > 1 && hasJobs">
+                        <select v-model="selectedPartIndex">
+                            <option v-for="(part, i) in sortedParts" 
+                                :key="i"
+                                :value="i">{{ part.job.name.message }}</option>
+                        </select>
                     </div>
                 </div>
                 <div class="weapon" v-if="parts.type == 'WEAPON'">
@@ -39,20 +59,26 @@
 
 <script>
 import Vue from 'vue';
-import * as THREE from "three";
 import Store from '@/store';
+import { ApiHttpClient } from "@/globals";
+
+import Item3DView from "@/components/item/Item3DView.vue";
 
 export default {
-    props: ["itemId", "parts"],
+    props: ["itemId", "parts", "type"],
+    components: {
+        Item3DView,
+    },
     data: function() {
         return {
-            selectedPart: null,
             expanded: false,
             renderer: {},
             size: {
                 width: 256,
                 height: 256,
-            }
+            },
+            active: false,
+            selectedPartIndex: 0,
         };
     },
     created() {
@@ -62,12 +88,32 @@ export default {
         this.setup();
     },
     computed: {
+        sortedParts() {
+            if (this.parts) {
+                return this.parts.parts.sort((a, b) => a.clsid - b.clsid);
+            } else {
+                return [];
+            }
+        },
         weaponPart() {
             if (this.parts.type == 'WEAPON') {
                 return this.parts.parts[0];
             } else {
                 return null;
             }
+        },
+        selectedPart() {
+            if (this.parts.parts.length != 0) {
+                return this.parts.parts[this.selectedPartIndex];
+            } else {
+                return null;
+            }
+        },
+        hasJobs() {
+            if (this.parts.parts.length > 0) {
+                return !!this.parts.parts[0].job;
+            }
+            return false;
         }
     },
     watch: {
@@ -79,24 +125,24 @@ export default {
     },
     methods: {
         init() {
-            if (this.parts.parts.length != 0) {
-                this.selectedPart = this.parts.parts[0];
-            } else {
-                this.selectedPart = null;
-            }
+        },
+        activate() {
+            this.active = true;
         },
         expand() {
             this.expanded = !this.expanded;
-            if (this.expanded) {
-                // console.log(this.$refs["renderbox"].getClientRects());
-                this.size.width = this.$refs["renderbox"].getClientRects().width;
-                this.size.height = this.$refs["renderbox"].getClientRects().height;
-            } else {
-                this.size.width = 256;
-                this.size.height = 256;
-            }
+            Vue.nextTick().then(() => {
+                if (this.expanded) {
+                    const rect = this.$refs["renderbox"].getClientRects()[0];
+                    this.size.width = Number(rect.width);
+                    this.size.height = Number(rect.height);
+                } else {
+                    this.size.width = 256;
+                    this.size.height = 256;
+                }
 
-            this.drawDecal();
+                this.drawDecal();
+            });
         },
         canvas() {
             return this.$refs["render"];
@@ -168,7 +214,8 @@ export default {
 
             .active-skn-name {
                 padding-top: 12px;
-                font-size: 20px;
+                font-size: 16px;
+                background-color: transparent;
             }
 
             .expand {
@@ -184,14 +231,32 @@ export default {
     }
 
     .overlay {
-        z-index: 100;
+        z-index: 10;
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
         right: 0;
 
+        &:hover {
+            .active-skn-name{
+                opacity: 1.0;
+            }
+        }
+
+        .activate {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         .active-skn-name {
+            &[always] {
+                opacity: 1.0;
+            }
+
+            opacity: 0.0;
             padding-top: 4px;
             word-wrap: break-word;
             text-align: center;
@@ -200,6 +265,9 @@ export default {
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: @dv-c-foreground;
+            transition: opacity 0.125s ease-in;
+            padding-bottom: 6px;
+            background: fade(@dv-c-background, 80%);
         }
 
         .weapon {
@@ -232,6 +300,10 @@ export default {
         .render-surface {
             width: 100%;
             height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            
         }
     }
 
