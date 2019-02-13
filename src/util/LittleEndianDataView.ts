@@ -55,16 +55,4 @@ export default class LittleEndianDataView {
         this._dv.setUint32(byteOffset, value, littleEndian === undefined ? true : littleEndian);
     }
     [Symbol.toStringTag]: string;
-    getBigInt64(byteOffset: number, littleEndian?: boolean | undefined): bigint {
-        return this._dv.getBigInt64(byteOffset, littleEndian === undefined ? true : littleEndian);
-    }
-    getBigUint64(byteOffset: number, littleEndian?: boolean | undefined): bigint {
-        return this._dv.getBigUint64(byteOffset, littleEndian === undefined ? true : littleEndian);
-    }
-    setBigInt64(byteOffset: number, value: bigint, littleEndian?: boolean | undefined): void {
-        this._dv.setBigInt64(byteOffset, value, littleEndian === undefined ? true : littleEndian);
-    }
-    setBigUint64(byteOffset: number, value: bigint, littleEndian?: boolean | undefined): void {
-        this._dv.setBigUint64(byteOffset, value, littleEndian === undefined ? true : littleEndian);
-    }
 }
