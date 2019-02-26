@@ -38,6 +38,7 @@ export default Vue.extend({
 
     &[long] {
         max-height: 50vh;
+        min-height: 300px;
         overflow-y: scroll;
         border-bottom: 1px solid @dv-c-foreground;
         border-top: 1px solid @dv-c-foreground;

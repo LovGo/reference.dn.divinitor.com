@@ -118,6 +118,7 @@ export default Vue.extend({
 
 <style lang="less">
 @import "less/core2.less";
+@import "less/common/common.less";
 
 html {
     // background-image: url("https://static.divinitor.com/site/common/img/dv-masthead-bg-static-merged.png");
