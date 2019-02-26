@@ -59,8 +59,13 @@
                         <span class="iid">#{{ itemId }}</span>
                     </div>
                     <h2 class="head">
-                        <span class="enhance" v-if="enhanceLevel > 0">+{{ enhanceLevel }}</span> 
-                        {{ name }}
+                        <span class="enhance" v-if="enhanceLevel > 0">+{{ enhanceLevel }}</span>
+                        <ui-string 
+                            :mid="nameMessage.id" 
+                            :alt="nameMessage.message" 
+                            :params="itemData.name._NameIDParam"
+                            :inline="true" 
+                        />
                     </h2>
                     <div class="remark">
                         <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span>
@@ -114,7 +119,15 @@
                     </div>
 
                     <div class="desc">
-                        <div v-if="itemData.desc" v-html="itemData.desc.desc" class="uistring"></div>
+                        <div v-if="itemData.desc">    
+                            <ui-string 
+                                :mid="itemData.desc._DescID" 
+                                :alt="itemData.desc.desc" 
+                                :params="itemData.desc._DescIDParam"
+                                format="html"
+                            />
+                        </div>
+                        <!-- <div v-if="itemData.desc" v-html="itemData.desc.desc" class="uistring"></div> -->
                         <div v-else>No description</div>
                         <div v-if="itemData.gainText" class="game-tooltip">
                             <div v-html="itemData.gainText" class="gain uistring"></div>
@@ -404,6 +417,7 @@ import CopyLink from "@/components/util/CopyLink.vue";
 import { ApiHttpClient } from "@/globals";
 
 import SkillStubLink from "@/components/skill/SkillStubLink.vue";
+import UiString from "@/components/uistring/UiString.vue";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('point-tag', Points);
@@ -429,6 +443,7 @@ export default {
     components: {
         SkillStubLink,
         CopyLink,
+        UiString,
     },
     data: function() {
         return {
@@ -489,6 +504,12 @@ export default {
             }
             
             return "Unnamed Item " + this.itemId;
+        },
+        nameMessage() {
+            return {
+                id: Number((this.itemData.name && this.itemData.name._NameID) || 0),
+                message: this.name,
+            };
         },
         canUse() {
             if (this.itemData.needClass) {

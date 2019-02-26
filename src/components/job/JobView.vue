@@ -10,7 +10,7 @@
             </router-link>
             <router-link :to="{name: 'job-view', params: { jobId: j.id }}" class="breadcrumb-entry" v-for="j in getBreadcrumb()" :key="j.id">
                 <sprite-icon :icon-info="j.icon" :size-override="20"/>
-                <ui-string :message-data="j.name" inline="true" />
+                <ui-string :message-data="j.name" :inline="true" />
             </router-link>
         </div>
         <div class="header">
@@ -34,13 +34,19 @@
             </div>
         </div>
 
-        <div class="desc" v-if="job.value.jobDescription.id">
+        <div class="dv-section" v-if="job.value.jobDescription.id">
+            <div class="dividing title">
+                Description
+            </div>
             <i><ui-string :message-data="job.value.jobDescription"/></i>
         </div>
 
-        <h3>Stat Scaling</h3>
-        <job-stat-scaling :job-id="job.value.id" />
-
+        <div class="dv-section">
+            <div class="dividing title">
+                Stat Scaling
+            </div>
+            <job-stat-scaling :job-id="job.value.id" />
+        </div>
         <p>
             Additional features and info are coming soon
         </p>

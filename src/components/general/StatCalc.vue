@@ -3,16 +3,16 @@
     <h1 class="divided">Stat Calculations</h1>
     <go-back />
     
-    <h2><ui-string mid="2280" inline="true" alt="Final Damage"/></h2>
+    <h2><ui-string mid="2280" :inline="true" alt="Final Damage"/></h2>
     <stat-calc-card stat="finalDamage" />
     
-    <h2><ui-string mid="27" inline="true" alt="Critical"/></h2>
+    <h2><ui-string mid="27" :inline="true" alt="Critical"/></h2>
     <stat-calc-card stat="critical" />
 
-    <h2><ui-string mid="1000064495" inline="true" alt="Critical Damage"/></h2>
+    <h2><ui-string mid="1000064495" :inline="true" alt="Critical Damage"/></h2>
     <stat-calc-card stat="criticalDamage" />
     
-    <h2><ui-string mid="20" inline="true" alt="Defense"/></h2>
+    <h2><ui-string mid="20" :inline="true" alt="Defense"/></h2>
     <stat-calc-card stat="defense" />
 </div>
 </template>

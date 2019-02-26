@@ -104,14 +104,15 @@
                             :itemId="item.id"
                         />
                     </responsive-card-list-entry>
-                    
-                    <div class="no result" :key="'none'" v-slot:empty>
-                        <small-error-box
-                            errorTitle="No Results"
-                            iconClass="fa-question-circle"
-                            errorContent="Try searching something else">
-                        </small-error-box>
-                    </div>
+                    <template slot="empty">
+                        <div class="no result" :key="'none'">
+                            <small-error-box
+                                errorTitle="No Results"
+                                iconClass="fa-question-circle"
+                                errorContent="Try searching something else">
+                            </small-error-box>
+                        </div>
+                    </template>
                 </responsive-card-list>
 
                 <!-- <div class="item-list">
