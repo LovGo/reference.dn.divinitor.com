@@ -5,7 +5,21 @@
             loadText="Item Drop"></load-indicator>
         </div>
         <div v-if="drops">
-            <div class="item-list" :long="drops.length > 6">
+            <responsive-card-list :count="drops.length">
+                <responsive-card-list-entry 
+                    v-for="(e, key) in drops" 
+                    :key="key">
+                    <item-card 
+                        :itemId="e.item.id"
+                        :itemStub="e.item"
+                        :count="e.count"
+                        :timeLimit="e.durationDays"
+                        :goldAmt="e.gold / 10000"
+                        :rate="e.rate"
+                    />
+                </responsive-card-list-entry>
+            </responsive-card-list>
+            <!-- <div class="item-list" :long="drops.length > 6">
                 <div class="entry" 
                     v-for="(e, key) in drops" 
                     :key="key">
@@ -18,7 +32,7 @@
                         :rate="e.rate"
                     ></item-card>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -33,12 +47,18 @@ import ItemStat from "@/old/api/item/itemstat";
 
 import Item from "@/old/api/item/item";
 import ItemFilter from "@/old/api/item/itemfilter";
+import ResponsiveCardList from "@/components/util/ResponsiveCardList.vue";
+import ResponsiveCardListEntry from "@/components/util/ResponsiveCardListEntry.vue";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('item-card', ItemCard);
 
 export default {
+    components: {
+        ResponsiveCardList,
+        ResponsiveCardListEntry,
+    },
     props: ["dropId"],
     data: function() {
         return {

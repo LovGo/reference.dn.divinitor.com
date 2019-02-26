@@ -126,7 +126,7 @@
 
                         <div class="gems" v-if="itemData.gemslots">
                             <div 
-                                class="skill gemslot tooltip" 
+                                class="skillgem gemslot tooltip" 
                                 v-if="itemData.gemslots.skill" 
                                 :style="`background: url('${baseUrl}/server/${region}/dds/uit_re_itemjewelslot03/png') 1px 0, url('${baseUrl}/server/${region}/dds/uit_itemslot_re01_d/png') -4px -4px;`">
                                 <div class="count" v-if="itemData.gemslots.skill > 1">

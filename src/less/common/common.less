@@ -1,0 +1,193 @@
+@import "../GLAZE.less";
+@import "../geomanist.less";
+@import "variables.less";
+
+.dv-button {
+    @fg-color: @dv-c-foreground;
+    @bg-color: @dv-c-background;
+
+    background: fade(@bg-color, @button-bg-opacity);
+    border: 2px solid @fg-color;
+    color: @fg-color;
+    cursor: pointer;
+    display: inline-block;
+    font-family: @dv-f-geomanist;
+    font-size: 16px;
+    height: auto;
+    letter-spacing: 0.1em;
+    line-height: 1em;
+    padding: @button-padding;
+    position: relative;
+    text-transform: uppercase;
+    transition: background-color 0.125s ease-in, color 0.125s ease-in;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: auto;
+    
+    &::-moz-focus-inner {
+        border: 0;
+    }
+
+    &::before {
+        @border-width: 1px;
+
+        animation-duration: 1s;
+        border: @border-width solid @fg-color;
+        bottom: -@border-width;
+        content: ' ';
+        left: -@border-width;
+        opacity: 0.8;
+        position: absolute;
+        right: -@border-width;
+        top: -@border-width;
+    }
+
+    &:active {
+        background-color: mix(@fg-color, @bg-color, 50%);
+    }
+
+    &:active::before {
+        animation-name: dv-button-ripple;
+    }
+
+    &:hover,
+    &:focus:hover {
+        background: @fg-color;
+        color: @bg-color;
+    }
+
+    &:hover::before {
+        animation-name: dv-button-ripple;
+    }
+
+    @keyframes dv-button-ripple {
+        100% {
+            @ripple-size: -12px;
+
+            bottom: @ripple-size;
+            left: @ripple-size;
+            opacity: 0.0;
+            right: @ripple-size;
+            top: @ripple-size;
+        }
+        0% {
+            bottom: 0;
+            left: 0;
+            opacity: 0.8;
+            right: 0;
+            top: 0;
+        }
+    }
+    
+    &::after {
+        @border-width: 1px;
+
+        animation-duration: 2s;
+        border: @border-width solid @fg-color;
+        bottom: -@border-width;
+        content: ' ';
+        left: -@border-width;
+        opacity: 0.5;
+        position: absolute;
+        right: -@border-width;
+        top: -@border-width;
+    }      
+      
+    &:focus {
+        background: fade(@fg-color, @button-bg-opacity / 4);
+        outline: none;
+    }
+
+    &:focus::after {
+        animation-name: dv-button-focus;
+        animation-iteration-count: infinite;
+    }
+    
+    @keyframes dv-button-focus {
+        100% {
+            @ripple-size: -12px;
+
+            bottom: @ripple-size;
+            left: @ripple-size;
+            opacity: 0.0;
+            right: @ripple-size;
+            top: @ripple-size;
+        }
+    }
+
+    &.secondary {
+        @fg-secondary-color: saturate(lighten(@fg-color, -30%), -20%);
+        color: @fg-secondary-color;
+        border-color: @fg-secondary-color;
+
+        &::before, &::after {
+            border-color: @fg-secondary-color;
+        }
+
+        &:hover, &:active {
+            color: @bg-color;
+        }
+    }
+}
+
+.dv-section {
+    @fg-color: @dv-c-accent-1;
+
+    margin: 10px 0 14px;
+
+    .dividing.title {
+        border-bottom: 1px solid @fg-color;
+        color: @fg-color;
+        font-family: @dv-f-geomanist;
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        margin-bottom: 10px;
+        position: relative;
+        width: 100%;
+        text-align: left;
+        text-transform: uppercase;
+    }
+}
+
+// TODO this needs some iterations
+.dv-item-tile {
+    @fg-color: @dv-c-foreground;
+    @bg-color: @dv-c-background;
+    @border-color: @fg-color;
+
+    background: fade(@bg-color, @tile-bg-opacity);
+    border: 1px solid @border-color;
+    cursor: default;
+    display: inline-block;
+    padding: @tile-padding;
+    position: relative;
+    transition: background-color 0.125s ease-in;
+    vertical-align: middle;
+
+    &:hover {
+        background: fade(@fg-color, @tile-bg-opacity);
+    }
+
+    .title {
+        color: @fg-color;
+        font-family: @dv-f-geomanist;
+        font-size: 18px;
+        font-weight: normal;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+
+        .subtitle {
+            color: @dv-c-accent-1;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+        }
+    }
+
+    &.no-break {
+        .title {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
+
