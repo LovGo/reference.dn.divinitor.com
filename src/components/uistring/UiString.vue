@@ -123,6 +123,7 @@ export default Vue.extend({
         },
         messageData(newProv, oldProv) {
             if (newProv != oldProv) {
+                this.altRegionMessages = null;
                 this.fetchData();
             }
         }
@@ -155,6 +156,8 @@ export default Vue.extend({
             if (this.message.loading) {
                 return;
             }
+
+            this.altRegionMessages = null;
             
             this.message.startLoad();
             UiStringProvider.get(this.id, this.region, this.params, this.format).then((msg) => {
