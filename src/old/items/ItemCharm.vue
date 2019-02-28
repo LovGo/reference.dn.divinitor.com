@@ -88,7 +88,23 @@
                 </div>
             </form>
 
-            <transition-group name="fade-item" tag="div" class="item-list">
+            <responsive-card-list :count="sorted.length">
+                <responsive-card-list-entry 
+                    v-for="(e, key) in sorted" 
+                    :key="key"
+                    v-if="shouldRender(e.item)">
+                    <item-card 
+                        :itemId="e.item.id"
+                        :itemStub="e.item"
+                        :count="e.count"
+                        :timeLimit="e.durationDays"
+                        :goldAmt="e.gold / 10000"
+                        :rate="itemType.type == 'MULTI_ITEM_DROP_POUCH' ? 0 : e.rate"
+                    />
+                </responsive-card-list-entry>
+            </responsive-card-list>
+
+            <!-- <transition-group name="fade-item" tag="div" class="item-list">
                 <div class="entry" 
                     v-for="(e, key) in sorted" 
                     :key="key"
@@ -109,7 +125,7 @@
                         errorContent="Try searching something else">
                     </small-error-box>
                 </div>
-            </transition-group>
+            </transition-group> -->
         </div>
     </transition>
 </div>
@@ -126,6 +142,9 @@ import Item from "@/old/api/item/item";
 import ItemFilter from "@/old/api/item/itemfilter";
 import Loader from "@/old/util/Loader";
 
+import ResponsiveCardList from "@/components/util/ResponsiveCardList.vue";
+import ResponsiveCardListEntry from "@/components/util/ResponsiveCardListEntry.vue";
+
 Vue.component('item-icon', ItemIcon);
 Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('item-card', ItemCard);
@@ -136,6 +155,10 @@ Vue.component("small-error-box", SmallErrorBox);
 
 export default {
     props: ["charmId", "itemType"],
+    components: {
+        ResponsiveCardList,
+        ResponsiveCardListEntry,
+    },
     data: function() {
         return {
             loading: true,

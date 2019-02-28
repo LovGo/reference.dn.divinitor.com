@@ -190,7 +190,7 @@
                             {{ activeRankData.addThreat | thousands }}
                         </div>
                     </div>
-                    <ui-string :message-data="activeRankData.skillDesc" :format="'html'" />
+                    <ui-string :message-data="activeRankData.skillDesc" :params="activeRankData.skillDescParam" :format="'html'" />
                 </div>
                 <div class="effect-pane" v-if="skillData.effects.length > 0">
                     <h4 class="pane-header">Applied effects</h4>

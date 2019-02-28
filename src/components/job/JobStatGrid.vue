@@ -14,7 +14,7 @@
                 <tr class="group-header">
                     <th class="job-name">
                         <sprite-icon :icon-info="g.representative.icon" :size-override="26" />
-                        <ui-string class="job-name-text" :message-data="g.representative.name" inline="true"/>
+                        <ui-string class="job-name-text" :message-data="g.representative.name" :inline="true"/>
                     </th>
                     <th>PDMG/STR</th>
                     <th>PDMG/AGI</th>
@@ -28,7 +28,7 @@
                 <tr v-for="c in g.children" :key="c.id">
                     <th>
                         <router-link class="job-name" :to="{name: 'job-view', params: { jobId: c.id }}">
-                            <ui-string class="job-name-text" :message-data="c.name" inline="true" />
+                            <ui-string class="job-name-text" :message-data="c.name" :inline="true" />
                             <sprite-icon :icon-info="c.icon" :size-override="18" /> 
                         </router-link>
                     </th>

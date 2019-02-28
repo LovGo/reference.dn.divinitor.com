@@ -41,14 +41,27 @@
                         errorContent="This may be for a future update or is removed content" 
                         iconClass="fa-exclamation-triangle"></small-error-box>
                     </div>
-                    <div class="options" :long="v.options.length > 4">
+                    <div class="options">
+                        <responsive-card-list :count="v.options.length">
+                            <responsive-card-list-entry 
+                                :narrow="true" 
+                                v-for="t in v.options" 
+                                :key="t.id">
+                                <item-card
+                                    :itemId="t.id"
+                                    :itemStub="t"
+                                    :potentialNum="t.potentialNum"></item-card>
+                            </responsive-card-list-entry>
+                        </responsive-card-list>
+                    </div>
+                    <!-- <div class="options" :long="v.options.length > 4">
                         <div class="item-entry" v-for="t in v.options" :key="t.id">
                             <item-card
                                 :itemId="t.id"
                                 :itemStub="t"
                                 :potentialNum="t.potentialNum"></item-card>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -70,8 +83,15 @@ Vue.component("load-indicator", Loader);
 import SmallErrorBox from "@/old/util/SmallErrorBox";
 Vue.component("small-error-box", SmallErrorBox);
 
+import ResponsiveCardList from "@/components/util/ResponsiveCardList.vue";
+import ResponsiveCardListEntry from "@/components/util/ResponsiveCardListEntry.vue";
+
 export default {
     props: ["itemId", "parentItem"],
+    components: {
+        ResponsiveCardList,
+        ResponsiveCardListEntry,
+    },
     data: function() {
         return {
             loading: true,
@@ -204,18 +224,18 @@ export default {
             .options {
                 position: relative;
                 flex: 1 1 0;
-                margin-top: 20px;
-
-                display: flex;
-                flex-direction: column;
+                margin-top: 10px;
                 margin-left: 8px;
 
-                &[long] {
-                    max-height: 400px;
-                    overflow-y: scroll;
-                    border-top: 2px solid @dv-c-accent-1;
-                    border-bottom: 2px solid @dv-c-accent-1;
-                }
+                // display: flex;
+                // flex-direction: column;
+
+                // &[long] {
+                //     max-height: 400px;
+                //     overflow-y: scroll;
+                //     border-top: 2px solid @dv-c-accent-1;
+                //     border-bottom: 2px solid @dv-c-accent-1;
+                // }
             }
 
             .item-entry {
