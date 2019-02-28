@@ -238,18 +238,17 @@
                         </div>
                     </form>
 
-
-                    <div class="box-list">
-                        <div class="entry" 
-                            v-for="e in acqData.box" 
-                            :key="e.boxItemId"
-                            v-if="shouldBoxRender(e.boxItem)">
+                    <responsive-card-list :count="acquireBoxList.length">
+                        <responsive-card-list-entry
+                            v-for="e in acquireBoxList"
+                            :key="e.boxItemId">
                             <item-card 
                                 :itemId="e.boxItem.id"
                                 :itemStub="e.boxItem"
-                            ></item-card>
-                        </div>
-                    </div>
+                            />
+                        </responsive-card-list-entry>
+
+                    </responsive-card-list>
                 </div>
 
                 <div class="subsection" v-if="acqData.cash && acqData.cash.length">
@@ -432,8 +431,15 @@ Vue.component("load-indicator", Loader);
 import SmallErrorBox from "@/old/util/SmallErrorBox";
 Vue.component("small-error-box", SmallErrorBox);
 
+import ResponsiveCardList from "@/components/util/ResponsiveCardList.vue";
+import ResponsiveCardListEntry from "@/components/util/ResponsiveCardListEntry.vue";
+
 export default {
     props: ["item"],
+    components: {
+        ResponsiveCardListEntry,
+        ResponsiveCardList,
+    },
     data: function() {
         return {
             loading: true,
@@ -449,10 +455,8 @@ export default {
         this.fetchData();
     },
     watch: {
-        itemId(to, from) {
-            if (to != from) {
-                this.fetchData();
-            }
+        item(to, from) {
+            this.fetchData();
         }
     },
     computed: {
@@ -461,6 +465,13 @@ export default {
         },
         activeCraftSet() {
             return this.acqData.craft[this.activeCraftGroup].entries;
+        },
+        acquireBoxList() {
+            if (this.acqData && this.acqData.box) {
+                return this.acqData.box.filter((b) => this.shouldBoxRender(b.boxItem));
+            }
+
+            return [];
         },
         hasBoxGrade() {
             let ret = {

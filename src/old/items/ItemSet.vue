@@ -93,7 +93,29 @@
                     </div>
                 </form>
 
-                <div class="item-list">
+                <responsive-card-list :count="filtered.length">
+                    <responsive-card-list-entry
+                        :narrow="true"
+                        v-for="item in filtered" 
+                        :key="item.id"
+                        class="result">
+                        <item-card
+                            :itemStub="item"
+                            :itemId="item.id"
+                        />
+                    </responsive-card-list-entry>
+                    <template slot="empty">
+                        <div class="no result" :key="'none'">
+                            <small-error-box
+                                errorTitle="No Results"
+                                iconClass="fa-question-circle"
+                                errorContent="Try searching something else">
+                            </small-error-box>
+                        </div>
+                    </template>
+                </responsive-card-list>
+
+                <!-- <div class="item-list">
                     <div
                         v-for="item in sorted" 
                         :key="item.id"
@@ -111,7 +133,7 @@
                             errorContent="Try searching something else">
                         </small-error-box>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </transition>
@@ -133,8 +155,15 @@ Vue.component("load-indicator", Loader);
 import SmallErrorBox from "@/old/util/SmallErrorBox";
 Vue.component("small-error-box", SmallErrorBox);
 
+import ResponsiveCardList from "@/components/util/ResponsiveCardList.vue";
+import ResponsiveCardListEntry from "@/components/util/ResponsiveCardListEntry.vue";
+
 export default {
     props: ["setData", "itemId", "jobs"],
+    components: {
+        ResponsiveCardList,
+        ResponsiveCardListEntry,
+    },
     data: function() {
         return {
             loading: true,
@@ -147,6 +176,9 @@ export default {
         this.fetchData();
     },
     computed: {
+        filtered() {
+            return this.sorted.filter((i) => this.shouldRender(i));
+        },
         sorted() {
             if (this.setContents) {
                 let ret = this.setContents.itemsInSet.slice(0);
@@ -262,7 +294,7 @@ export default {
     }
 
     .flow-container {
-        margin-top: 4px;
+        margin-top: 10px;
         display: flex;
         flex-direction: row;
         
@@ -271,7 +303,7 @@ export default {
         }
 
         .left-col {
-            flex: 0 1 auto;
+            flex: 0 0 30%;
             margin: 0 5px 0 0;
             width: 30%;
             min-height: 10px;
@@ -289,7 +321,7 @@ export default {
 
         .col {
             position: relative;
-            padding-top: 30px;
+            padding-top: 20px;
 
             .title {
                 position: absolute;

@@ -62,11 +62,14 @@ class UiStringProvider implements IUiStringProvider {
                     param: params ? params : undefined,
                 },
             });
-
-            return {
+            const ret = {
                 id: mid,
                 message: result.data,
             };
+
+            this._cache[key] = ret;
+
+            return ret;
         });
     }
 
