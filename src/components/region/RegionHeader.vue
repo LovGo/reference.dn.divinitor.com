@@ -1,8 +1,7 @@
 <template>
 <div class="locale-select">
     <div class="selector" v-on:click="showSelector" :noclick="noclick">
-        <i class="fa fa-globe"></i> <span v-if="selectedRegion">{{ selectedRegion.displayNames.default }} v{{selectedRegion.version}}</span>
-        <span v-else>Local</span>
+        <i class="fa fa-globe"></i>{{ renderedName }} {{ renderedVersion}}
     </div>
 
     <div class="region-selector" v-if="showSelect">
@@ -76,6 +75,26 @@ export default Vue.extend({
             }
 
             return ret;
+        },
+        renderedName(): string {
+            if (this.selectedRegion) {
+                const localizedName = this.selectedRegion.displayNames[this.selectedRegion.defaultLocale];
+                const defaultName = this.selectedRegion.displayNames.default;
+                if (localizedName !== defaultName) {
+                    return `${localizedName} (${defaultName})`;
+                }
+
+                return defaultName;
+            }
+
+            return 'Unknown region';
+        },
+        renderedVersion(): string {
+            if (this.selectedRegion) {
+                return `v${this.selectedRegion.version}`;
+            }
+
+            return '';
         }
     },
     mounted() {
@@ -162,6 +181,7 @@ export default Vue.extend({
         font-weight: normal;
         transition: color ease-in 0.125s;
         cursor: pointer;
+        white-space: nowrap;
         // pointer-events: none;
 
         &:hover {
