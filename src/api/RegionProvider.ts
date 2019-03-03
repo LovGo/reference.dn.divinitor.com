@@ -20,6 +20,9 @@ export enum SupportedRegions {
     KOREA = "ko",
     EUROPE = "eu",
     SOUTHEAST_ASIA = "sea",
+    // JAPAN = "jp",
+    // CHINA = "cn",
+    BRAZIL = "br",
 };
 
 export const defaultRegion: SupportedRegions = SupportedRegions.NORTH_AMERICA;

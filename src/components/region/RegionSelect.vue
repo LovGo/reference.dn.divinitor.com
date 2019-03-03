@@ -8,7 +8,7 @@
             :active="r.shortName == selected">
             <div class="region-header">
                 <div class="head">{{ getRegionLocalizedName(r) }}</div>
-                <div class="subheader">{{r.displayNames.default}}</div>
+                <div class="subheader">{{ subscript(r) }}</div>
             </div>
 
             <div class="version">
@@ -61,6 +61,32 @@ export default Vue.extend({
             }
 
             return loc;
+        },
+        getRegionCurrentLocalizedName(region: IRegion): string {
+            let loc = region.displayNames[region.defaultLocale];
+            const selectedRegion = this.regions.find((r) => r.shortName == this.selected);
+            if (!selectedRegion) {
+                return loc || region.displayNames.default;
+            }
+
+            return region.displayNames[selectedRegion.defaultLocale] || region.displayNames.default;
+        },
+        subscript(region: IRegion): string {
+            const defaultName = region.displayNames.default;
+            const regionLocalized = this.getRegionLocalizedName(region);
+            const currentLocalized = this.getRegionCurrentLocalizedName(region);
+
+            if (defaultName !== currentLocalized &&
+                regionLocalized !== defaultName &&
+                regionLocalized !== currentLocalized) {
+                return `${currentLocalized} | ${defaultName}`;
+            }
+
+            if (regionLocalized === currentLocalized) {
+                return defaultName;
+            }
+
+            return currentLocalized;
         }
     }
 });
@@ -80,13 +106,31 @@ export default Vue.extend({
         min-width: 0;
 
         .region {
-            flex: 1 1 49.5%;
-            min-width: 0;
+            flex: 0 1;
             position: relative;
             border: 1px solid @dv-c-foreground;
+            border-top-width: 0;
+            box-sizing: border-box;
             cursor: pointer;
             transition: background-color 0.125s ease-in;
-            
+    
+            // Desktop view (wide)
+            @media @min-mobile {
+                flex-basis: 50%;
+                &:first-child, &:nth-child(2) {
+                    border-top-width: 1px;
+                }
+                &:nth-child(2n) {
+                    border-left-width: 0;
+                }
+            }
+
+            // Narrow view (tablet and below)
+            flex-basis: 100%;
+            &:first-child {
+                border-top-width: 1px;
+            }
+
             &:hover {
                 background: fade(@dv-c-foreground, 20%);
             }
