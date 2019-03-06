@@ -1,4 +1,5 @@
 import IUiStringMessage from '../uistring/IUiStringMessage';
+import IItemState from './IItemState';
 
 export default interface ITitle {
     id: number;
@@ -11,4 +12,5 @@ export default interface ITitle {
     foregroundColor: string;
     backgroundColor: string;
     skillLinkItemId: number;
+    states: IItemState[];
 }
