@@ -31,7 +31,14 @@ const COPIED_TEXT = "Copied!";
 
 export default {
     name: 'uistring-midresult',
-    props: ['result', 'mid'],
+    props: {
+        result: {
+            type: Object as () => any,
+        },
+        mid: {
+            type: Object as () => any,
+        },
+    },
     components: {
         UiString,
     },
