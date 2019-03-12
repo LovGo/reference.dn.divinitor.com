@@ -16,7 +16,7 @@
             </transition>
             <transition name="fade-item">
                 <div v-if="result">
-                    <uistring-midresult :result="result"></uistring-midresult>
+                    <uistring-midresult :result="result" :mid="mid"></uistring-midresult>
                 </div>
             </transition>
             <transition name="fade-item">
@@ -49,6 +49,7 @@ export default {
         loadedQuery: "",
         query: "",
         result: null,
+        mid: 0,
         loading: false,
         error: null,
         lastChangeTimer: null,
@@ -86,6 +87,7 @@ export default {
         }
 
         this.loading = true;
+        this.mid = mid;
         uistring.getVariant(mid, 
         {
             vue: this,
