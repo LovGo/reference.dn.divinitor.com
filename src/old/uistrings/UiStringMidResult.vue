@@ -23,13 +23,14 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import IUiStringMessage from '@/models/uistring/IUiStringMessage';
 import UiString from "@/components/uistring/UiString.vue";
 
 const COPY_TEXT = "Copy HTML Source";
 const COPIED_TEXT = "Copied!";
 
-export default {
+export default Vue.extend({
     name: 'uistring-midresult',
     props: {
         result: {
@@ -96,7 +97,7 @@ export default {
             entity.select();
         }
     }
-};
+});
 </script>
 
 <style lang="less" scoped>
