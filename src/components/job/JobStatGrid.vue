@@ -19,7 +19,14 @@
                     <th>PDMG/STR</th>
                     <th>PDMG/AGI</th>
                     <th>MDMG/INT</th>
-                    <th class="critdmg">CRITDMG</th>
+                    <template v-if="isV0">
+                        <th class="critdmg">CRITDMG</th>
+                    </template>
+                    <template v-else>
+                        <th class="critdmg">CRITDMG/STR</th>
+                        <th class="critdmg">CRITDMG/AGI</th>
+                        <th class="critdmg">CRITDMG/INT</th>
+                    </template>
                     <th>HP/VIT</th>
                     <th>PDEF/VIT</th>
                     <th>MDEF/INT</th>
@@ -36,7 +43,14 @@
                         <td>{{ c.stats.strToPhys }}</td>
                         <td>{{ c.stats.agiToPhys }}</td>
                         <td>{{ c.stats.intToMagic }}</td>
-                        <td class="critdmg">{{ c.stats.strIntToCritDmg }}</td>
+                        <template v-if="isV0">
+                            <td class="critdmg">{{ c.stats.strIntToCritDmg }}</td>
+                        </template>
+                        <template v-else>
+                            <td class="critdmg">{{ c.stats.strToCritDmg }}</td>
+                            <td class="critdmg">{{ c.stats.agiToCritDmg }}</td>
+                            <td class="critdmg">{{ c.stats.intToCritDmg }}</td>
+                        </template>
                         <td>{{ c.stats.vitToHp }}</td>
                         <td>{{ c.stats.vitToDef }}</td>
                         <td>{{ c.stats.intToMdef }}</td>
@@ -52,7 +66,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import LoadingErrorable from '@/models/util/LoadingErrorable';
-import IJobScaling from '@/models/jobs/IJobScaling';
+import { IJobScaling, IJobScalingV1, IJobScalingV0 } from '@/models/jobs/IJobScaling';
 import JobProvider from '@/api/JobProvider';
 import IJob from '@/models/jobs/IJob';
 import Loader from "@/components/util/Loader.vue";
@@ -62,6 +76,7 @@ import UiString from "@/components/uistring/UiString.vue";
 interface IData {
     scalings: LoadingErrorable<IJobScaling[], any>;
     groups: IJobGroup[];
+    isV0: boolean;
 }
 
 interface IStatJob extends IJob {
@@ -83,10 +98,13 @@ export default Vue.extend({
         return {
             scalings: new LoadingErrorable(),
             groups: [],
+            isV0: true,
         }
     },
     mounted() {
         this.fetchData();
+    },
+    computed: {
     },
     methods: {
         fetchData() {
@@ -102,6 +120,8 @@ export default Vue.extend({
                 }
 
                 this.scalings.done(scalings);
+
+                this.computeIsV0();
             })
         },
 
@@ -129,6 +149,20 @@ export default Vue.extend({
 
         getScalingForJob(jobId: number, scalings: IJobScaling[]): IJobScaling {
             return scalings.find((s) => s.jobId == jobId)!;
+        },
+
+        computeIsV0() {
+            const first = this.groups[0];
+            if (first) {
+                const firstChild = first.children[0];
+                if (firstChild && firstChild.stats) {
+
+                    this.isV0 = firstChild.stats.scalingVersion !== 1;
+                    return;
+                }
+            }
+
+            this.isV0 = true;
         }
     }
 });
