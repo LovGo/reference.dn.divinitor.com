@@ -13,4 +13,7 @@ export default interface IJobScalingTableRow {
     _Stun: number;
     _StunResistance: number;
     _StrengthIntelligenceToCriticalDamage: number;
+    _StrengthToCriticalDamage: number;
+    _AgilityToCriticalDamage: number;
+    _IntelligenceToCriticalDamage: number;
 }

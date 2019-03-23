@@ -272,7 +272,12 @@ export const Blows: ITypedMap<IStateBlow> = {
     },
     75: statIncrease("Movement speed"),
     76: statIncreasePercent("Movement speed"),
-
+    78: {
+        name: "Silenced",
+        describe(effect, value) {
+            return null;
+        }
+    },
     83: {
         name: "Buff wipe",
         describe(effect, value) {
@@ -468,6 +473,10 @@ export const Blows: ITypedMap<IStateBlow> = {
             return null;
         },
     },
+    151: {
+        name: "Camera distortion effect",
+        // TODO
+    },
 
     159: {
         name: "Execute damage",
@@ -566,6 +575,10 @@ export const Blows: ITypedMap<IStateBlow> = {
             return null;
         }
     },
+    // TODO
+    // 211: {
+    //     name: "Clear status effect from skill",
+    // },
 
     218: {
         name: "Binding",
@@ -617,7 +630,7 @@ export const Blows: ITypedMap<IStateBlow> = {
         describe(effect, value) {
             if (value) {
                 let v = value.value;
-                let killPlayers = v == "1";
+                let killPlayers = v == "0";
 
                 return {
                     text: `Guaranteed kills${killPlayers ? " players" : " summons"}`,

@@ -23,10 +23,26 @@
                         <th>MDMG/INT</th>
                         <td>{{ scaling.value.intToMagic }}</td>
                     </tr>
-                    <tr>
-                        <th>CRITDMG/STR+INT</th>
-                        <td>{{ scaling.value.strIntToCritDmg }}</td>
-                    </tr>
+                    <template v-if="!scaling.value.scalingVersion">
+                        <tr>
+                            <th>CRITDMG/STR+INT</th>
+                            <td>{{ scaling.value.strIntToCritDmg }}</td>
+                        </tr>
+                    </template>
+                    <template v-else>
+                        <tr>
+                            <th>CRITDMG/STR</th>
+                            <td>{{ scaling.value.strToCritDmg }}</td>
+                        </tr>
+                        <tr>
+                            <th>CRITDMG/AGI</th>
+                            <td>{{ scaling.value.agiToCritDmg }}</td>
+                        </tr>
+                        <tr>
+                            <th>CRITDMG/INT</th>
+                            <td>{{ scaling.value.intToCritDmg }}</td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
             <table class="col">
@@ -61,7 +77,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import LoadingErrorable from '@/models/util/LoadingErrorable';
-import IJobScaling from '@/models/jobs/IJobScaling';
+import { IJobScaling } from '@/models/jobs/IJobScaling';
 import JobProvider from '@/api/JobProvider';
 import Loader from "@/components/util/Loader.vue";
 

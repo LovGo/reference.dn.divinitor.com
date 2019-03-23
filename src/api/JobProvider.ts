@@ -6,7 +6,7 @@ import RequestCache from '@/models/util/RequestCache';
 import { ApiHttpClient } from "@/globals";
 import store from '@/store';
 import IIconInfo from '@/models/util/IIconInfo';
-import IJobScaling from '@/models/jobs/IJobScaling';
+import { IJobScaling, IJobScalingV0, IJobScalingV1 } from '@/models/jobs/IJobScaling';
 import IJobScalingTableRow from '@/models/jobs/raw/IJobScalingTableRow';
 
 export interface IJobProvider {
@@ -249,17 +249,31 @@ class JobProvider implements IJobProvider {
     }
 
     private _scalingDataToObject(data: IJobScalingTableRow): IJobScaling {
-        return {
+        let ret: IJobScaling = {
             jobId: data.id,
             vitToHp: data._HP,
             vitToDef: data._PhysicalDefense,
-            agiToCrit: data._Critical,
             agiToPhys: data._AgilityAttack,
             intToMagic: data._IntelligenceAttack,
             intToMdef: data._MagicDefense,
-            strIntToCritDmg: data._StrengthIntelligenceToCriticalDamage,
             strToPhys: data._StrengthAttack,
+            scalingVersion: undefined,
         };
+
+        if (data._StrengthIntelligenceToCriticalDamage) {
+            ret.scalingVersion = 0;
+            const ret0 = ret as IJobScalingV0;
+            ret0.strIntToCritDmg = data._StrengthIntelligenceToCriticalDamage;
+            ret0.agiToCrit = data._Critical;
+        } else {
+            ret.scalingVersion = 1;
+            const ret1 = ret as IJobScalingV1;
+            ret1.strToCritDmg = data._StrengthToCriticalDamage;
+            ret1.agiToCritDmg = data._AgilityToCriticalDamage;
+            ret1.intToCritDmg = data._IntelligenceToCriticalDamage;
+        }
+
+        return ret;
     }
 };
 
