@@ -285,7 +285,12 @@
                             <!-- TODO -->
                             Gain <point-tag :pointId="itemData.type.coinType" :amount="itemData.type.amount"></point-tag>
                             upon acquisition or activation.
-                        </div>                        
+                        </div>            
+                        <div class=""
+                            v-if="itemType == 'TITLE'">
+                            Grants the following title when used:
+                            <title-info :titleId="itemData.type.appellationId"/>
+                        </div>
                     </div>
                 </div>
                 <div class="model-view" v-if="hasModel && !$route.query.embed">
@@ -418,6 +423,7 @@ import { ApiHttpClient } from "@/globals";
 
 import SkillStubLink from "@/components/skill/SkillStubLink.vue";
 import UiString from "@/components/uistring/UiString.vue";
+import TitleInfo from "@/components/title/TitleInfo.vue";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('point-tag', Points);
@@ -444,6 +450,7 @@ export default {
         SkillStubLink,
         CopyLink,
         UiString,
+        TitleInfo,
     },
     data: function() {
         return {
