@@ -77,7 +77,7 @@ import Item from "@/old/api/item/item";
 
 Vue.component('item-card', ItemCard);
 
-import Loader from "@/old/util/Loader";
+import Loader from "@/components/util/Loader";
 Vue.component("load-indicator", Loader);
 
 import SmallErrorBox from "@/old/util/SmallErrorBox";

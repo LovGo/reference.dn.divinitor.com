@@ -140,7 +140,7 @@ import ItemStat from "@/old/api/item/itemstat";
 
 import Item from "@/old/api/item/item";
 import ItemFilter from "@/old/api/item/itemfilter";
-import Loader from "@/old/util/Loader";
+import Loader from "@/components/util/Loader";
 
 import ResponsiveCardList from "@/components/util/ResponsiveCardList.vue";
 import ResponsiveCardListEntry from "@/components/util/ResponsiveCardListEntry.vue";

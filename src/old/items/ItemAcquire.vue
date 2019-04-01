@@ -425,7 +425,7 @@ import Shop from "@/old/api/shop";
 Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('point-tag', Points);
 
-import Loader from "@/old/util/Loader";
+import Loader from "@/components/util/Loader";
 Vue.component("load-indicator", Loader);
 
 import SmallErrorBox from "@/old/util/SmallErrorBox";
