@@ -737,7 +737,7 @@ export default {
     .header {
         position: relative;
         width: 100%;
-        padding-left: 0;
+        .padding-left(0);
         padding-bottom: 0;
         display: flex;
         flex-direction: row;
@@ -757,9 +757,9 @@ export default {
 
         .title {
             flex: 1 1 auto;
-            margin-left: 10px;
-            border-left: 2px solid @dv-c-accent-1;
-            padding-left: 12px;
+            .margin-left(10px);
+            .border-left(2px solid @dv-c-accent-1);
+            .padding-left(12px);
             padding-top: 8px;
             padding-bottom: 8px;
 
@@ -811,7 +811,7 @@ export default {
             letter-spacing: 0.2em;
             position: absolute;
             top: -1.3em;
-            left: 0;
+            .left(0);
             user-select: none;
         }
 
@@ -856,7 +856,7 @@ export default {
             .fa {
                 &:nth-child(2),
                 &:nth-child(3) {
-                    margin-left: -0.4em;
+                    .margin-left(-0.4em);
                 }
 
                 &.fa-dollar {
@@ -875,11 +875,11 @@ export default {
 
                     &:nth-child(2) {
                         color: @dv-c-green;
-                        margin-left: -0.75em;
+                        .margin-left(-0.75em);
                     }
                     &:nth-child(3) {
                         color: lighten(@dv-c-green, 20%);
-                        margin-left: -0.75em;
+                        .margin-left(-0.75em);
                     }
                 }
             }
@@ -919,7 +919,7 @@ export default {
                     letter-spacing: 0.2em;
                     position: absolute;
                     top: -1.3em;
-                    left: 0;
+                    .left(0);
                 }
 
                 .gain {
@@ -964,7 +964,7 @@ export default {
             text-align: center;
             vertical-align: middle;
             border: 1px solid @dv-c-accent-1;
-            margin-left: 30px;
+            .margin-left(30px);
         }
     }
 
@@ -985,7 +985,7 @@ export default {
 
             .count {
                 position: absolute;
-                right: 0px;
+                .right(0px);
                 bottom: 0px;
             }
         }
@@ -1008,20 +1008,20 @@ export default {
 
             @media only screen and (min-width:@min-desktop-wide-width) {
                 flex: 0 1 460px;
-                border-right-color: transparent;
+                .border-right-color(transparent);
                 &:first-child,
                 &:nth-child(2) {
                     border-top-color: @dv-c-foreground;
                 }
                 &:nth-child(2n) {
-                    border-right-color: @dv-c-foreground;
+                    .border-right-color(@dv-c-foreground);
                 }
                 &:last-child {
-                    border-right-color: @dv-c-foreground;
+                    .border-right-color(@dv-c-foreground);
                     padding-right: 1px;
                 }
                 &:first-child:last-child {
-                    border-right-color: @dv-c-foreground;
+                    .border-right-color(@dv-c-foreground);
                 }
 
             }
@@ -1077,9 +1077,9 @@ export default {
                 margin: -5em -6em;
                 text-indent: -9999em;
                 border-top: 1.1em solid rgba(0, 0, 0, 0.75);
-                border-right: 1.1em solid rgba(0, 0, 0, 0.75);
+                .border-right(1.1em solid rgba(0, 0, 0, 0.75));
                 border-bottom: 1.1em solid rgba(0, 0, 0, 0.75);
-                border-left: 1.1em solid @dv-c-foreground;
+                .border-left(1.1em solid @dv-c-foreground);
                 background: rgba(0, 0, 0, 0.5);
                 //   -webkit-transform: translateZ(0);
                 //   -ms-transform: translateZ(0);

@@ -172,7 +172,7 @@ export default Vue.extend({
     user-select: none;
 
     .selector {
-        text-align: right;
+        .text-align(right);
         color: @dv-c-accent-2;
         font-family: @dv-f-lato;
         letter-spacing: 0.2em;
@@ -322,10 +322,10 @@ export default Vue.extend({
 
                     text-transform: uppercase;
 
-                    border-left: 4px solid #98BCD4;
+                    .border-left(4px solid #98BCD4);
                     padding: 8px 16px;
                     animation: 0.25s ease-in 0s 1 startup-fade-in;
-                    text-align: left;
+                    .text-align(left);
 
                     .title {
                         font-weight: normal;

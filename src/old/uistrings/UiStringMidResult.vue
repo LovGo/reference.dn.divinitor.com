@@ -110,7 +110,7 @@ export default Vue.extend({
     .invisible {
         position: absolute;
         top: 0;
-        left: 0;
+        .left(0);
         width: 0;
         height: 0;
         opacity: 0.0;
@@ -127,7 +127,7 @@ export default Vue.extend({
         margin: 0;
 
         &:first-child {
-            border-right: none;
+            .border-right(none);
         }
 
         &:hover {
@@ -141,7 +141,7 @@ export default Vue.extend({
         position: absolute;
         font-size: 12px;
         top: 0.1em;
-        left: 0.4em;
+        .left(0.4em);
         color: @dv-c-idle;
     }
 
@@ -150,14 +150,14 @@ export default Vue.extend({
         position: absolute;
         font-size: 12px;
         top: 0.1em;
-        left: 0.4em;
+        .left(0.4em);
         color: @dv-c-idle;
     }
 
     .foot {
         position: absolute;
         bottom: -1.5em;
-        left: 0;
+        .left(0);
         font-size: 12px;
         color: @dv-c-accent-1;
         letter-spacing: 0.2em;

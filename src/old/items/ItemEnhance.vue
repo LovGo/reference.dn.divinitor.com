@@ -812,11 +812,11 @@ export default {
 
     .options {
         input[type="checkbox"] {
-            margin-left: 2em;
+            .margin-left( 2em);
             cursor: pointer;
 
             &:first-child {
-                margin-left: 0;
+                .margin-left( 0);
             }
         }
     }
@@ -830,7 +830,7 @@ export default {
     }
 
     .no-jelly {
-        margin-left: 2em;
+        .margin-left( 2em);
         font-style: italic;
         color: @dv-c-red;
     }
@@ -843,7 +843,7 @@ export default {
 
         .left {
             flex: 0 1 auto;
-            margin-right: 20px;
+            .margin-right( 20px);
             z-index: 1;
         }
 
@@ -873,8 +873,8 @@ export default {
         .title {
             position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
+            .left( 0);
+            .right( 0);
             font-family: @dv-f-geomanist;
             font-size: 14px;
             color: @dv-c-accent-2;
@@ -916,9 +916,9 @@ export default {
                 height: 3em;
 
                 &.first {
-                    border-right: 2px solid @dv-c-body;
+                    .border-right( 2px solid @dv-c-body);
                     width: 50px;
-                    text-align: right;
+                    .text-align(right);
                 }
 
                 &.fixed {
@@ -932,16 +932,16 @@ export default {
         }
 
         tr {
-            padding-left: 0.125em;
+            .padding-left( 0.125em);
             transition: background-color 0.125s ease-in, color 0.125s ease-in;
         }
 
 
         tr th {
-            border-right: 2px solid @dv-c-body;
+            .border-right( 2px solid @dv-c-body);
             border-bottom-color: transparent;
             padding: 4px 12px 4px 0;
-            text-align: right;
+            .text-align(right);
         }
 
         th, td {
@@ -950,7 +950,7 @@ export default {
         }
 
         td {
-            padding-right: 0.5em;
+            .padding-right( 0.5em);
             &.point-td {
                 transform: translateY(-4px);
             }
@@ -958,8 +958,8 @@ export default {
 
         td:first-child,
         th:first-child {
-            padding-left: 0.25em;
-            padding-right: 0.5em;
+            .padding-left( 0.25em);
+            .padding-right( 0.5em);
         }
         tr:last-child td {
             border-bottom-color: transparent;
@@ -1040,22 +1040,22 @@ export default {
         position: absolute;
         height: 420px;
         top: 0;
-        left: 0;
-        right: 0;
+        .left( 0);
+        .right( 0);
         bottom: 0;
 
         .help {
-            text-align: left;
+            .text-align(left);
             margin-top: 10px;
             font-size: 14px;
             padding: 8px 12px;
             background-color: fade(@dv-c-background, 40%);
-            border-left: 4px solid @dv-c-accent-2;
+            .border-left( 4px solid @dv-c-accent-2);
 
             .fa {
                 color: @dv-c-foreground;
                 display: inline-block;
-                padding-right: 6px;
+                .padding-right( 6px);
             }
         }
     }
@@ -1070,8 +1070,8 @@ export default {
         .loader-box {
             position: absolute;
             // top: 0;
-            // left: 0;
-            // right: 0;
+            // left( 0;
+            // right( 0;
             // bottom: 0;
             // background: rgba(0, 0, 0, 0.5);
             padding: 16px 0 0 16px;
@@ -1081,7 +1081,7 @@ export default {
                 text-transform: uppercase;
                 letter-spacing: 0.2em;
                 padding-top: 10px;
-                padding-left: 10px;
+                .padding-left( 10px);
                 vertical-align: top;
                 color: @dv-c-foreground;
             }
@@ -1098,9 +1098,9 @@ export default {
                 font-size: 16px;
                 text-indent: -9999em;
                 border-top: 0.2em solid rgba(0, 0, 0, 0.75);
-                border-right: 0.2em solid rgba(0, 0, 0, 0.75);
+                .border-right( 0.2em solid rgba(0, 0, 0, 0.75));
                 border-bottom: 0.2em solid rgba(0, 0, 0, 0.75);
-                border-left: 0.2em solid @dv-c-foreground;
+                .border-left( 0.2em solid @dv-c-foreground);
                 background: rgba(0, 0, 0, 0.5);
                 //   -webkit-transform: translateZ(0);
                 //   -ms-transform: translateZ(0);

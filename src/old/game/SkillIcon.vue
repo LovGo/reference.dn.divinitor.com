@@ -32,8 +32,8 @@ export default {
     .skill {
         position: absolute;
         top: 1px;
-        left: 1px;
-        right: 0;
+        .left(1px);
+        .right(0);
         bottom: 0;
         width: 48px;
         height: 48px;

@@ -136,7 +136,7 @@ export default Vue.extend({
     .index {
         position: absolute;
         top: 0;
-        right: 0;
+        .right(0);
         font-size: 8px;
         color: @dv-c-idle;
     }

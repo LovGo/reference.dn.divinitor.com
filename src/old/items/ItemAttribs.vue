@@ -145,7 +145,7 @@ export default {
         .fa {
             &:nth-child(2),
             &:nth-child(3) {
-                margin-left: -0.4em;
+                .margin-left(-0.4em);
             }
 
             &.fa-dollar {
@@ -164,11 +164,11 @@ export default {
 
                 &:nth-child(2) {
                     color: @dv-c-green;
-                    margin-left: -0.75em;
+                    .margin-left(-0.75em);
                 }
                 &:nth-child(3) {
                     color: lighten(@dv-c-green, 20%);
-                    margin-left: -0.75em;
+                    .margin-left(-0.75em);                    
                 }
             }
         }

@@ -35,10 +35,10 @@
         border: @border-width solid @fg-color;
         bottom: -@border-width;
         content: ' ';
-        left: -@border-width;
+        .left(-@border-width);
         opacity: 0.8;
         position: absolute;
-        right: -@border-width;
+        .right(-@border-width);
         top: -@border-width;
     }
 
@@ -144,7 +144,7 @@
         margin-bottom: 10px;
         position: relative;
         width: 100%;
-        text-align: left;
+        .text-align(left);
         text-transform: uppercase;
     }
 }

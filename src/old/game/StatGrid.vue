@@ -440,9 +440,9 @@ export default {
                 text-align: center;
 
                 &.first {
-                    border-right: 2px solid @dv-c-body;
+                    .border-right(2px solid @dv-c-body);
                     min-width: 50px;
-                    text-align: right;
+                    .text-align(right);
                 }
 
                 &.fixed {
@@ -456,7 +456,7 @@ export default {
         }
 
         tr {
-            padding-left: 0.125em;
+            .padding-left(0.125em);
             transition: background-color 0.125s ease-in, color 0.125s ease-in;
         }
 
@@ -472,10 +472,10 @@ export default {
         }
 
         tr th {
-            border-right: 2px solid @dv-c-body;
+            .border-right(2px solid @dv-c-body);
             border-bottom-color: transparent;
             padding: 4px 12px 4px 0;
-            text-align: right;
+            .text-align(right);
             color: @dv-c-foreground;
             font-size: 12px;
             font-weight: normal;
@@ -495,8 +495,8 @@ export default {
 
         td:first-child,
         th:first-child {
-            padding-left: 0.25em;
-            padding-right: 0.5em;
+            .padding-left(0.25em);
+            .padding-right(0.5em);
         }
         tr:last-child td {
             border-bottom-color: transparent;

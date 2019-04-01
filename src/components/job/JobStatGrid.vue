@@ -197,11 +197,11 @@ export default Vue.extend({
                     padding-left: 0.5em;
                     padding-right: 0.5em;
                     &:not(:first-child) {
-                        border-right: none;
+                        .border-right(none);
                     }
 
                     &:first-child {
-                        text-align: left;
+                        .text-align(left);
                         font-size: 18px;
                     }
                 }

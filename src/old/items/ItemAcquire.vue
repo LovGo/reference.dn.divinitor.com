@@ -759,11 +759,11 @@ export default {
             text-transform: uppercase;
             height: 100%;
             padding: 4px 0 4px 6px;
-            border-left: 1px solid @dv-c-idle;
+            .border-left(1px solid @dv-c-idle);
 
             &:first-child {
-                border-left: none;
-                padding-left: 0;
+                .border-left(none);
+                .padding-left(0);
             }
         }
 
@@ -771,7 +771,7 @@ export default {
             margin: 0 8px;
 
             &:first-child {
-                margin-left: 0;
+                .margin-left(0);
             }
 
             .fa {
@@ -805,8 +805,8 @@ export default {
 
                 .shop-name {
                     flex: 0 1 120px;
-                    text-align: right;
-                    border-right: 2px solid @dv-c-body;
+                    .text-align(right);
+                    .border-right(2px solid @dv-c-body);
                     padding: 10px 10px 0 0;
                     color: @dv-c-foreground;
                     font-size: 12px;
@@ -847,12 +847,12 @@ export default {
 
                             .fee-entry {
                                 flex: 0 0 auto;
-                                border-left: 1px solid @dv-c-idle;
+                                .border-left(1px solid @dv-c-idle);
                                 padding: 0 8px;
 
                                 &:first-child {
-                                    padding-left: 0;
-                                    border-left: none;
+                                    .padding-left(0);
+                                    .border-left(none);
                                 }
 
                                 & > span {
@@ -898,7 +898,7 @@ export default {
             .craft-group-list {
                 position: relative;
                 flex: 0 0 200px;
-                border-right: 1px solid @dv-c-foreground;
+                .border-right(1px solid @dv-c-foreground);
                 padding-top: 24px;
 
                 &::before {
@@ -1030,19 +1030,19 @@ export default {
                 }
 
                 @media only screen and (min-width:@min-desktop-wide-width) {
-                    border-right-color: transparent;
+                    .border-right-color(transparent);
                     &:first-child,
                     &:nth-child(2) {
                         border-top-color: @dv-c-foreground;
                     }
                     &:nth-child(2n) {
-                        border-right-color: @dv-c-foreground;
+                        .border-right-color(@dv-c-foreground);
                     }
                     &:last-child {
-                        border-right-color: @dv-c-foreground;
+                        .border-right-color(@dv-c-foreground);
                     }
                     &:first-child:last-child {
-                        border-right-color: @dv-c-foreground;
+                        .border-right-color(@dv-c-foreground);
                     }
 
                 }
@@ -1070,7 +1070,7 @@ export default {
                 }
                 position: relative;
                 padding: 10px 14px;
-                padding-right: 40px;
+                .padding-right(40px);
                 transition: background-color 0.125s ease-in;
 
                 &:hover {
@@ -1099,8 +1099,8 @@ export default {
                     color: fade(@dv-c-body, 20%);
                     position: absolute;
                     top: 0;
-                    right: 2px;
-                    text-align: right;
+                    .right(2px);
+                    .text-align(right);
                     font-size: 12px;
                     letter-spacing: 0.1em;
                 }
@@ -1164,24 +1164,24 @@ export default {
                         font-weight: normal;
                     }
                     .fa {
-                        margin-right: 8px;
+                        .margin-right(8px);
                     }
 
                     .coupon {
-                        margin-left: 10px;
+                        .margin-left(10px);
                         &:first-child {
-                            margin-left: 0;
+                            .margin-left(0);
                         }
                     }
 
                     .no-coupon {
                         &:first-child {
-                            margin-left: 0;
+                            .margin-left(0);
                         }
-                        margin-left: 10px;
+                        .margin-left(10px);
                         padding: 6px 12px 6px 10px;
                         background: fade(@dv-c-red, 25%);
-                        border-left: @dv-c-red 4px solid;
+                        .border-left(@dv-c-red 4px solid);
                         vertical-align: top;
                         text-transform: uppercase;
                         letter-spacing: 0.2em;
@@ -1196,7 +1196,7 @@ export default {
                 .count {
                     position: absolute;
                     top: 50%;
-                    right: 10px;
+                    .right(10px);
                     transform: translateY(-50%);
                     font-size: 18px;
                     color: @dv-c-accent-2;
@@ -1247,7 +1247,7 @@ export default {
                 text-transform: uppercase;
                 letter-spacing: 0.2em;
                 padding-top: 10px;
-                padding-left: 10px;
+                .padding-left(10px);
                 vertical-align: top;
                 color: @dv-c-foreground;
             }
@@ -1264,9 +1264,9 @@ export default {
                 font-size: 16px;
                 text-indent: -9999em;
                 border-top: 0.2em solid rgba(0, 0, 0, 0.75);
-                border-right: 0.2em solid rgba(0, 0, 0, 0.75);
+                .border-right(0.2em solid rgba(0, 0, 0, 0.75));
                 border-bottom: 0.2em solid rgba(0, 0, 0, 0.75);
-                border-left: 0.2em solid @dv-c-foreground;
+                .border-left(0.2em solid @dv-c-foreground);
                 background: rgba(0, 0, 0, 0.5);
                 //   -webkit-transform: translateZ(0);
                 //   -ms-transform: translateZ(0);

@@ -57,7 +57,7 @@ export default Vue.extend({
         .desc {
             padding: 0.5em 1em;
             background: fade(@dv-c-background, 70%);
-            border-left: 2px solid @dv-c-foreground;
+            .border-left(2px solid @dv-c-foreground);
         }
     }
 }

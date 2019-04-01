@@ -305,7 +305,7 @@ export default Vue.extend({
 
             .key {
                 display: inline-block;
-                margin-right: 0.3em;
+                .margin-right(0.3em);
                 text-transform: uppercase;
                 font-family: @dv-f-geomanist;
                 font-size: 12px;

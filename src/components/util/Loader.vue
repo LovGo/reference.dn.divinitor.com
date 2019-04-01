@@ -42,10 +42,10 @@ export default {
 
         .text {
             position: absolute;
-            padding-left: 20px;
+            .padding-left(20px);
             bottom: -2px;
-            left: 0;
-            text-align: left;
+            .left(0);
+            .text-align(left);
             text-shadow: 0 0 14px @c-shadow-color;
             color: @c-color;
             font: @dv-f-geomanist;
@@ -60,22 +60,22 @@ export default {
         }
 
         @keyframes title {
-            0% {opacity: 0.0;left: -10px;}
-            5% {left: 0px;}
-            10% {opacity: 1.0;left: 0px;}
-            50% {opacity: 1.0;left: 0px}
-            53% {opacity: 0.0;left: 200px;}
-            99% {opacity: 0.0;left: 0px;}
+            0% {opacity: 0.0; .left(-10px);}
+            5% { .left(0px);}
+            10% {opacity: 1.0;.left(0px);}
+            50% {opacity: 1.0;.left(0px)}
+            53% {opacity: 0.0;.left(200px);}
+            99% {opacity: 0.0;.left(0px);}
             100% {opacity: 0.0;}
         }
 
         @keyframes text {
-            0% {opacity: 0.0;left: -10px;}
-            5% {left: 0px;}
-            10% {opacity: 1.0;left: 0px;}
-            50% {opacity: 1.0;left: 0px}
-            53% {opacity: 0.0;left: 200px;}
-            99% {opacity: 0.0;left: 0px;}
+            0% {opacity: 0.0; .left(-10px);}
+            5% { .left(0px);}
+            10% {opacity: 1.0;.left(0px);}
+            50% {opacity: 1.0;.left(0px)}
+            53% {opacity: 0.0;.left(200px);}
+            99% {opacity: 0.0;.left(0px);}
             100% {opacity: 0.0;}
         }
     }

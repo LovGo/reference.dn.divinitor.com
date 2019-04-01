@@ -145,14 +145,14 @@ export default Vue.extend({
     }
 
     .home {
-        padding-left: 0.5em;
-        border-left: @dv-c-accent-1 solid 2px;
+        .padding-left(0.5em);
+        .border-left(@dv-c-accent-1 solid 2px);
         transition: border ease-in 0.125s;
         font-weight: normal;
         letter-spacing: 0.1em;
         color: @dv-c-accent-1;
         text-transform: uppercase;
-        margin-left: 0.25em;
+        .margin-left(0.25em);
         margin-top: 1em;
         line-height: 1.25em;
 
@@ -174,13 +174,13 @@ export default Vue.extend({
             font-family: @dv-f-lato;
             font-size: 14px;
 
-            margin-left: 0.25em;
+            .margin-left(0.25em);
             margin-top: 0.6em;
             
-            padding-left: 0.5em;
+            .padding-left(0.5em);
             padding-top: 0.2em;
             padding-bottom: 0.2em;
-            border-left: @dv-c-accent-1 solid 2px;
+            .border-left(@dv-c-accent-1 solid 2px);
             transition: border ease-in 0.125s, color ease-in 0.125s, background-color ease-in 0.125s;
             font-weight: normal;
             letter-spacing: 0.1em;
@@ -195,7 +195,7 @@ export default Vue.extend({
             &.disabled {
                 pointer-events: none;
                 color: @dv-c-disabled;
-                border-left: @dv-c-disabled solid 2px;
+                .border-left(@dv-c-disabled solid 2px);
             }
         }
         
@@ -230,7 +230,7 @@ export default Vue.extend({
     .menu-icon {
         position: absolute;
         top: 0;
-        right: 0;
+        .right(0);
         width: 40px;
         height: 40px;
         border: 1px solid @dv-c-idle;
@@ -261,7 +261,7 @@ export default Vue.extend({
         overflow-x: hidden;
 
         li {
-            margin-right: 50px;
+            .margin-right(50px);
         }
     }
 }

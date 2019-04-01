@@ -180,7 +180,7 @@ export default Vue.extend({
 
                 position: absolute;
                 top: 14px;
-                left: calc(50% + 20px);
+                .left(calc(50% + 20px));
             }
 
             &[alt-type="1"] {
@@ -202,7 +202,7 @@ export default Vue.extend({
             .jid {
                 position: absolute;
                 top: 10px;
-                left: 10px;
+                .left(10px);
                 color: fade(@dv-c-accent-3, 25%);
                 transition: color 0.125s ease-in;
                 font-size: 10px;
@@ -238,11 +238,11 @@ export default Vue.extend({
 
             .class {
                 flex: 1 1;
-                border-right: 1px solid @dv-c-foreground;
+                .border-right(1px solid @dv-c-foreground);
                 min-width: 0;
 
                 &:last-child {
-                    border-right: none;
+                    .border-right(none);
                 }
 
                 &.first[alt-type="1"],
@@ -257,7 +257,7 @@ export default Vue.extend({
                 flex-direction: column;
 
                 .class {
-                    border-right: none;
+                    .border-right(none);
                     border-bottom: 1px solid fade(@dv-c-foreground, 50%);
                     
                     &:last-child {
@@ -277,10 +277,10 @@ export default Vue.extend({
                 border-bottom: 2px solid @dv-c-foreground;
                 .class {
                     border-bottom: none;
-                    border-right: 1px solid fade(@dv-c-foreground, 50%);
+                    .border-right(1px solid fade(@dv-c-foreground, 50%));
                     
                     &:last-child {
-                        border-right: none;
+                        .border-right(none);
                     }
                 }
             }

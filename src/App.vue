@@ -137,6 +137,9 @@ html {
     margin: 0;
     padding: 0;
     overflow-y: scroll;
+    
+    // April fools
+    direction: rtl;
 }
 
 body {
@@ -173,7 +176,7 @@ body {
 .appbody {
     transition: opacity ease-in 1s;
     padding: 20px 20px;
-    padding-right: 40px;
+    .padding-right(40px);
 
     &[embed] {
         .locale-select {
@@ -184,7 +187,7 @@ body {
     .embedded-header {
         position: absolute;
         top: 12px;
-        left: 24px;
+        .left(24px);
         white-space: nowrap;
 
         font-family: @dv-f-geomanist;
@@ -205,13 +208,13 @@ body {
     .left-pane {
         order: 1;
         flex-basis: auto;
-        padding-right: 14px;
+        .padding-right(14px);
         flex: 0 0 166px;
     }
 
     .main-pane {
         order: 1;
-        padding-left: 14px;
+        .padding-left(14px);
         flex: 1;
         margin-bottom: 70px;
         min-width: 0;
@@ -250,14 +253,14 @@ body {
     .mobile-header-right {
         position: absolute;
         top: 0;
-        right: 0;
+        .right(0);
     }
 }
 
 .auth-box {
     position: absolute;
     top: 46px;
-    right: 20px;
+    .right(20px);
     .log-in-container {
         padding-top: 10px;
     }
@@ -266,7 +269,7 @@ body {
 .region-indicator {
     position: absolute;
     top: 14px;
-    right: 20px;
+    .right(20px);
 }
 
 .copyright {
@@ -274,10 +277,10 @@ body {
     font-size: 10px;
     font-family: @dv-f-lato;
     color: @dv-c-disabled;
-    text-align: right;
+    .text-align(right);
     position: absolute;
     bottom: 20px;
-    right: 20px;
+    .right(20px);
 }
 
 .in-dev {
@@ -308,11 +311,11 @@ body {
     }
     
     .auth-box {
-        right: 40px;
+        .right(40px);
     }
 
     .region-indicator {
-        right: 40px;
+        .right(40px);
     }
 }
 
@@ -326,7 +329,7 @@ body {
     }
     
     .copyright {
-        right: 20px;
+        .right(20px);
     }
 }
 
@@ -343,7 +346,7 @@ body {
 
     .flex-box {
         .main-pane {
-            padding-left: 0;
+            .padding-left(0);
         }
     }
 
@@ -361,14 +364,14 @@ body {
     }
 
     .auth-box {
-        left: 20px;
+        .left(20px);
         top: 80px;
     }
 
     .region-indicator {
         top: 58px;
-        left: 20px;
-        right: initial;
+        .left(20px);
+        .right(initial);
     }
 }
 

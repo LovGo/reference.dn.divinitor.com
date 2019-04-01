@@ -48,8 +48,8 @@ export default {
     .item {
         position: absolute;
         top: 1px;
-        left: 1px;
-        right: 0;
+        .left(1px);
+        .right(0);
         bottom: 0;
     }
 
@@ -66,9 +66,9 @@ export default {
              @offset -@offset 0 @text-shadow,
             -@offset  @offset 0 @text-shadow,
              @offset  @offset 0 @text-shadow;
-        right: 7px;
+        .right(7px);
         bottom: 4px;
-        text-align: right;
+        .text-align(right);
         color: white;
     }
 
@@ -84,10 +84,10 @@ export default {
              @offset -@offset 0 @text-shadow,
             -@offset  @offset 0 @text-shadow,
              @offset  @offset 0 @text-shadow;
-        left: 1px;
+        .left(1px);
         top: 2px;
         color: #F0F080;
-        text-align: right;
+        .text-align(right);
 
         &::before {
             content: "+";

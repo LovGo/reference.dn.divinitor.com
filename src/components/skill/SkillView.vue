@@ -542,7 +542,7 @@ export default Vue.extend({
         .header {
             position: relative;
             width: 100%;
-            padding-left: 0;
+            .padding-left(0);
             padding-bottom: 0;
             display: flex;
             flex-direction: row;
@@ -565,9 +565,9 @@ export default Vue.extend({
 
             .title {
                 flex: 1 1 auto;
-                margin-left: 6px;
-                border-left: 2px solid @dv-c-accent-1;
-                padding-left: 12px;
+                .margin-left(6px);
+                .border-left(2px solid @dv-c-accent-1);
+                .padding-left(12px);
                 padding-top: 8px;
                 padding-bottom: 8px;
 
@@ -592,10 +592,10 @@ export default Vue.extend({
 
                     & > div {
                         display: inline-block;
-                        margin-left: 0.3em;
+                        .margin-left(0.3em);
 
                         &:first-child {
-                            margin-left: 0;
+                            .margin-left(0);
                         }
                     }
 
@@ -662,7 +662,7 @@ export default Vue.extend({
 
                     .key {
                         display: inline-block;
-                        margin-right: 0.3em;
+                        .margin-right(0.3em);
                         text-transform: uppercase;
                         font-family: @dv-f-geomanist;
                         font-size: 12px;
@@ -687,11 +687,11 @@ export default Vue.extend({
 
                 .effect-pane {
                     flex: 1 1;
-                    margin-left: 8px;
+                    .margin-left(8px);
 
                     .pane-header {
                         padding-top: 0;
-                        padding-left: 10px;
+                        .padding-left(10px);
                         margin-top: 0;
                     }
                 }

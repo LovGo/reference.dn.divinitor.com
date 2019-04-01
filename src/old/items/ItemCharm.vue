@@ -326,13 +326,13 @@ export default {
 
             @media only screen and (min-width:@min-desktop-wide-width) {
                 flex: 0 1 460px;
-                border-left: none;
+                .border-left(none);
                 &:first-child,
                 &:nth-child(2) {
                     border-top-color: @dv-c-foreground;
                 }
                 &:nth-child(2n + 1) {
-                    border-left: 1px solid @dv-c-foreground;
+                    .border-left(1px solid @dv-c-foreground);
                 }
                 &:last-child {
                     // border-right: 1px solid @dv-c-foreground;
@@ -360,7 +360,7 @@ export default {
                 text-transform: uppercase;
                 letter-spacing: 0.2em;
                 padding-top: 10px;
-                padding-left: 10px;
+                .padding-left(10px);
                 vertical-align: top;
                 color: @dv-c-foreground;
             }
@@ -377,9 +377,9 @@ export default {
                 font-size: 16px;
                 text-indent: -9999em;
                 border-top: 0.2em solid rgba(0, 0, 0, 0.75);
-                border-right: 0.2em solid rgba(0, 0, 0, 0.75);
+                .border-right(0.2em solid rgba(0, 0, 0, 0.75));
                 border-bottom: 0.2em solid rgba(0, 0, 0, 0.75);
-                border-left: 0.2em solid @dv-c-foreground;
+                .border-left(0.2em solid @dv-c-foreground);
                 background: rgba(0, 0, 0, 0.5);
                 //   -webkit-transform: translateZ(0);
                 //   -ms-transform: translateZ(0);

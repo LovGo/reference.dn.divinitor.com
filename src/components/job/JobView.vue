@@ -182,7 +182,7 @@ export default Vue.extend({
         .header {
             position: relative;
             width: 100%;
-            padding-left: 0;
+            .padding-left(0);
             padding-bottom: 0;
             display: flex;
             flex-direction: row;
@@ -204,9 +204,9 @@ export default Vue.extend({
 
             .title {
                 flex: 1 1 auto;
-                margin-left: 6px;
-                border-left: 2px solid @dv-c-accent-1;
-                padding-left: 12px;
+                .margin-left(6px);
+                .border-left(2px solid @dv-c-accent-1);
+                .padding-left(12px);
                 padding-top: 8px;
                 padding-bottom: 8px;
 

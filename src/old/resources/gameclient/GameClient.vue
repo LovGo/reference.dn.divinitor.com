@@ -204,10 +204,10 @@ export default {
                 transition: color ease-in 0.125s;
 
                 .detail {
-                    margin-right: 12px;
+                    .margin-right(12px);
 
                     &:last-child {
-                        margin-right: 0;
+                        .margin-right(0);
                     }
                 }
             }
@@ -223,7 +223,7 @@ export default {
 
             .downloaded {
                 position: absolute;
-                right: 10px;
+                .right(10px);
                 top: 10px;
                 font-size: 12px;
                 color: @dv-c-green;
@@ -242,7 +242,7 @@ export default {
     .dl-info {
         table {
             th {
-                text-align: right;
+                .text-align(right);
                 padding-right: 12px;
                 font-weight: normal;
                 color: @dv-c-foreground;

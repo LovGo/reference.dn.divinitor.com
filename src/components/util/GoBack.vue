@@ -1,7 +1,7 @@
 <template>
 <div class="go-back"
     v-on:click="goBack">
-    <i class="fa fa-angle-double-left"></i>Back
+    <i class="fa fa-angle-double-left"></i> Back
 </div>
 </template>
 
@@ -25,7 +25,9 @@ export default Vue.extend({
     border: 1px solid @dv-c-foreground;
     cursor: pointer;
     width: 70px;
-    padding: 8px 10px 8px 6px;
+    padding: 8px;
+    .padding-left(10px);
+    .padding-right(6px);
     text-align: center;
     background: fade(@dv-c-background, 50%);
     transition: background-color ease-in 0.125s, color ease-in 0.125s;
@@ -33,7 +35,7 @@ export default Vue.extend({
     font-size: 14px;
 
     .fa {
-        margin-right: 0.5em;
+        .margin-right(0.5em);
         color: @dv-c-accent-2;
     }
 

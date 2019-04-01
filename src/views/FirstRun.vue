@@ -525,10 +525,10 @@ export default Vue.extend({
                 display: flex;
                 button {
                     flex: 1 1;
-                    margin-right: 8px;
+                    .margin-right(8px);
 
                     &:last-child {
-                        margin-right: 0;
+                        .margin-right(0);
                     }
                 }
             }
@@ -555,7 +555,7 @@ export default Vue.extend({
             bottom: -30px;
             left: 0;
             right: 0;
-            padding-left: 0px;
+            .padding-left(0px);
 
             .indicator {
                 @diamond-size: 6px;
@@ -583,7 +583,7 @@ export default Vue.extend({
                 &::after {
                     content: "";
                     position: absolute;
-                    left: -@diamond-size;
+                    .left(-@diamond-size);
                     top: @diamond-size;
                     width: 0;
                     height: 0;

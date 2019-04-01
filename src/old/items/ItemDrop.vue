@@ -99,13 +99,13 @@ export default {
 
             @media only screen and (min-width:@min-desktop-wide-width) {
                 flex: 0 1 460px;
-                border-left: none;
+                .border-left(none);
                 &:first-child,
                 &:nth-child(2) {
                     border-top-color: @dv-c-foreground;
                 }
                 &:nth-child(2n + 1) {
-                    border-left: 1px solid @dv-c-foreground;
+                    .border-left(1px solid @dv-c-foreground);
                 }
                 &:last-child {
                     // border-right: 1px solid @dv-c-foreground;
