@@ -320,8 +320,8 @@
                 <item-charm
                     :charmId="itemData.type.charmNum"
                     :itemType="itemData.type"
-                >
-                </item-charm>
+                    :itemId="itemId"
+                />
             </div>
             <div class="section" v-if="itemType == 'RANDOM'">
                 <div class="title">Box Contents</div>
