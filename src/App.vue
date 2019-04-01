@@ -139,7 +139,7 @@ html {
     overflow-y: scroll;
     
     // April fools
-    direction: rtl;
+    // direction: rtl;
 }
 
 body {
