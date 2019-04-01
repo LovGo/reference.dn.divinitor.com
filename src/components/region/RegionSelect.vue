@@ -121,7 +121,7 @@ export default Vue.extend({
                     border-top-width: 1px;
                 }
                 &:nth-child(2n) {
-                    border-left-width: 0;
+                    .border-left-width(0);
                 }
             }
 
@@ -160,7 +160,7 @@ export default Vue.extend({
             .version {
                 position: absolute;
                 top: 50%;
-                right: 8px;
+                .right(8px);
                 transform: translate(0%, -50%);
                 font-size: 12px;
                 font-family: @dv-f-geomanist;

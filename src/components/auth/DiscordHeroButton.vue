@@ -190,12 +190,12 @@ export default Vue.extend({
             display: flex;
             button {
                 flex: 0 0 auto;
-                margin-right: 8px;
-                padding-left: 20px;
-                padding-right: 20px;
+                .margin-right(8px);
+                .padding-left(20px);
+                .padding-right(20px);
 
                 &:last-child {
-                    margin-right: 0;
+                    .margin-right(0);
                 }
             }
         }

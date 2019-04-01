@@ -275,7 +275,7 @@ export default {
 
         .expand {
             position: absolute;
-            right: 0;
+            .right(0);
             bottom: 0;
             border: none;
             background: none;
@@ -302,7 +302,7 @@ export default {
             height: 100%;
             position: absolute;
             top: 0;
-            left: 0;
+            .left(0);
             
         }
     }

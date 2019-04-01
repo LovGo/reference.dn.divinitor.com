@@ -315,12 +315,12 @@ export default {
         
         .title {
             flex: 1 1 auto;
-            padding-left: 12px;
+            .padding-left(12px);
             padding-top: 0px;
             padding-bottom: 20px;
 
             &:last-child {
-                padding-right: 40px;
+                .padding-right(40px);
             }
 
             .head {
@@ -347,7 +347,7 @@ export default {
 
                 .tier {
                     display: inline-block;
-                    margin-right: 0.3em;
+                    .margin-right(0.3em);
                 }
 
                 .level {
@@ -410,8 +410,8 @@ export default {
 
         .rate {
             position: absolute;
-            text-align: right;
-            right: 0.4em;
+            .text-align(right);
+            .right(0.4em);
             top: 50%;
             color: @dv-c-accent-1;
             transition: color ease-in 0.125s;
@@ -450,7 +450,7 @@ export default {
                 text-transform: uppercase;
                 letter-spacing: 0.2em;
                 padding-top: 10px;
-                padding-left: 10px;
+                .padding-left(10px);
                 vertical-align: top;
                 color: @dv-c-foreground;
             }
@@ -467,9 +467,9 @@ export default {
                 font-size: 16px;
                 text-indent: -9999em;
                 border-top: 0.2em solid rgba(0, 0, 0, 0.75);
-                border-right: 0.2em solid rgba(0, 0, 0, 0.75);
+                .border-right(0.2em solid rgba(0, 0, 0, 0.75));
                 border-bottom: 0.2em solid rgba(0, 0, 0, 0.75);
-                border-left: 0.2em solid @dv-c-foreground;
+                .border-left(0.2em solid @dv-c-foreground);
                 background: rgba(0, 0, 0, 0.5);
                 //   -webkit-transform: translateZ(0);
                 //   -ms-transform: translateZ(0);

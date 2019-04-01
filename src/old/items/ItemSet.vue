@@ -382,9 +382,9 @@ export default {
                 text-align: center;
 
                 &:first-child {
-                    border-right: 2px solid @dv-c-body;
+                    .border-right(2px solid @dv-c-body);
                     // min-width: 50px;
-                    text-align: right;
+                    .text-align(right);
                 }
             }
 
@@ -394,14 +394,14 @@ export default {
         }
 
         tr {
-            padding-left: 0.125em;
+            .padding-left(0.125em);
             transition: background-color 0.125s ease-in, color 0.125s ease-in;
         }
         
         tr th {
-            border-right: 2px solid @dv-c-body;
+            .border-right(2px solid @dv-c-body);
             padding: 4px 12px 4px 0;
-            text-align: right;
+            .text-align(right);
             color: @dv-c-foreground;
             font-size: 18px;
             font-weight: normal;
@@ -422,8 +422,8 @@ export default {
 
         td:first-child,
         th:first-child {
-            padding-left: 0.25em;
-            padding-right: 0.5em;
+            .padding-left(0.25em);
+            .padding-right(0.5em);
         }
         tr:last-child td, tr:last-child th {
             border-bottom-color: transparent;
@@ -445,7 +445,7 @@ export default {
                 text-transform: uppercase;
                 letter-spacing: 0.2em;
                 padding-top: 10px;
-                padding-left: 10px;
+                .padding-left(10px);
                 vertical-align: top;
                 color: @dv-c-foreground;
             }

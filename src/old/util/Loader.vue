@@ -30,21 +30,21 @@ export default {
     position: relative;
     .loader {
         position: relative;
-        text-align: left;
+        .text-align(left);
         text-shadow: 0 0 14px @c-shadow-color;
         color: @c-color;
         font: @dv-f-geomanist;
         text-transform: uppercase;
         letter-spacing: 0.1em;
 
-        padding-left: 10px;
+        .padding-left(10px);
 
         &:before {
             content: "";
             display: block;
             position: absolute;
             top: -4px;
-            left: 0px;
+            .left(0px);
             width: 20px;
             height: 20px;
             background: @c-block-color;
@@ -55,8 +55,8 @@ export default {
         & > div {
             display: block;
             position: absolute;
-            padding-left: 30px;
-            left: 0;
+            .padding-left(30px);
+            .left(0);
             height: 20px;
             line-height: 20px;
         }
@@ -72,22 +72,22 @@ export default {
         }
 
         @keyframes title {
-            0% {opacity: 0.0;left: -10px;}
-            5% {left: 0px;}
-            10% {opacity: 1.0;left: 0px;}
-            50% {opacity: 1.0;left: 0px}
-            53% {opacity: 0.0;left: 200px;}
-            99% {opacity: 0.0;left: 0px;}
+            0% {opacity: 0.0;.left(-10px);}
+            5% {.left(0px);}
+            10% {opacity: 1.0;.left(0px);}
+            50% {opacity: 1.0;.left(0px);}
+            53% {opacity: 0.0;.left(200px);}
+            99% {opacity: 0.0;.left(0px);}
             100% {opacity: 0.0;}
         }
 
         @keyframes text {
-            0% {opacity: 0.0;left: -10px;}
-            5% {left: 0px;}
-            10% {opacity: 1.0;left: 0px;}
-            50% {opacity: 1.0;left: 0px}
-            53% {opacity: 0.0;left: 200px;}
-            99% {opacity: 0.0;left: 0px;}
+            0% {opacity: 0.0;.left(-10px);}
+            5% {.left(0px);}
+            10% {opacity: 1.0;.left(0px);}
+            50% {opacity: 1.0;.left(0px);}
+            53% {opacity: 0.0;.left(200px);}
+            99% {opacity: 0.0;.left(0px);}
             100% {opacity: 0.0;}
         }
 

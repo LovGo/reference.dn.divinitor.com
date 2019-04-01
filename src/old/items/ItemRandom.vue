@@ -319,7 +319,7 @@ export default {
                 text-transform: uppercase;
                 letter-spacing: 0.2em;
                 padding-top: 10px;
-                padding-left: 10px;
+                .padding-left(10px);
                 vertical-align: top;
                 color: @dv-c-foreground;
             }

@@ -87,11 +87,11 @@ export default {
     .point-tooltip {
         position: absolute;
         bottom: 100%;
-        left: 0;
+        .left(0);
         // transform: translateX(-50%);
         display: block;
         opacity: 0.0;
-        text-align: left;
+        .text-align(left);
         min-width: 100px;
         background: @dv-c-background;
         z-index: 10;

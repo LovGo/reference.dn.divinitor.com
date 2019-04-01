@@ -79,7 +79,7 @@ a {
     &.active {
         color: @dv-c-accent-2;
         border-bottom: @dv-c-accent-2 solid 1px;
-        padding-left: 3px;
+        .padding-left(3px);
     }
 
     &.rss {
@@ -92,7 +92,7 @@ a {
             color: #FF8822;
         }
         .fa {
-            margin-right: 6px;
+            .margin-right(6px);
         }
     }
 }
@@ -134,7 +134,8 @@ strong {
 .toast {
 
     border: @dv-c-foreground solid;
-    border-width: 0 0 0 4px;
+    border-width: 0;
+    .border-left-width(4px);
     background-color: fade(@dv-c-background, 75%);
     padding: 0.5em 1em;
     margin: 1em 0;
@@ -145,7 +146,7 @@ strong {
     .icon {
         font-size: 36px;
         color: @dv-c-foreground;
-        margin-right: 16px;
+        .margin-right(16px);
         text-align: center;
         width: 40px;
     }
@@ -253,7 +254,8 @@ strong {
         text-transform: uppercase;
         font-size: 16px;
         border: @dv-c-foreground 1px solid;
-        border-width: 1px 1px 1px 0;
+        border-width: 1px;
+        .border-right-width(0);
         padding: 0.5em;
         cursor: pointer;
         transition: background-color 0.25s ease-in, color 0.25s ease-in;
@@ -322,7 +324,7 @@ button, .button {
     &:active span, &:focus span {
         position: relative;
         top: 0;
-        left: 0;
+        .left(0);
     }
 
     &.ok {
@@ -362,7 +364,7 @@ button, .button {
         font-size: 24px;
         transition: border-color 0.125s ease-in, color 0.125s ease-in, background-color 0.125s ease-in;
         background: rgba(0, 0, 0, 0);
-        padding-left: 0.25em;
+        .padding-left(0.25em);
 
         &:focus {
             border-bottom-color: @dv-c-foreground;
@@ -491,7 +493,7 @@ button, .button {
     font-family: @dv-f-lato;
 
     bottom: 100%;
-    left: 50%;
+    .left(50%);
     transform: translate(-50%, -5px) translate(-2px, 0);
 
     box-shadow: 4px 4px 4px rgba(0.0, 0.0, 0.0, 0.75);
@@ -508,8 +510,8 @@ button, .button {
         content: " ";
         position: absolute;
         top: 100%;
-        left: 50%;
-        margin-left: -8px;
+        .left(50%);
+        .margin-left(-8px);
         border-width: 8px;
         border-style: solid;
         border-color: @dv-c-foreground transparent transparent transparent;
@@ -519,8 +521,8 @@ button, .button {
         content: " ";
         position: absolute;
         top: 100%;
-        left: 50%;
-        margin-left: -6px;
+        .left(50%);
+        .margin-left(-6px);
         border-width: 6px;
         border-style: solid;
         border-color: @dv-c-background transparent transparent transparent;
@@ -581,7 +583,7 @@ button, .button {
     legend {
         position: absolute;
         top: 0;
-        left: 0;
+        .left(0);
         font-family: @dv-f-geomanist;
         letter-spacing: 0.2em;
         text-transform: uppercase;
@@ -594,7 +596,7 @@ button, .button {
         flex: 0 1 auto;
         white-space: nowrap;
         margin: 0;
-        margin-right: 20px;
+        .margin-right(20px);
         input[type="number"] {
             background: none;
             border: none;
@@ -645,9 +647,9 @@ button, .button {
 
         span {
             display: inline-block;
-            margin-right: 10px;
-            border-left: 2px white solid;
-            padding-left: 2px;
+            .margin-right(10px);
+            .border-left(2px white solid);
+            .padding-left(2px);
 
             &.divinitor {
                 @ct: @dv-c-accent-2;
@@ -655,7 +657,7 @@ button, .button {
                     color: @ct;
                 }
                 
-                border-left-color: @ct;
+                .border-left-color(@ct);
 
                 &:hover {
                     label {
@@ -683,7 +685,7 @@ button, .button {
                     color: @ct;
                 }
 
-                border-left-color: @ct;
+                .border-left-color(@ct);
 
                 &:hover {
                     label {
@@ -711,7 +713,7 @@ button, .button {
                     color: @ct;
                 }
 
-                border-left-color: @ct;
+                .border-left-color(@ct);
 
                 &:hover {
                     label {
@@ -739,7 +741,7 @@ button, .button {
                     color: @ct;
                 }
                 
-                border-left-color: @ct;
+                .border-left-color(@ct);
 
                 &:hover {
                     label {
@@ -767,7 +769,7 @@ button, .button {
                     color: @ct;
                 }
                 
-                border-left-color: @ct;
+                .border-left-color(@ct);
 
                 &:hover {
                     label {
@@ -795,7 +797,7 @@ button, .button {
                     color: @ct;
                 }
                 
-                border-left-color: @ct;
+                .border-left-color(@ct);
 
                 &:hover {
                     label {
@@ -823,7 +825,7 @@ button, .button {
                     color: @ct;
                 }
                 
-                border-left-color: @ct;
+                .border-left-color(@ct);
 
                 &:hover {
                     label {
@@ -851,7 +853,7 @@ button, .button {
                     color: @ct;
                 }
                 
-                border-left-color: @ct;
+                .border-left-color(@ct);
 
                 &:hover {
                     label {
@@ -879,7 +881,7 @@ button, .button {
                     color: @ct;
                 }
                 
-                border-left-color: @ct;
+                .border-left-color(@ct);
 
                 &:hover {
                     label {
@@ -921,7 +923,7 @@ button, .button {
                 &:before {
                     position: absolute;
                     top: 50%;
-                    left: -18px;
+                    .left(-18px);
                     width: 10px;
                     height: 10px;
                     background: transparent;
@@ -935,7 +937,7 @@ button, .button {
             input:checked ~ label:before {
                 position: absolute;
                 top: 50%;
-                left: -18px;
+                .left(-18px);
                 width: 10px;
                 height: 10px;
                 background: white;
@@ -952,9 +954,9 @@ button, .button {
 
 .checkbox {
     display: inline-block;
-    margin-right: 10px;
-    border-left: 2px @dv-c-green solid;
-    padding-left: 6px;
+    .margin-right(10px);
+    .border-left(2px @dv-c-green solid);
+    .padding-left(6px);
 
     input[type="checkbox"] {
         opacity: 0;
@@ -973,7 +975,7 @@ button, .button {
         &:before {
             position: absolute;
             top: 50%;
-            left: -18px;
+            .left(-18px);
             width: 10px;
             height: 10px;
             background: transparent;
@@ -1007,7 +1009,7 @@ button, .button {
     input:checked ~ label:before {
         position: absolute;
         top: 50%;
-        left: -18px;
+        .left(-18px);
         width: 10px;
         height: 10px;
         border-color: @dv-c-green;
@@ -1094,7 +1096,7 @@ button, .button {
         .icon {
             flex: 0 0 40px;
             width: 40px;
-            margin-right: 6px;
+            .margin-right(6px);
             padding-top: 8px;
             font-size: 24px;
             color: @dv-c-foreground;
@@ -1129,7 +1131,7 @@ input[type="text"] {
     border: none;
     color: @dv-c-foreground;
     font-size: 14px;
-    text-align: left;
+    .text-align(left);
     min-width: 200px;
     border-bottom: 1px @dv-c-idle solid;
     transition: border-color ease-in 0.125s;
@@ -1151,7 +1153,7 @@ input[type="text"] {
 }
 
 .share {
-    margin-left: 8px;
+    .margin-left(8px);
     margin-bottom: 4px;
 
     .share-link {
@@ -1165,7 +1167,7 @@ input[type="text"] {
 
         & > span {
             position: absolute;
-            left: 0;
+            .left(0);
             top: 0;
             color: fade(@dv-c-foreground, 50%);
 
@@ -1200,7 +1202,7 @@ input[type="text"] {
 
 .modal {
     position: fixed;
-    left: 50%;
+    .left(50%);
     top: 50%;
     transform: translate(-50%, -50%);
 }
@@ -1215,15 +1217,15 @@ input[type="text"] {
     position: relative;
     width: 20px;
     height: 20px;
-    margin-right: 16px;
-    margin-left: 12px;
+    .margin-right(16px);
+    .margin-left(12px);
     
     &:before {
         content: "";
         display: block;
         position: absolute;
         bottom: -4px;
-        left: 0px;
+        .left(0px);
         width: 20px;
         height: 20px;
         background: @c-block-color;
@@ -1271,9 +1273,9 @@ table {
             text-align: center;
 
             &:first-child {
-                border-right: 2px solid @dv-c-body;
+                .border-right(2px solid @dv-c-body);
                 min-width: 50px;
-                text-align: right;
+                .text-align(right);
             }
 
             &.fixed {
@@ -1287,7 +1289,7 @@ table {
     }
 
     tr {
-        padding-left: 0.125em;
+        .padding-left(0.125em);
         transition: background-color 0.125s ease-in, color 0.125s ease-in;
     }
 
@@ -1303,10 +1305,10 @@ table {
     }
 
     tr th {
-        border-right: 2px solid @dv-c-body;
+        .border-right(2px solid @dv-c-body);
         border-bottom-color: transparent;
         padding: 4px 12px 4px 0;
-        text-align: right;
+        .text-align(right);
         color: @dv-c-foreground;
         font-size: 12px;
         font-weight: normal;
@@ -1326,8 +1328,8 @@ table {
 
     td:first-child,
     th:first-child {
-        padding-left: 0.25em;
-        padding-right: 0.5em;
+        .padding-left(0.25em);
+        .padding-right(0.5em);
     }
     tr:last-child td {
         border-bottom-color: transparent;
@@ -1335,8 +1337,8 @@ table {
 }
 
 .fa {
-    margin-left: 0.2em;
-    margin-right: 0.2em;
+    .margin-left(0.2em);
+    .margin-right(0.2em);
 }
 
 .page-section {
@@ -1351,7 +1353,7 @@ table {
         letter-spacing: 0.2em;
         position: absolute;
         top: -1.3em;
-        left: 0;
+        .left(0);
         user-select: none;
     }
 
@@ -1386,10 +1388,10 @@ table {
     color: @dv-c-background;
     
     .right-pad {
-        padding-right: 0.25em;
+        .padding-right(0.25em);
 
         &.fa {
-            padding-left: 0.4em;
+            .padding-left(0.4em);
             padding-top: 2px;
             padding-bottom: 2px;
         }
@@ -1413,6 +1415,6 @@ table {
     }
     .nonelemental {
         background-color: @dv-c-body;
-        padding-right: 0.5em;
+        .padding-right(0.5em);
     }
 }

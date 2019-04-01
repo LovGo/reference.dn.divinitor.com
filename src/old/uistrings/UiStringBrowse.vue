@@ -228,7 +228,7 @@ export default {
             width: 100%;
             position: absolute;
             height: 100%;
-            padding-right: 16px;
+            .padding-right(16px);
             z-index: 10;
             pointer-events: none;
             
@@ -302,7 +302,7 @@ export default {
                 }
 
                 .buttonbox {
-                    text-align: right;
+                    .text-align(right);
                 }
 
                 button {
@@ -314,7 +314,7 @@ export default {
                 .permalink {
                     position: absolute;
                     padding-top: 2px;
-                    right: 0;
+                    .right(0);
                     font-size: 12px;
                     color: @dv-c-accent-1;
                     letter-spacing: 0.2em;

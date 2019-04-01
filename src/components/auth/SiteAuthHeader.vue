@@ -130,7 +130,7 @@ export default Vue.extend({
     }
 
     .guest {
-        border-left: 2px solid @dv-c-foreground;
+        .border-left(2px solid @dv-c-foreground);
         background: fade(@dv-c-background, 80%);
         padding: 10px;
         cursor: pointer;
@@ -153,8 +153,8 @@ export default Vue.extend({
             }
 
             .loading-blinker {
-                margin-left: 8px;
-                margin-right: 12px;
+                .margin-left(8px);
+                .margin-right(12px);
             }
         }
 
@@ -173,10 +173,10 @@ export default Vue.extend({
     }
 
     .logged-in {
-        border-left: 2px solid @dv-c-foreground;
+        .border-left(2px solid @dv-c-foreground);
         background: fade(@dv-c-background, 80%);
         padding: 6px 8px;
-        padding-left: 12px;
+        .padding-left(12px);
 
         &::after {
             content: "";
@@ -195,7 +195,7 @@ export default Vue.extend({
         }
 
         .left {
-            float: left;
+            .float(left);
             margin-top: 8px;
             margin-bottom: 8px;
         }
@@ -203,7 +203,7 @@ export default Vue.extend({
         .right {
             @size: 48px;
             margin: 4px;
-            margin-left: 8px;
+            .margin-left(8px);
             float: clear;
             border-radius: 50%;
             border: 1px solid @dv-c-foreground;
@@ -247,7 +247,7 @@ export default Vue.extend({
 
             .right {
                 position: absolute;
-                right: 2px;
+                .right(2px);
             }
         }
     }

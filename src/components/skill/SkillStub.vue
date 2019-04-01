@@ -211,7 +211,7 @@ export default Vue.extend({
         .tooltip {
             position: absolute;
             top: -100%;
-            left: 0;
+            .left(0);
             z-index: 100;
             pointer-events: none;
         }
@@ -236,10 +236,10 @@ export default Vue.extend({
             position: relative;
             flex: 1 0 0;
             border: 1px solid;
-            border-left: none;
+            .border-left(none);
             border-color: @rank-divine;
             padding: 10px;
-            padding-left: 12px;
+            .padding-left(12px);
             padding-top: 4px;
 
             .id {
@@ -272,10 +272,10 @@ export default Vue.extend({
 
                 & > div {
                     display: inline-block;
-                    margin-left: 0.3em;
+                    .margin-left(0.3em);
 
                     &:first-child {
-                        margin-left: 0;
+                        .margin-left(0);
                     }
                 }
 
@@ -304,7 +304,7 @@ export default Vue.extend({
         .load-content {
             position: absolute;
             top: 16px;
-            left: 8px;
+            .left(8px);
         }
     }
     

@@ -311,7 +311,7 @@ export default {
             width: 100%;
             position: absolute;
             height: 100%;
-            padding-right: 16px;
+            .padding-right(16px);
             z-index: 10;
             pointer-events: none;
             

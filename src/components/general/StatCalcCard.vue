@@ -363,7 +363,7 @@ export default Vue.extend({
     .more {
         position: absolute;
         bottom: 0.5em;
-        right: 0.5em;
+        .right(0.5em);
         text-transform: uppercase;
         letter-spacing: 0.2em;
         font-size: 14px;

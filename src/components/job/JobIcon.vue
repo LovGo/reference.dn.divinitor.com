@@ -51,7 +51,8 @@ export default Vue.extend({
 
     .job-icon-resize {
         position: relative;
-        transform-origin: top left;
+        // transform-origin: top left;
+            transform-origin: top right;
 
         .job-icon {
             position: relative;

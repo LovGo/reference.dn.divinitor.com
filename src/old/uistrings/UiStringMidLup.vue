@@ -143,7 +143,7 @@ export default {
         .loading {
             width: 100%;
             position: absolute;
-            padding-right: 16px;
+            .padding-right(16px);
             z-index: 10;
             
             .loader-box {

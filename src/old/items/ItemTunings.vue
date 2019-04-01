@@ -166,7 +166,7 @@ export default {
             letter-spacing: 0.2em;
             position: absolute;
             top: -1.3em;
-            left: 0;
+            .left(0);
             user-select: none;
         }
 
@@ -217,15 +217,15 @@ export default {
                 
                 display: flex;
                 flex-direction: column;
-                padding-right: 8px;
-                border-right: 1px solid @dv-c-idle;
+                .padding-right(8px);
+                .border-right(1px solid @dv-c-idle);
             }
 
             .options {
                 position: relative;
                 flex: 1 1 0;
                 margin-top: 10px;
-                margin-left: 8px;
+                .margin-left(8px);
 
                 // display: flex;
                 // flex-direction: column;
@@ -268,7 +268,7 @@ export default {
                 text-transform: uppercase;
                 letter-spacing: 0.2em;
                 padding-top: 10px;
-                padding-left: 10px;
+                .padding-left(10px);
                 vertical-align: top;
                 color: @dv-c-foreground;
             }

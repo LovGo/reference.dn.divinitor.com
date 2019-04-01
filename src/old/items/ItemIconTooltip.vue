@@ -220,11 +220,11 @@ export default {
         .itemtip {
             position: absolute;
             bottom: 100%;
-            left: 0;
+            .left(0);
             opacity: 0.0;
             // transform: translateX(-50%);
             display: inline-block;
-            text-align: left;
+            .text-align(left);
             min-width: 100px;
             background: @dv-c-background;
             z-index: 10;
@@ -314,7 +314,7 @@ export default {
 
         .rate {
             position: absolute;
-            text-align: right;
+            .text-align(right);
             right: 0.4em;
             top: 50%;
             color: @dv-c-accent-1;
@@ -354,7 +354,7 @@ export default {
                 text-transform: uppercase;
                 letter-spacing: 0.2em;
                 padding-top: 10px;
-                padding-left: 10px;
+                .padding-left(10px);
                 vertical-align: top;
                 color: @dv-c-foreground;
             }

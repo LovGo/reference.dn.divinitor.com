@@ -24,13 +24,13 @@ export default {
             font-family: @dv-f-lato;
             font-size: 14px;
 
-            margin-left: 0.25em;
+            .margin-left(0.25em);
             margin-top: 0.6em;
             
-            padding-left: 0.5em;
+            .padding-left(0.5em);
             padding-top: 0.2em;
             padding-bottom: 0.2em;
-            border-left: @dv-c-accent-1 solid 2px;
+            .border-left(@dv-c-accent-1 solid 2px);
             transition: border ease-in 0.125s, color ease-in 0.125s, background-color ease-in 0.125s;
             font-weight: normal;
             letter-spacing: 0.1em;

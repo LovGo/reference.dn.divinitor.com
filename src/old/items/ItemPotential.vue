@@ -261,7 +261,7 @@ export default {
                 position: absolute;
                 font-size: 10px;
                 top: 4px;
-                right: 6px;
+                .right( 6px);
                 color: transparent;
                 transition: color ease-in 0.125s;
             }
@@ -343,7 +343,7 @@ export default {
                 position: absolute;
                 font-size: 10px;
                 top: 4px;
-                right: 6px;
+                .right( 6px);
                 color: transparent;
                 transition: color ease-in 0.125s;
             }
@@ -366,8 +366,8 @@ export default {
 
                 .skill-info {
                     flex: 1 0;
-                    margin-left: 8px;
-                    margin-right: 24px;
+                    .margin-left( 8px);
+                    .margin-right( 24px);
                     .skill-id {
                         font-size: 12px;
                         letter-spacing: 0.2em;
@@ -401,8 +401,8 @@ export default {
 
             .rate {
                 position: absolute;
-                text-align: right;
-                right: 0.4em;
+                .text-align(right);
+                .right( 0.4em);
                 top: 50%;
                 color: @dv-c-accent-1;
                 transition: color ease-in 0.125s;
@@ -415,8 +415,8 @@ export default {
                     color: @dv-c-idle;
                     font-size: 10px;
                     bottom: -4px;
-                    left: 0;
-                    right: 0;
+                    .left( 0);
+                    .right( 0);
                     text-align: center;
                     transition: color ease-in 0.125s;
                 }
