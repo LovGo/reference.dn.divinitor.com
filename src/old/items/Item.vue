@@ -61,7 +61,7 @@
                     <h2 class="head">
                         <span class="enhance" v-if="enhanceLevel > 0">+{{ enhanceLevel }}</span>
                         <ui-string 
-                            :mid="nameMessage.id" 
+                            :mid="nameMessage.id.toString()" 
                             :alt="nameMessage.message" 
                             :params="itemData.name._NameIDParam"
                             :inline="true" 
@@ -121,7 +121,7 @@
                     <div class="desc">
                         <div v-if="itemData.desc">    
                             <ui-string 
-                                :mid="itemData.desc._DescID" 
+                                :mid="itemData.desc._DescID.toString()" 
                                 :alt="itemData.desc.desc" 
                                 :params="itemData.desc._DescIDParam"
                                 format="html"
