@@ -105,11 +105,15 @@ export default Vue.extend({
 
 .title-info {
     .title-name {
-        letter-spacing: 0.01em;
+        letter-spacing: 0.05em;
+        font-size: 18px;
+        padding: 4px 8px;
+        margin: 4px 0;
     }
 
     .title-desc {
         font-style: italic;
+        margin: 4px 0;
     }
 }
 
