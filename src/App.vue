@@ -139,7 +139,7 @@ html {
     overflow-y: scroll;
     
     // April fools
-    direction: rtl;
+    // direction: rtl;
 }
 
 body {
@@ -177,6 +177,7 @@ body {
     transition: opacity ease-in 1s;
     padding: 20px 20px;
     .padding-right(40px);
+    padding-top: 30px;
 
     &[embed] {
         .locale-select {

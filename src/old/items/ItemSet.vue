@@ -149,7 +149,7 @@ import StatGrid from "@/old/game/StatGrid";
 
 Vue.component('stat-grid', StatGrid);
 
-import Loader from "@/old/util/Loader";
+import Loader from "@/components/util/Loader";
 Vue.component("load-indicator", Loader);
 
 import SmallErrorBox from "@/old/util/SmallErrorBox";

@@ -61,7 +61,7 @@ import Item from "@/old/api/item/item";
 
 Vue.component('item-icon', ItemIcon);
 
-import Loader from "@/old/util/Loader";
+import Loader from "@/components/util/Loader";
 Vue.component("load-indicator", Loader);
 
 export default {

@@ -117,7 +117,7 @@ Vue.component('item-icon', ItemIcon);
 Vue.component('item-icon-tooltip', ItemIconTooltip);
 Vue.component('item-card', ItemCard);
 
-import Loader from "@/old/util/Loader";
+import Loader from "@/components/util/Loader";
 Vue.component("load-indicator", Loader);
 
 import SmallErrorBox from "@/old/util/SmallErrorBox";

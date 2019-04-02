@@ -67,7 +67,7 @@ export default Vue.extend({
     name: "ui-string",
     props: {
         "mid": {
-            type: String as () => string,
+            type: [String as () => string, Number as () => number],
         },
         "params": {
             type: String as () => string,
