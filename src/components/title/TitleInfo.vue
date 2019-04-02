@@ -4,7 +4,16 @@
         Loading
     </template>
     <template v-else-if="loaded">
-        Success {{ loading.result }}
+        <div class="title-name" :style="titleStyle">
+            {{ title.name.message }}
+        </div>
+        <div class="title-desc" v-if="title.description.id">
+            {{ title.description.message }}
+        </div>
+        <stat-grid
+            v-if="title.states.length"
+            :statSet="title.states"
+        />
     </template>
     <template v-else>
         Error {{ loading.error }}
@@ -17,15 +26,29 @@ import Vue from 'vue';
 import { ILoading } from '@/models/util/ILoading';
 import * as Loading from '@/models/util/ILoading'; 
 
+import ITitle from '@/models/title/ITitle';
 import TitleProvider from '@/api/TitleProvider';
 
-import ITitle from '@/models/title/ITitle';
+import StatGrid from '@/components/general/StatGrid.vue';
 
 interface IData {
     loading: ILoading<ITitle>;
 }
 
+function hexToColor(hexy: string): string {
+    if (hexy.startsWith('0x')) {
+        hexy = hexy.substring(4);
+
+        return '#' + hexy;
+    }
+
+    return hexy;
+}
+
 export default Vue.extend({
+    components: {
+        StatGrid,
+    },
     props: {
         titleId: {
             type: Number as () => number,
@@ -45,6 +68,19 @@ export default Vue.extend({
     computed: {
         loaded(): boolean {
             return Loading.isSuccess(this.loading);
+        },
+        title(): ITitle|null {
+            return this.loading.result;
+        },
+        titleStyle(): string {
+            if (this.loaded) {
+                const title = this.loading.result!;
+                const fg = `color: ${hexToColor(title.foregroundColor)}`;
+                const bg = `text-shadow: 2px 2px 2px ${hexToColor(title.backgroundColor)}`;
+                return `${fg};${bg};`;
+            }
+
+            return '';
         }
     },
     mounted() {
@@ -68,7 +104,13 @@ export default Vue.extend({
 @import "./../../less/core.less";
 
 .title-info {
+    .title-name {
+        letter-spacing: 0.01em;
+    }
 
+    .title-desc {
+        font-style: italic;
+    }
 }
 
 </style>

@@ -1,3 +1,5 @@
+import ITypedMap from '../util/ITypedMap';
+
 export enum ItemRank {
     NORMAL,
     MAGIC,
@@ -81,6 +83,128 @@ export enum ItemState {
     PVP_DAMAGE = 105,
     PVP_DEFENSE = 106,
     ONE_HUNDRED_SEVEN = 107,
+}
+
+export interface IItemStateInfo {
+    abbv: string;
+    type: 'stat'|'percent'|'compound';
+    compound?: ItemState[];
+    minmax?: 'min'|'max';
+}
+
+export const StateInfo: { [key: number]: IItemStateInfo } = {
+    [ItemState.STRENGTH]: {
+        abbv: 'STR',
+        type: 'stat',
+    },
+    [ItemState.AGILITY]: {
+        abbv: 'AGI',
+        type: 'stat',
+    },
+    [ItemState.INTELLECT]: {
+        abbv: 'INT',
+        type: 'stat',
+    },
+    [ItemState.VITALITY]: {
+        abbv: 'VIT',
+        type: 'stat',
+    },
+    [ItemState.PHYSICAL_DAMAGE_MIN]: {
+        abbv: 'PDMG [MIN]',
+        type: 'stat',
+        minmax: 'min',
+    },
+    [ItemState.PHYSICAL_DAMAGE_MAX]: {
+        abbv: 'PDMG [MAX]',
+        type: 'stat',
+        minmax: 'max',
+    },
+    [ItemState.MAGICAL_DAMAGE_MIN]: {
+        abbv: 'MDMG [MIN]',
+        type: 'stat',
+        minmax: 'min',
+    },
+    [ItemState.MAGICAL_DAMAGE_MAX]: {
+        abbv: 'MDMG [MAX]',
+        type: 'stat',
+        minmax: 'max',
+    },
+    [ItemState.PHYSICAL_DEFENSE]: {
+        abbv: 'PDEF',
+        type: 'stat',
+    },
+    [ItemState.MAGICAL_DEFENSE]: {
+        abbv: 'MDEF',
+        type: 'stat',
+    },
+    [ItemState.PARALYZE]: {
+        abbv: 'PARA',
+        type: 'stat',
+    },
+    [ItemState.PARALYZE_RESIST]: {
+        abbv: 'PARARES',
+        type: 'stat',
+    },
+    [ItemState.CRITICAL]: {
+        abbv: 'CRIT',
+        type: 'stat',
+    },
+    [ItemState.CRITICAL_RESIST]: {
+        abbv: 'CRITRES',
+        type: 'stat',
+    },
+    [ItemState.STUN]: {
+        abbv: 'STUN',
+        type: 'stat',
+    },
+    [ItemState.STUN_RESIST]: {
+        abbv: 'STUNRES',
+        type: 'stat',
+    },
+    [ItemState.FIRE_ATTACK]: {
+        abbv: 'FIRE %',
+        type: 'percent',
+    },
+    [ItemState.ICE_ATTACK]: {
+        abbv: 'ICE %',
+        type: 'percent',
+    },
+    [ItemState.LIGHT_ATTACK]: {
+        abbv: 'LIGHT %',
+        type: 'percent',
+    },
+    [ItemState.DARK_ATTACK]: {
+        abbv: 'DARK %',
+        type: 'percent',
+    },
+    [ItemState.FIRE_DEFENSE]: {
+        abbv: 'FIRE DEF%',
+        type: 'percent',
+    },
+    [ItemState.ICE_DEFENSE]: {
+        abbv: 'ICE DEF%',
+        type: 'percent',
+    },
+    [ItemState.LIGHT_DEFENSE]: {
+        abbv: 'LIGHT DEF%',
+        type: 'percent',
+    },
+    [ItemState.DARK_DEFENSE]: {
+        abbv: 'DARK DEF%',
+        type: 'percent',
+    },
+    [ItemState.MOVEMENT_SPEED]: {
+        abbv: 'MOVE',
+        type: 'stat',
+    },
+    [ItemState.HP]: {
+        abbv: 'HP',
+        type: 'stat'
+    },
+    [ItemState.MANA]: {
+        abbv: 'MANA',
+        type: 'stat'
+    },
 }
 
 export enum WeaponType {
