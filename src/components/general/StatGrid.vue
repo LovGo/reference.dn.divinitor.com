@@ -8,9 +8,22 @@
             <th v-if="hasEnhance">Total</th>
         </thead>
 
-        <tr v-for="statKey in statList" :key="statKey.key">
-            <th>{{ statKey.stateInfo.abbv }}</th>
-            <td>{{ renderStat(statKey.stateInfo, statKey.base) }}</td>
+        <tr v-for="stat in listOfRangedStates" :key="stat.state">
+            <th> {{ stat.info.abbv }} </th>
+            <td> {{ renderStat(stat) }} </td>
+            <template v-if="hasEnhance">
+                <td> {{ renderStat(stat, 'e') }} </td>
+                <td> {{ renderStat(stat, 't') }} </td>
+            </template>
+        </tr>
+
+        <tr v-for="stat in listOfStatesWithoutDmg" :key="stat.state">
+            <th> {{ stat.info.abbv }} </th>
+            <td> {{ renderStat(stat) }} </td>
+            <template v-if="hasEnhance">
+                <td> {{ renderStat(stat, 'e') }} </td>
+                <td> {{ renderStat(stat, 't') }} </td>
+            </template>
         </tr>
     </table>
 </div>
@@ -25,16 +38,17 @@ interface IData {
 
 }
 
-interface IStatEntry {
-    key: string;
-    stateInfo: IItemStateInfo;
-    base: IItemState;
-    enhance?: IItemState;
-    total?: IItemState;
+interface IItemStateInfoPair {
+    state: ItemState;
+    info: IItemStateInfo;
+}
+
+interface IRangedStatInfo {
+    low: number;
+    high: number;
 }
 
 export default {
-    // props: ["statSet", "enhanceStatSet", "hideHeader"],
     props: {
         statSet: {
             type: Array as () => IItemState[],
@@ -61,61 +75,138 @@ export default {
             }
             return [];
         },
-        statList(): IStatEntry[] {
-            const info: ITypedMap<IItemStateInfo> = {};
-            for (let stat of this.deconStatSet) {
-                const stateInfoName = ItemState[stat.state];
-                const stateInfo = StateInfo[stat.state];
-                if (stateInfo) {
-                    info[stateInfoName] = stateInfo;
-                }
-            }
-
-            if (this.hasEnhance) {
-                for (let stat of this.deconEnhanceStatSet) {
-                    const stateInfoName = ItemState[stat.state];
-                    const stateInfo = StateInfo[stat.state];
-                    if (stateInfo) {
-                        info[stateInfoName] = stateInfo;
-                    }
-                }
-            }
-
-            const ret: IStatEntry[] = [];
-            for (let k in info) {
-                const v = info[k];
-                const base = this.deconStatSet.find((s) => ItemState[s.state] === k)!
-                const enhance = this.hasEnhance ? this.deconEnhanceStatSet.find((s) => ItemState[s.state] === k) : undefined;
-
-                ret.push({
-                    key: k,
-                    stateInfo: v,
-                    base: base,
-                    enhance: enhance,
-                });
-            }
-
-            return ret;
-        },
         hasEnhance(): boolean {
             return this.enhanceStatSet && this.enhanceStatSet.length > 0;
+        },
+        listOfStates(): IItemStateInfoPair[] {
+            let stats = this.deconStatSet.map((v) => v.state);
+            if (this.hasEnhance) {
+                stats = stats.concat(this.deconEnhanceStatSet.map((v) => v.state));
+            }
+
+            stats = stats.filter((v, i, a) => a.indexOf(v) === i);
+
+            return stats.map((s) => ({
+                state: s,
+                info: StateInfo[s],
+            }));
+        },
+        listOfStatesWithoutDmg(): IItemStateInfoPair[] {
+            return this.listOfStates.filter((v) => {
+                switch (v.state) {
+                    case ItemState.PHYSICAL_DAMAGE_MIN:
+                    case ItemState.PHYSICAL_DAMAGE_MAX:
+                    case ItemState.MAGICAL_DAMAGE_MIN:
+                    case ItemState.MAGICAL_DAMAGE_MAX:
+                    case ItemState.PHYSICAL_DAMAGE_MIN_PERCENT:
+                    case ItemState.PHYSICAL_DAMAGE_MAX_PERCENT:
+                    case ItemState.MAGICAL_DAMAGE_MIN_PERCENT:
+                    case ItemState.MAGICAL_DAMAGE_MAX_PERCENT:
+                        return false;
+                }
+
+                return true;
+            });
+        },
+        listOfRangedStates(): IItemStateInfoPair[] {
+            return this.listOfStates.map((v) => {
+                switch (v.state) {
+                    case ItemState.PHYSICAL_DAMAGE_MIN:
+                    case ItemState.PHYSICAL_DAMAGE_MAX:
+                        return ItemState.PHYSICAL_DAMAGE_MINMAX;
+
+                    case ItemState.MAGICAL_DAMAGE_MIN:
+                    case ItemState.MAGICAL_DAMAGE_MAX:
+                        return ItemState.MAGICAL_DAMAGE_MINMAX;
+
+                    case ItemState.PHYSICAL_DAMAGE_MIN_PERCENT:
+                    case ItemState.PHYSICAL_DAMAGE_MAX_PERCENT:
+                        return ItemState.PHYSICAL_DAMAGE_MINMAX_PERCENT;
+
+                    case ItemState.MAGICAL_DAMAGE_MIN_PERCENT:
+                    case ItemState.MAGICAL_DAMAGE_MAX_PERCENT:
+                        return ItemState.MAGICAL_DAMAGE_MINMAX_PERCENT;
+                }
+
+                return null;
+            }).filter((v) => v != null)
+            .filter((v, i, a) => a.indexOf(v) === i)
+            .reverse()
+            .map((v) => ({
+                state: v!,
+                info: StateInfo[v!],
+            }));
         }
     },
     methods: {
-        renderStat(info: IItemStateInfo, state?: IItemState): string {
-            if (state) {
-                if (info.type === 'stat') {
-                    return state.value.toLocaleString(undefined, {
-                        useGrouping: true,
-                        maximumFractionDigits: 0,
-                    });
+        renderStat(stateInfo: IItemStateInfoPair, type: 'b'|'e'|'t' = 'b'): string {
+            const info = stateInfo.info;
+            if (info.type === 'compound') {
+                const compound = info.compound!;
+                let parts: string[] = [];
+                for (let c of compound) {
+                    const state = this.getState(c, type);
+                    let value = '';
+                    if (state) {
+                        if (info.subtype === 'stat') {
+                            value = state.value.toLocaleString(undefined, {
+                                useGrouping: true,
+                                maximumFractionDigits: 0,
+                            });
+                        } else if (info.subtype === 'percent') {
+                            value = (state.value * 100).toLocaleString(undefined, {
+                                useGrouping: true,
+                                maximumFractionDigits: 2,
+                                minimumFractionDigits: 2,
+                            }) + '%';
+                        } else {
+                            value = state.value.toString();
+                        }
+
+                        parts.push(value);
+                    }
                 }
 
-                return state.value.toString();
+                // If the min and max values are the same, just merge them
+                parts = parts.filter((v, i, a) => a.indexOf(v) === i);
+
+                return parts.join(' - ');
             } else {
-                return '&#8210';
+                const state = this.getState(stateInfo.state, type);
+                if (state) {
+                    if (info.type === 'stat') {
+                        return state.value.toLocaleString(undefined, {
+                            useGrouping: true,
+                            maximumFractionDigits: 0,
+                        });
+                    } else if (info.type === 'percent') {
+                        return (state.value * 100).toLocaleString(undefined, {
+                            useGrouping: true,
+                            maximumFractionDigits: 2,
+                            minimumFractionDigits: 2,
+                        }) + '%';
+                    }
+
+                    return state.value.toString();
+                } else {
+                    return '—';
+                }
             }
-        }
+        },
+        getState(state: ItemState, type: 'b'|'e'|'t' = 'b'): IItemState|null {
+            if (type === 'b') {
+                return this.deconStatSet.find((v) => v.state === state) || null;
+            }
+            if (type === 'e' && this.hasEnhance) {
+                return this.deconEnhanceStatSet.find((v) => v.state === state) || null;
+            }
+            if (type === 't') {
+                // todo
+                return null;
+            }
+
+            return null;
+        },
     }
 }
 </script>

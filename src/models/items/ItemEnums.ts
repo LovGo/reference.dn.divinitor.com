@@ -89,7 +89,7 @@ export interface IItemStateInfo {
     abbv: string;
     type: 'stat'|'percent'|'compound';
     compound?: ItemState[];
-    minmax?: 'min'|'max';
+    subtype?: 'stat'|'percent';
 }
 
 export const StateInfo: { [key: number]: IItemStateInfo } = {
@@ -112,22 +112,18 @@ export const StateInfo: { [key: number]: IItemStateInfo } = {
     [ItemState.PHYSICAL_DAMAGE_MIN]: {
         abbv: 'PDMG [MIN]',
         type: 'stat',
-        minmax: 'min',
     },
     [ItemState.PHYSICAL_DAMAGE_MAX]: {
         abbv: 'PDMG [MAX]',
         type: 'stat',
-        minmax: 'max',
     },
     [ItemState.MAGICAL_DAMAGE_MIN]: {
         abbv: 'MDMG [MIN]',
         type: 'stat',
-        minmax: 'min',
     },
     [ItemState.MAGICAL_DAMAGE_MAX]: {
         abbv: 'MDMG [MAX]',
         type: 'stat',
-        minmax: 'max',
     },
     [ItemState.PHYSICAL_DEFENSE]: {
         abbv: 'PDEF',
@@ -199,12 +195,174 @@ export const StateInfo: { [key: number]: IItemStateInfo } = {
     },
     [ItemState.HP]: {
         abbv: 'HP',
-        type: 'stat'
+        type: 'stat',
     },
     [ItemState.MANA]: {
         abbv: 'MANA',
-        type: 'stat'
+        type: 'stat',
     },
+    [ItemState.MANA_RECOVERY]: {
+        abbv: 'MP REGEN',
+        type: 'stat',
+    },
+    [ItemState.FINAL_DAMAGE]: {
+        abbv: 'FD',
+        type: 'stat',
+    },
+    [ItemState.SAFE_ZONE_MOVEMENT_SPEED]: {
+        abbv: 'SAFEMOVE',
+        type: 'stat',
+    },
+    [ItemState.PHYSICAL_DAMAGE_MINMAX]: {
+        abbv: 'PDMG',
+        type: 'compound',
+        compound: [ItemState.PHYSICAL_DAMAGE_MIN, ItemState.PHYSICAL_DAMAGE_MAX],
+        subtype: 'stat',
+    },
+    [ItemState.MAGICAL_DAMAGE_MINMAX]: {
+        abbv: 'MDMG',
+        type: 'compound',
+        compound: [ItemState.MAGICAL_DAMAGE_MIN, ItemState.MAGICAL_DAMAGE_MAX],
+        subtype: 'stat',
+    },
+    [ItemState.STR_AGI_INT_VIT]: {
+        abbv: 'STR/AGI/INT/VIT',
+        type: 'compound',
+        compound: [ItemState.STRENGTH, ItemState.AGILITY, ItemState.INTELLECT, ItemState.VITALITY],
+        subtype: 'stat',
+    },
+    [ItemState.STRENGTH_PERCENT]: {
+        abbv: 'STR %',
+        type: 'percent',
+    },
+    [ItemState.AGILITY_PERCENT]: {
+        abbv: 'AGI %',
+        type: 'percent',
+    },
+    [ItemState.INTELLECT_PERCENT]: {
+        abbv: 'INT %',
+        type: 'percent',
+    },
+    [ItemState.VITALITY_PERCENT]: {
+        abbv: 'VIT %',
+        type: 'percent',
+    },
+    [ItemState.PHYSICAL_DAMAGE_MIN_PERCENT]: {
+        abbv: 'PDMG % [MIN]',
+        type: 'percent',
+    },
+    [ItemState.PHYSICAL_DAMAGE_MAX_PERCENT]: {
+        abbv: 'PDMG % [MAX]',
+        type: 'percent',
+    },
+    [ItemState.MAGICAL_DAMAGE_MIN_PERCENT]: {
+        abbv: 'MDMG % [MIN]',
+        type: 'percent',
+    },
+    [ItemState.MAGICAL_DAMAGE_MAX_PERCENT]: {
+        abbv: 'MDMG % [MAX]',
+        type: 'percent',
+    },
+    [ItemState.PHYSICAL_DEFENSE_PERCENT]: {
+        abbv: 'PDEF %',
+        type: 'percent'
+    },
+    [ItemState.MAGICAL_DEFENSE_PERCENT]: {
+        abbv: 'MDEF %',
+        type: 'percent',
+    },
+    [ItemState.PARALYZE_PERCENT]: {
+        abbv: 'PARA %',
+        type: 'percent',
+    },
+    [ItemState.PARALYZE_RESIST_PERCENT]: {
+        abbv: 'PARARES %',
+        type: 'percent',
+    },
+    [ItemState.CRITICAL_PERCENT]: {
+        abbv: 'CRIT %',
+        type: 'percent',
+    },
+    [ItemState.CRITICAL_RESIST_PERCENT]: {
+        abbv: 'CRITRES %',
+        type: 'percent',
+    },
+    [ItemState.STUN_PERCENT]: {
+        abbv: 'STUN %',
+        type: 'percent',
+    },
+    [ItemState.STUN_RESIST_PERCENT]: {
+        abbv: 'STUNRES %',
+        type: 'percent',
+    },
+    [ItemState.MOVEMENT_SPEED_PERCENT]: {
+        abbv: 'MOVE %',
+        type: 'percent',
+    },
+    [ItemState.HP_PERCENT]: {
+        abbv: 'HP %',
+        type: 'percent',
+    },
+    [ItemState.MP_PERCENT]: {
+        abbv: 'MP %',
+        type: 'percent',
+    },
+    [ItemState.MANA_RECOVERY_PERCENT]: {
+        abbv: 'MP REGEN %',
+        type: 'percent',
+    },
+    [ItemState.FINAL_DAMAGE_PERCENT]: {
+        abbv: 'FD %',
+        type: 'percent',
+    },
+    [ItemState.SAFE_ZONE_MOVEMENT_SPEED_PERCENT]: {
+        abbv: 'SAFEMOVE %',
+        type: 'percent',
+    },
+    [ItemState.STR_AGI_INT_VIT_PERCENT]: {
+        abbv: 'STR/AGI/INT/VIT %',
+        type: 'compound',
+        compound: [ItemState.STRENGTH_PERCENT, ItemState.AGILITY_PERCENT, ItemState.INTELLECT_PERCENT, ItemState.VITALITY_PERCENT],
+        subtype: 'percent',
+    },
+    [ItemState.FIRE_ICE_LIGHT_DARK_ATTACK]: {
+        abbv: 'ELE',
+        type: 'compound',
+        compound: [ItemState.FIRE_ATTACK, ItemState.ICE_ATTACK, ItemState.LIGHT_ATTACK, ItemState.FIRE_ATTACK],
+        subtype: 'percent',
+    },
+    [ItemState.WILL]: {
+        abbv: 'WILL',
+        type: 'stat',
+    },
+    [ItemState.PHYSICAL_DAMAGE_MINMAX_PERCENT]: {
+        abbv: 'PDMG %',
+        type: 'compound',
+        compound: [ItemState.PHYSICAL_DAMAGE_MIN_PERCENT, ItemState.PHYSICAL_DAMAGE_MAX_PERCENT],
+        subtype: 'percent',
+    },
+    [ItemState.MAGICAL_DAMAGE_MINMAX_PERCENT]: {
+        abbv: 'MDMG %',
+        type: 'compound',
+        compound: [ItemState.MAGICAL_DAMAGE_MIN_PERCENT, ItemState.MAGICAL_DAMAGE_MAX_PERCENT],
+        subtype: 'percent',
+    },
+    [ItemState.CRITICAL_DAMAGE]: {
+        abbv: 'CRITDMG',
+        type: 'stat',
+    },
+    [ItemState.CRITICAL_DAMAGE_PERCENT]: {
+        abbv: 'CRITDMG %',
+        type: 'stat',
+    },
+    [ItemState.PVP_DAMAGE]: {
+        abbv: 'PVP DMG',
+        type: 'stat',
+    },
+    [ItemState.PVP_DEFENSE]: {
+        abbv: 'PVP DEF',
+        type: 'stat'
+    }
 }
 
 export enum WeaponType {
