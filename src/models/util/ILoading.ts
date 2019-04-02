@@ -62,7 +62,3 @@ export function throwIfError<V>(loading: ILoading<V>): void {
         throw loading.error;
     }
 }
-
-export function isFinished<V>(loading: ILoading<V>): boolean {
-    return loading.finished;
-}
