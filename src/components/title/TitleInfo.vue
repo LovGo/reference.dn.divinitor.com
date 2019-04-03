@@ -44,9 +44,13 @@ interface IData {
 
 function hexToColor(hexy: string): string {
     if (hexy.startsWith('0x')) {
-        hexy = hexy.substring(4);
+        const colorNum = parseInt(hexy.substring(2), 16);
+        const alpha = (((colorNum >> 24) & 0xFF) / 255);
+        const r = ((colorNum >> 16) & 0xFF);
+        const g = ((colorNum >> 8) & 0xFF);
+        const b = (colorNum & 0xFF);
 
-        return '#' + hexy;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
     return hexy;
@@ -85,7 +89,7 @@ export default Vue.extend({
             if (this.loaded) {
                 const title = this.loading.result!;
                 const fg = `color: ${hexToColor(title.foregroundColor)}`;
-                const bg = `text-shadow: 2px 2px 2px ${hexToColor(title.backgroundColor)}`;
+                const bg = `text-shadow: 0px 0px 2px ${hexToColor(title.backgroundColor)}`;
                 return `${fg};${bg};`;
             }
 
@@ -100,8 +104,7 @@ export default Vue.extend({
             Loading.startLoading(this.loading);
             try {
                 const titleInfo = await TitleProvider.getTitle(this.titleId);
-                // Loading.finishedLoading(this.loading, titleInfo);
-                throw new Error("test");
+                Loading.finishedLoading(this.loading, titleInfo);
             } catch (error) {
                 Loading.failed(this.loading, error);
             }
