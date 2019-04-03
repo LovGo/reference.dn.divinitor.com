@@ -30,6 +30,7 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import IItemState,{ deconstruct } from '@/models/items/IItemState';
 import ITypedMap from '@/models/util/ITypedMap';
 import { ItemState, IItemStateInfo, StateInfo } from '@/models/items/ItemEnums';
@@ -48,7 +49,7 @@ interface IRangedStatInfo {
     high: number;
 }
 
-export default {
+export default Vue.extend({
     props: {
         statSet: {
             type: Array as () => IItemState[],
@@ -208,7 +209,7 @@ export default {
             return null;
         },
     }
-}
+});
 </script>
 
 <style lang="less" scoped>
