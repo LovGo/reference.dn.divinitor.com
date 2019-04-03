@@ -1,7 +1,7 @@
 <template>
 <div class="title-info">
     <template v-if="loading.loading">
-        Loading
+        <loader loadText="Title Info" />
     </template>
     <template v-else-if="loaded">
         <div class="title-name" :style="titleStyle">
@@ -16,7 +16,12 @@
         />
     </template>
     <template v-else>
-        Error {{ loading.error }}
+        <toast type="warn">
+            <template slot="header">
+                Oops
+            </template>
+            We were unable to load this title's data. Please try again later.
+        </toast>
     </template>
 </div>
 </template>
@@ -25,6 +30,8 @@
 import Vue from 'vue';
 import { ILoading } from '@/models/util/ILoading';
 import * as Loading from '@/models/util/ILoading'; 
+import Loader from '@/components/util/Loader.vue';
+import Toast from '@/components/util/Toast.vue';
 
 import ITitle from '@/models/title/ITitle';
 import TitleProvider from '@/api/TitleProvider';
@@ -48,6 +55,8 @@ function hexToColor(hexy: string): string {
 export default Vue.extend({
     components: {
         StatGrid,
+        Loader,
+        Toast,
     },
     props: {
         titleId: {
@@ -91,7 +100,8 @@ export default Vue.extend({
             Loading.startLoading(this.loading);
             try {
                 const titleInfo = await TitleProvider.getTitle(this.titleId);
-                Loading.finishedLoading(this.loading, titleInfo);
+                // Loading.finishedLoading(this.loading, titleInfo);
+                throw new Error("test");
             } catch (error) {
                 Loading.failed(this.loading, error);
             }
