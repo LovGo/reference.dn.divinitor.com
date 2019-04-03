@@ -72,6 +72,9 @@
                                             <span class="point" v-else-if="f.typeId == 32">
                                                 <point-tag pointId="32" :amount="f.value"></point-tag>
                                             </span>
+                                            <span class="point" v-else-if="f.typeId == 35">
+                                                <point-tag pointId="35" :amount="f.value"></point-tag>
+                                            </span>
                                             <span class="point" v-else-if="f.type == 'CRYSTAL_POINT'">
                                                 <point-tag pointId="30" :amount="f.value"></point-tag>
                                             </span>

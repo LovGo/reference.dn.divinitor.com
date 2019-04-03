@@ -1,5 +1,5 @@
 import IUiStringMessage from '../uistring/IUiStringMessage';
-import IItemState from './IItemState';
+import IItemState from '../items/IItemState';
 
 export default interface ITitle {
     id: number;
