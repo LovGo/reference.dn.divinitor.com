@@ -176,9 +176,8 @@
                     
                     <div class="extra-data">
                         <div class="color" 
-                            v-if="itemType == 'HAIRDYE' || itemType == 'SKINDYE' || itemType == 'CONTACT_LENS' || itemType == 'TWO_TONE_HAIRDYE'">
-                            colorId: {{ itemData.type.color }}
-
+                            v-if="itemType == 'HAIRDYE' || itemType == 'CONTACT_LENS' || itemType == 'TWO_TONE_HAIRDYE'">
+                            <item-custom-color :colorCode="itemData.type.color" />
                         </div>
                         <div class=""
                             v-if="itemType == 'SKILL_RESET_SCROLL' || itemType == 'UNLIMITED_RESET_SCROLL'">
@@ -424,6 +423,7 @@ import { ApiHttpClient } from "@/globals";
 import SkillStubLink from "@/components/skill/SkillStubLink.vue";
 import UiString from "@/components/uistring/UiString.vue";
 import TitleInfo from "@/components/title/TitleInfo.vue";
+import ItemCustomColor from "@/components/item/ItemCustomColor.vue";
 
 Vue.component('item-icon', ItemIcon);
 Vue.component('point-tag', Points);
@@ -449,6 +449,7 @@ export default {
     components: {
         SkillStubLink,
         CopyLink,
+        ItemCustomColor,
         UiString,
         TitleInfo,
     },
