@@ -21,7 +21,8 @@ function statIncreasePercent(statName: string, mod: number = 0): IStateBlow {
             if (value) {
                 const split = value.value.split(";");
                 let amount = Number(split[0]);
-                let appliesTo = split[1] || null;
+                let appliesTo = split.length > 0 ? split[1] : null;
+                console.log(amount, appliesTo);
                 if (!isNaN(amount)) {
                     amount += mod;
                     let incr = "increased";
@@ -52,6 +53,7 @@ function statIncreasePercent(statName: string, mod: number = 0): IStateBlow {
                 }
             }
 
+            console.log('No value for ' + statName);
             return null;
         },
     };
@@ -119,6 +121,22 @@ export const Blows: ITypedMap<IStateBlow> = {
         }
     },
     4: statIncreasePercent("Physical defense"),
+    12: {
+        name: "HP over time",
+        describe(effect, value) {
+            if (value) {
+                let amount = Number(value.value);
+                if (!isNaN(amount)) {
+                    return {
+                        text: `${amount < 0 ? "Drains" : "Restores"} ${filters.percent((amount < 0 ? -1 : 1) * amount, 1)}% HP over time`,
+                        appendDuration: true,
+                    };
+                }
+            }
+
+            return null;
+        }
+    },
     14: {
         name: "Mana",
         describe(effect, value) {
@@ -140,7 +158,8 @@ export const Blows: ITypedMap<IStateBlow> = {
         name: "HP Adjustment",
         describe(effect, value) {
             if (value) {
-                let amount = Number(value.value);
+                const v = value.value.split(";");
+                let amount = Number(v[0]);
                 if (!isNaN(amount)) {
                     return {
                         text: `${amount < 0 ? "Depletes" : "Heals"} ${filters.percent((amount < 0 ? -1 : 1) * amount, 1)}% HP`,
@@ -177,6 +196,24 @@ export const Blows: ITypedMap<IStateBlow> = {
 
     34: statIncreasePercent("Light attack"),
 
+    43: {
+        name: "Electrocution",
+        describe(effect, value) {
+            if (value) {
+                let v = value.value;
+                let split = v.split(";");
+                let interval = Number(split[0]) + 1;
+                let damage = Number(split[2]);
+
+                return {
+                    text: `Electrocuted every ${interval}s`,
+                    appendDuration: true,
+                };
+            }
+
+            return null;
+        }
+    },
     44: {
         name: "Dark Burn",
         describe(effect, value) {
@@ -275,8 +312,11 @@ export const Blows: ITypedMap<IStateBlow> = {
     78: {
         name: "Silenced",
         describe(effect, value) {
-            return null;
-        }
+            return {
+                text: "Unable to use skills",
+                appendDuration: true,
+            };
+        },
     },
     83: {
         name: "Buff wipe",
@@ -285,6 +325,13 @@ export const Blows: ITypedMap<IStateBlow> = {
         }
     },
 
+    86: {
+        name: "Lovesick",
+        describe: (e, v) => ({
+            text: "Lovesick",
+            appendDuration: true,
+        }),
+    },
     87: statIncreasePercent("STR"),
     88: statIncreasePercent("AGI"),
     89: statIncreasePercent("INT"),
@@ -580,6 +627,21 @@ export const Blows: ITypedMap<IStateBlow> = {
     //     name: "Clear status effect from skill",
     // },
 
+    215: {
+        name: "Command summon use skill",
+        async describe(effect, value) {
+            let skill = value && Number(value.value) || 0;
+            let skillName = '';
+            if (skill) {
+                skillName = (await SkillProvider.getSkill(skill)).name.message;
+            }
+
+            return {
+                text: `Command summon to use skill '${skillName}' (${skill})`,
+            }
+        },
+    },
+
     218: {
         name: "Binding",
         describe(effect, value) {
@@ -600,6 +662,22 @@ export const Blows: ITypedMap<IStateBlow> = {
 
             return null;
         },
+    },
+
+    224: {
+        name: "Cannot perform action",
+        describe: (effect, value) => ({
+            text: `Unable to perform action(s) ${value && value.value.split(";").join(", ")}`,
+            appendDuration: true,
+        }),
+    },
+
+    225: {
+        name: "Confusion",
+        describe: (effect, value) => ({
+            text: `Controls will be reversed` + ((value && value.value) ? ` every ${value.value}s` : ''),
+            appendDuration: true,
+        }),
     },
 
     232: {
@@ -640,6 +718,11 @@ export const Blows: ITypedMap<IStateBlow> = {
 
             return null;
         },
+    },
+
+    241: {
+        name: "Screen flash",
+        describe: () => ({ text: "Screen flash", appendDuration: true }),
     },
 
     251: statIncreasePercent("Critical rate"),
@@ -740,6 +823,33 @@ export const Blows: ITypedMap<IStateBlow> = {
         }
     },
 
+    356: {
+        name: "Skill cooldown reduction on skill hit",
+        async describe(effect, value) {
+            if (value) {
+                let params = value.value;
+                let split = params.split(";");
+                let recoveredSkills = split[0].split(",").map((v) => Number(v));
+                let recoverySkills = split[1].split(",").map((v) => Number(v));
+                let recoveryAmount = Number(split[2]);
+
+                let recoveredSkillNames = (await Promise.all(recoveredSkills
+                    .map(async (v) => await SkillProvider.getSkill(v))
+                    .map(async (v) => (await v).name.message)));
+                
+                let recoverySkillNames = (await Promise.all(recoverySkills
+                    .map(async (v) => await SkillProvider.getSkill(v))
+                    .map(async (v) => (await v).name.message)));
+
+                return {
+                    text: `Reduces the cooldown${recoveredSkillNames.length == 1 ? "" : "s"} of ${recoveredSkillNames.join("/")} by ${filters.milliseconds(recoveryAmount)}s when ${recoverySkillNames.join("/")} hit${recoverySkillNames.length == 1 ? "s" : ""}`,
+                };
+            }
+
+            return null;
+        }
+    },
+
     372: {
         name: "Increase stat by percent of another stat",
         describe(effect, value) {
@@ -792,31 +902,9 @@ export const Blows: ITypedMap<IStateBlow> = {
         }
     },
 
-    356: {
-        name: "Skill cooldown reduction on skill hit",
-        async describe(effect, value) {
-            if (value) {
-                let params = value.value;
-                let split = params.split(";");
-                let recoveredSkills = split[0].split(",").map((v) => Number(v));
-                let recoverySkills = split[1].split(",").map((v) => Number(v));
-                let recoveryAmount = Number(split[2]);
-
-                let recoveredSkillNames = (await Promise.all(recoveredSkills
-                    .map(async (v) => await SkillProvider.getSkill(v))
-                    .map(async (v) => (await v).name.message)));
-                
-                let recoverySkillNames = (await Promise.all(recoverySkills
-                    .map(async (v) => await SkillProvider.getSkill(v))
-                    .map(async (v) => (await v).name.message)));
-
-                return {
-                    text: `Reduces the cooldown${recoveredSkillNames.length == 1 ? "" : "s"} of ${recoveredSkillNames.join("/")} by ${filters.milliseconds(recoveryAmount)}s when ${recoverySkillNames.join("/")} hit${recoverySkillNames.length == 1 ? "s" : ""}`,
-                };
-            }
-
-            return null;
-        }
+    392: {
+        name: "Action speed slow",
+        describe: (effect, value) => ({ text: "Your actions will be slowed", appendDuration: true }),
     },
 
     404: statIncreasePercent("Critical damage"),

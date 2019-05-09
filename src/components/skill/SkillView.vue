@@ -194,17 +194,53 @@
                 </div>
                 <div class="effect-pane" v-if="skillData.effects.length > 0">
                     <h4 class="pane-header">Applied effects</h4>
+                    <div class="effect-options options">
+                        <div class="checkbox">
+                            <input id="show-all" type="checkbox" v-model="forceShowAllEffects" />
+                            <label for="show-all">Display all</label>
+                        </div>
+                    </div>
                     <div class="effect" v-for="effect of skillData.effects" :key="effect.index">
-                        <skill-effect :effect="effect" :value="effectValuesFor(effect.index, activeSkillRank)" />
+                        <skill-effect :effect="effect" :value="effectValuesFor(effect.index, activeSkillRank)" :forceShow="forceShowAllEffects" />
                     </div>
                 </div>
             </div>
             <div class="rank-view">
                 <div class="processor-pane">
+                    <h4 class="pane-header">Usage Constraints</h4>
+                    <skill-usable
+                        :canUseParams="activeRankData.canUseParams"
+                        :usableCheckers="skillData.usableCheckers"/>
+                </div>
+            </div>
+            <div class="rank-view">
+                <div class="processor-pane">
+                    <div>Processors</div>
+                    <div v-for="(p, i) in skillData.processors" :key="i">
+                        {{ p }}
+                    </div>
+                </div>
+                <div class="processor-pane">
+                    <div>ProcessParams</div>
                     <div v-for="(p, i) in activeRankData.processParams" :key="i">
                         {{ p }}
                     </div>
                 </div>
+                <div class="processor-pane">
+                    <div>UsableCheckers</div>
+                    <div v-for="(p, i) in skillData.usableCheckers" :key="i">
+                        {{ p }}
+                    </div>
+                </div>
+                <div class="processor-pane">
+                    <div>CanUseParams</div>
+                    <div v-for="(p, i) in activeRankData.canUseParams" :key="i">
+                        {{ p }}
+                    </div>
+                </div>
+            </div>
+            <div class="state-effect-visual" v-if="activeRankData.stateEffectIds.length || activeRankData.stateEffectOtherIds.length">
+                SEIDs {{ activeRankData.stateEffectIds.concat(activeRankData.stateEffectOtherIds).join(", ") }}
             </div>
             </template>
         </div>
@@ -229,6 +265,7 @@ import CopyLink from "@/components/util/CopyLink.vue";
 import SkillEffect from "@/components/skill/SkillEffect.vue";
 import BigErrorBox from "@/components/util/BigErrorBox.vue";
 import SkillStubLink from "@/components/skill/SkillStubLink.vue";
+import SkillUsable from "@/components/skill/SkillUsable.vue";
 
 import LoadingErrorable from "@/models/util/LoadingErrorable";
 import ISkill from '@/models/skills/ISkill';
@@ -248,6 +285,7 @@ interface IData {
     skillLevelPvPDataLoader: LoadingErrorable<ISkillLevel[], any>;
     pvp: boolean;
     activeSkillRank: number;
+    forceShowAllEffects: boolean;
 }
 
 export default Vue.extend({
@@ -259,6 +297,7 @@ export default Vue.extend({
         UiString,
         SkillEffect,
         SkillStubLink,
+        SkillUsable,
     },
     props: {
         "skillSlug": {
@@ -273,6 +312,7 @@ export default Vue.extend({
             skillLevelPvPDataLoader: new LoadingErrorable(),
             pvp: false,
             activeSkillRank: 0,
+            forceShowAllEffects: false,
         };
     },
     watch: {
@@ -694,6 +734,14 @@ export default Vue.extend({
                         .padding-left(10px);
                         margin-top: 0;
                     }
+
+                    .effect-options {
+                        .margin-left(8px);
+                    }
+                }
+
+                .processor-pane {
+                    .margin-right(12px);
                 }
             }
         }

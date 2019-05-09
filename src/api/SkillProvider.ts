@@ -21,6 +21,8 @@ import { ISkillLevelResponse } from '@/models/skills/raw/ISkillLevelResponse';
 export interface ISkillProvider {
     getSkill(id: number, region?: string): Promise<ISkill>;
 
+    searchSkillsByName(name: string, region?: string): Promise<ISkill[]>;
+
     skillSlug(skill: ISkillStub): string;
 
     getSkillLevels(skillId: number, pvp?: boolean, region?: string): Promise<ISkillLevel[]>;
@@ -76,6 +78,43 @@ class SkillProvider {
 
             return ret;
         });
+    }
+
+    public async searchSkillsByName(name: string, region?: string): Promise<ISkill[]> {
+        region = this._ensureRegion(region);
+
+        const resp = await ApiHttpClient.get<ISkill[]>(`/server/${region}/skills/search`, {
+            params: {
+                name,
+            },
+        });
+
+        const d = resp.data.map((sk) => {
+            const retBag = sk as any;
+            const ret = {...sk};
+            
+            // Some fixing is required
+            ret.skillIcon = this._icon(retBag.skillIconIndex);
+            ret.buffIcon = this._buffIcon(retBag.buffIconIndex);
+            ret.debuffIcon = this._buffIcon(retBag.debuffIconIndex);
+            ret.elementStr = ElementalType[ret.element];
+            ret.skillTypeStr = SkillType[ret.skillType];
+            for (let effect of ret.effects) {
+                effect.effectApplyTypeStr = SkillEffectApplyType[effect.effectApplyType];
+            }
+
+            if (ret.requiredJob) {
+                let jobBag = ret.requiredJob as any;
+                ret.requiredJob.icon = JobProvider.getIconInfo(jobBag.iconIndex);
+            }
+
+            ret.durationTypeStr = SkillDurationType[ret.durationType];
+            ret.targetTypeStr = SkillTargetType[ret.targetType];
+
+            return ret;
+        });
+
+        return d;
     }
 
     skillSlug(skill: ISkillStub): string {

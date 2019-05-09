@@ -56,6 +56,7 @@
             <div class="detail">Now loading</div>
         </div>
     </div>
+    <div id="tooltip-host"></div>
 </div>
 </template>
 
