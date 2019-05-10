@@ -247,10 +247,13 @@ export const Blows: ITypedMap<IStateBlow> = {
                 let v = value.value;
                 let split = v.split(";");
                 let chance = Number(split[0]) * 100;
+                let damagePercent = Number(split[1]);
                 let damage = Number(split[2]);
 
+                const damageStr = (isNaN(damagePercent) || damagePercent == 0) ? filters.thousands(damage) : `${filters.percent(damagePercent)}%`;
+
                 return {
-                    text: `${chance}% to afflict ${filters.thousands(damage)} dark damage every 2s`,
+                    text: `${chance}% to afflict ${damageStr} dark damage every 2s`,
                     appendDuration: true,
                 };
             }
