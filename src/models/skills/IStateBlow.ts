@@ -22,7 +22,6 @@ function statIncreasePercent(statName: string, mod: number = 0): IStateBlow {
                 const split = value.value.split(";");
                 let amount = Number(split[0]);
                 let appliesTo = split.length > 0 ? split[1] : null;
-                console.log(amount, appliesTo);
                 if (!isNaN(amount)) {
                     amount += mod;
                     let incr = "increased";
@@ -53,7 +52,6 @@ function statIncreasePercent(statName: string, mod: number = 0): IStateBlow {
                 }
             }
 
-            console.log('No value for ' + statName);
             return null;
         },
     };
@@ -817,6 +815,26 @@ export const Blows: ITypedMap<IStateBlow> = {
 
                 return {
                     text: `Every ${filters.milliseconds(interval)}s, gain 1x ${bubbleName}`,
+                }
+            }
+            return null;
+        }
+    },
+    350: {
+        name: "Passive bubble consumption",
+        async describe(effect, value) {
+            if (value) {
+                let params = value.value;
+                let split = params.split(";");
+
+                let interval = Number(split[0]);
+                let bubbleId = Number(split[1]);
+
+                // todo load bubble info
+                let bubbleName = `Bubble ${bubbleId}`;
+
+                return {
+                    text: `Every ${filters.milliseconds(interval)}s, consume 1x ${bubbleName}`,
                 }
             }
             return null;
