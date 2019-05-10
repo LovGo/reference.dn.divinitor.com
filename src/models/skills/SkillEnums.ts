@@ -85,6 +85,9 @@ export enum SkillProcessor {
      * Params: FromWeaponID, ToWeaponID
      */
     CHANGE_PROJECTILE,
+    /**
+     * Params: Argument
+     */
     DIVIDED_STATE_EFFECT_ARG,
     IMPACT_BLOW,
     /**

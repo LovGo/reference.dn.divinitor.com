@@ -191,6 +191,19 @@
                         </div>
                     </div>
                     <ui-string :message-data="activeRankData.skillDesc" :params="activeRankData.skillDescParam" :format="'html'" />
+                    
+                    <div class="entry" v-if="activeRankData.pdmgBoardDamage > 0">
+                        <div class="key">Internal PDMG: </div>
+                        <div class="value">
+                            {{ (activeRankData.pdmgBoardDamage + 1) | statPercent }}
+                        </div>
+                    </div>
+                    <div class="entry" v-if="activeRankData.mdmgBoardDamage > 0">
+                        <div class="key">Internal MDMG: </div>
+                        <div class="value">
+                            {{ (activeRankData.mdmgBoardDamage + 1) | statPercent }}
+                        </div>
+                    </div>
                 </div>
                 <div class="effect-pane" v-if="skillData.effects.length > 0">
                     <h4 class="pane-header">Applied effects</h4>
@@ -201,7 +214,11 @@
                         </div>
                     </div>
                     <div class="effect" v-for="effect of skillData.effects" :key="effect.index">
-                        <skill-effect :effect="effect" :value="effectValuesFor(effect.index, activeSkillRank)" :forceShow="forceShowAllEffects" />
+                        <skill-effect
+                            :effect="effect"
+                            :value="effectValuesFor(effect.index, activeSkillRank)"
+                            :activeRankData="activeRankData"
+                            :forceShow="forceShowAllEffects" />
                     </div>
                 </div>
             </div>
@@ -212,8 +229,14 @@
                         :canUseParams="activeRankData.canUseParams"
                         :usableCheckers="skillData.usableCheckers"/>
                 </div>
+                <div class="processor-pane">
+                    <h4 class="pane-header">Skill Processors</h4>
+                    <skill-execution
+                        :processors="skillData.processors"
+                        :processParams="activeRankData.processParams"/>
+                </div>
             </div>
-            <div class="rank-view">
+            <!-- <div class="rank-view">
                 <div class="processor-pane">
                     <div>Processors</div>
                     <div v-for="(p, i) in skillData.processors" :key="i">
@@ -238,7 +261,7 @@
                         {{ p }}
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="state-effect-visual" v-if="activeRankData.stateEffectIds.length || activeRankData.stateEffectOtherIds.length">
                 SEIDs {{ activeRankData.stateEffectIds.concat(activeRankData.stateEffectOtherIds).join(", ") }}
             </div>
@@ -266,6 +289,7 @@ import SkillEffect from "@/components/skill/SkillEffect.vue";
 import BigErrorBox from "@/components/util/BigErrorBox.vue";
 import SkillStubLink from "@/components/skill/SkillStubLink.vue";
 import SkillUsable from "@/components/skill/SkillUsable.vue";
+import SkillExecution from "@/components/skill/SkillExecution.vue";
 
 import LoadingErrorable from "@/models/util/LoadingErrorable";
 import ISkill from '@/models/skills/ISkill';
@@ -298,6 +322,7 @@ export default Vue.extend({
         SkillEffect,
         SkillStubLink,
         SkillUsable,
+        SkillExecution,
     },
     props: {
         "skillSlug": {

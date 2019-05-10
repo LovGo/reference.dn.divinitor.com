@@ -33,7 +33,7 @@ function statIncreasePercent(statName: string, mod: number = 0): IStateBlow {
                     if (appliesTo) {
                         const applySplit = appliesTo.split(",");
                         const promises = (applySplit.map((v) => Number(v))
-                            .filter((v) => !isNaN(v) && v != 1)
+                            .filter((v) => !isNaN(v) && v > 1)
                             .map(async (v) => await SkillProvider.getSkill(v)));
                         const skills = await Promise.all(promises);
                         if (skills.length > 0) {
@@ -76,12 +76,16 @@ function statIncrease(statName: string, mod: number = 0): IStateBlow {
                     if (appliesTo) {
                         const applySplit = appliesTo.split(",");
                         const promises = (applySplit.map((v) => Number(v))
-                            .filter((v) => !isNaN(v))
+                            .filter((v) => !isNaN(v) && v > 1)
                             .map(async (v) => await SkillProvider.getSkill(v)));
                         const skills = await Promise.all(promises);
-                        appliesTo = "during " + skills
-                            .map((v) => v.name.message)
-                            .join(", ");
+                        if (skills.length > 0) {
+                            appliesTo = "during " + skills
+                                .map((v) => v.name.message)
+                                .join(", ");
+                        } else {
+                            appliesTo = null;
+                        }
                     }
 
                     return {
@@ -119,6 +123,11 @@ export const Blows: ITypedMap<IStateBlow> = {
         }
     },
     4: statIncreasePercent("Physical defense"),
+    5: statIncrease("STR"),
+    6: statIncrease("AGI"),
+    7: statIncrease("INT"),
+    8: statIncrease("VIT"),
+    9: statIncrease("HP"),
     12: {
         name: "HP over time",
         describe(effect, value) {
@@ -170,6 +179,8 @@ export const Blows: ITypedMap<IStateBlow> = {
         }
     },
 
+    21: statIncrease("Critical"),
+
     25: statIncreasePercent("Animation speed"),
 
     29: {
@@ -194,17 +205,34 @@ export const Blows: ITypedMap<IStateBlow> = {
 
     34: statIncreasePercent("Light attack"),
 
+    41: {
+        name: "Ice Stack",
+        describe(effect, value) {
+            if (value) {
+                const split = value.value.split(";");
+                const rate = Number(split[0]);
+
+                return {
+                    text: `${filters.percent(rate)}% chance to freeze`,
+                    appendDuration: true,
+                };
+            }
+
+            return null;
+        },
+    },
+
     43: {
         name: "Electrocution",
         describe(effect, value) {
             if (value) {
                 let v = value.value;
                 let split = v.split(";");
-                let interval = Number(split[0]) + 1;
+                let chance = Number(split[0]) * 100;
                 let damage = Number(split[2]);
 
                 return {
-                    text: `Electrocuted every ${interval}s`,
+                    text: `${chance}% chance to electrocute`,
                     appendDuration: true,
                 };
             }
@@ -218,11 +246,11 @@ export const Blows: ITypedMap<IStateBlow> = {
             if (value) {
                 let v = value.value;
                 let split = v.split(";");
-                let interval = Number(split[0]) + 1;
+                let chance = Number(split[0]) * 100;
                 let damage = Number(split[2]);
 
                 return {
-                    text: `Deal ${filters.thousands(damage)} dark damage every ${interval}s`,
+                    text: `${chance}% to afflict ${filters.thousands(damage)} dark damage every 2s`,
                     appendDuration: true,
                 };
             }
@@ -444,6 +472,12 @@ export const Blows: ITypedMap<IStateBlow> = {
 
     126: statIncreasePercent("Critical Resist"),
 
+    129: { name: "Use alternative action names", describe: () => ({
+            text: "Apply action name changer from skill processor",
+            appendDuration: true,
+        }),
+    },
+
     132: {
         name: "Generate Threat",
         describe(effect, value) {
@@ -541,6 +575,38 @@ export const Blows: ITypedMap<IStateBlow> = {
         }
     },
 
+    154: {
+        name: "Grant immunity to skill",
+        async describe(effect, value) {
+            if (value) {
+                const split = value.value.split(";");
+                const idCount = split.length - 1;
+                if (idCount > 0) {
+                    const skillIds = split.slice(0, idCount)
+                        .map((v) => Number(v))
+                        .filter((v) => !isNaN(v) && v > 1);
+                    const onHitType = split[idCount];
+
+                    let freeSkillNames = (await Promise.all(skillIds
+                        .filter((v) => v > 0)
+                        .map(async (v) => await SkillProvider.getSkill(v))
+                        .map(async (v) => {
+                            const vv = await v;
+                            return vv.name.message + ` (${vv.id})`;
+                        })
+                        .filter((v, i, s) => s.indexOf(v) == i)));
+
+                    return {
+                        text: `Grants immunity to ${freeSkillNames.join(", ")} using ${onHitType} processor`,
+                        appendDuration: true,
+                    };
+                }
+            }
+
+            return null;
+        },
+    },
+
     166: {
         name: "Increased damage against afflicted targets",
         describe(effect, value) {
@@ -564,6 +630,19 @@ export const Blows: ITypedMap<IStateBlow> = {
         }
     },
 
+    167: {
+        name: "Set summon skills' level",
+        describe(effect, value) {
+            if (value) {
+                return {
+                    text: `The summon's skills will be level ${value.value}`
+                }
+            }
+
+            return null;
+        },
+    },
+
     169: {
         name: "Increased damage when critting",
         describe(effect, value) {
@@ -582,6 +661,38 @@ export const Blows: ITypedMap<IStateBlow> = {
             }
             return null;
         }
+    },
+
+    171: {
+        name: "Adjust skill cooldown",
+        async describe(effect, value) {
+            if (value) {
+                let params = value.value;
+                let split = params.split("_");
+                let split2 = split[0].split(";");
+                let type = Number(split2[0]);
+                let ratio = Number(split2[1]);
+
+                let freeSkills = split.length > 1 ? (split[1].split(";")
+                    .map((v) => Number(v))) :
+                    [];
+
+                let freeSkillNames = (await Promise.all(freeSkills
+                    .filter((v) => v > 0)
+                    .map(async (v) => await SkillProvider.getSkill(v))
+                    .map(async (v) => (await v).name.message)))
+                    .filter((v, i, s) => s.indexOf(v) == i);
+
+
+                return {
+                    text: `${type ? 'Passive': 'Active'} skill cooldowns${freeSkillNames.length ? ' for ' + freeSkillNames.join(", ") : ''} are reduced by ${filters.percent(1 - ratio)}%`,
+                    appendDuration: true,
+                };
+
+            }
+
+            return null;
+        },
     },
 
     173: {
@@ -620,10 +731,36 @@ export const Blows: ITypedMap<IStateBlow> = {
             return null;
         }
     },
-    // TODO
-    // 211: {
-    //     name: "Clear status effect from skill",
-    // },
+
+    200: statIncrease("PDMG"),
+
+    202: statIncrease("MDMG"),
+
+    211: {
+        name: "Clear status effect",
+        async describe(effect, value) {
+            if (value) {
+                let values = value.value.split(";");
+                let freeSkills = values
+                    .map((v) => Number(v));
+
+                let freeSkillNames = (await Promise.all(freeSkills
+                    .filter((v) => v > 0)
+                    .map(async (v) => await SkillProvider.getSkill(v))
+                    .map(async (v) => {
+                        const vv = await v;
+                        return vv.name.message + ` (${vv.id})`;
+                    })
+                    .filter((v, i, s) => s.indexOf(v) == i)));
+                
+                return {
+                    text: `Remove effect(s) applied by ${freeSkillNames.join(", ")}`
+                };
+            }
+
+            return null;
+        }
+    },
 
     215: {
         name: "Command summon use skill",
@@ -717,6 +854,7 @@ export const Blows: ITypedMap<IStateBlow> = {
             return null;
         },
     },
+    234: statIncrease("CRIT"),
 
     241: {
         name: "Screen flash",
@@ -724,6 +862,58 @@ export const Blows: ITypedMap<IStateBlow> = {
     },
 
     251: statIncreasePercent("Critical rate"),
+
+    252: {
+        name: "Grant immunity",
+        async describe(effect, value) {
+            if (value) {
+                const split = value.value.split(";");
+                
+                const freeSkills = split
+                    .map((v) => Number(v))
+                    .filter((v) => !isNaN(v) && v > 1);
+
+                let freeSkillNames = (await Promise.all(freeSkills
+                    .filter((v) => v > 0)
+                    .map(async (v) => await SkillProvider.getSkill(v))
+                    .map(async (v) => {
+                        const vv = await v;
+                        return vv.name.message + ` (${vv.id})`;
+                    })
+                    .filter((v, i, s) => s.indexOf(v) == i)));
+                
+                return {
+                    text: `Grants immunity from effect(s) applied by ${freeSkillNames.join(", ")}`,
+                    appendDuration: true,
+                };
+            }
+
+            return null;
+        }
+    },
+
+    278: {
+        name: "Reverse execute damage",
+        describe(effect, value) {
+            if (value) {
+                let v = value.value;
+                let split = v.split(";");
+                let thresholdHpPercent = Number(split[0]);
+                let hpThresholdRatio = Number(split[1]);
+                let damageBoost = Number(split[2]);
+
+                return {
+                    text: `Upon striking an enemy under ${filters.percent(thresholdHpPercent)}% HP, gain ${filters.percent(damageBoost)}% damage per ${filters.percent(hpThresholdRatio)}% HP above ${filters.percent(thresholdHpPercent)}%`,
+                };
+            }
+
+            return null;
+        }
+    },
+
+    288: {
+        name: "Apply effect on successful hit of type"
+    },
 
     291: {
         name: "All active skill cooldown refund",
@@ -737,6 +927,10 @@ export const Blows: ITypedMap<IStateBlow> = {
 
             return null;
         }
+    },
+
+    297: {
+        name: "Apply state effect on successful hit from skill",
     },
 
     301: {
@@ -775,8 +969,28 @@ export const Blows: ITypedMap<IStateBlow> = {
 
     306: statIncreasePercent("Elemental resistance"),
 
+    310: statIncreasePercent("ATK"),
+
+    325: {
+        name: "Bleed",
+        describe(effect, value) {
+            if (value) {
+                const split = value.value.split(";");
+                const rate = Number(split[0]);
+                const coeff = Number(split[1]);
+
+                return {
+                    text: `${filters.percent(rate)}% chance to afflict target with ${filters.percent(coeff)}% ATK bleed`,
+                    appendDuration: true,
+                };
+            }
+
+            return null;
+        },
+    },
+
     345: {
-        name: "Ignore bubble consumption",
+        name: "Enhance Skills",
         async describe(effect, value) {
             if (value) {
                 let params = value.value;
@@ -785,13 +999,14 @@ export const Blows: ITypedMap<IStateBlow> = {
                 let freeSkills = split.map((v) => Number(v));
 
                 let freeSkillNames = (await Promise.all(freeSkills
+                    .filter((v) => v > 0)
                     .map(async (v) => await SkillProvider.getSkill(v))
                     .map(async (v) => (await v).name.message)))
                     .filter((v, i, s) => s.indexOf(v) == i);
 
 
                 return {
-                    text: `${freeSkillNames.join(", ")} ${freeSkillNames.length == 1 ? "does" : "do"} not require bubbles`,
+                    text: `Skills ${freeSkillNames.join(", ")} are enhanced`,
                     appendDuration: true,
                 };
             }
@@ -866,6 +1081,29 @@ export const Blows: ITypedMap<IStateBlow> = {
 
             return null;
         }
+    },
+
+    370: {
+        name: "Remove buff when bubble count drops to value",
+        async describe(effect, value) {
+            if (value) {
+                const split = value.value.split(";");
+                const bubbleId = Number(split[0]);
+                const count = Number(split[1]);
+                const skillId = Number(split[2]);
+
+                // todo load bubble info
+                let bubbleName = `Bubble ${bubbleId}`;
+                let skill = await SkillProvider.getSkill(skillId);
+
+                return {
+                    text: `Removes effects granted by skill ${skill.name.message} if ${bubbleName} drops to ${count}`,
+                    appendDuration: true,
+                };
+            }
+
+            return null;
+        },
     },
 
     372: {

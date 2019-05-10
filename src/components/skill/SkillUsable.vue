@@ -1,10 +1,13 @@
 <template>
-<div class="skill-usable">
-    <div class="usable-entry" v-for="(checker, i) in checkers"
+<ul class="skill-usable">
+    <li class="usable-entry" v-for="(checker, i) in checkers"
         :key="i">
-        {{ checker.desc }}
-    </div>
-</div>
+        {{ checker.desc }} <span class="raw">{{ checker.type }}: {{ checker.params }}</span>
+    </li>
+    <li class="usable-entry" v-if="checkers.length == 0">
+        No constraints
+    </li>
+</ul>
 </template>
 
 <script lang="ts">
@@ -67,10 +70,21 @@ export default Vue.extend({
             checkers: [],
         };
     },
+    watch: {
+        async usableCheckers() {
+            await this.evaluate();
+        },
+        async canUseParams() {
+            await this.evaluate();
+        },
+    },
     async mounted() {
-        this.checkers = await this.calcCheckers();
+        await this.evaluate();
     },
     methods: {
+        async evaluate() {
+            this.checkers = await this.calcCheckers();  
+        },
         async calcCheckers(): Promise<IChecker[]> {
             const ret: IChecker[] = [];
             let paramIdx = 0;
@@ -127,6 +141,7 @@ export default Vue.extend({
                 }
 
                 v.desc = resStr;
+                v.params = v.params.filter(p => p != null);
             };
 
             return ret;
@@ -139,7 +154,34 @@ export default Vue.extend({
 @import "./../../less/core.less";
 
 .skill-usable {
+    margin: 4px 0;
+    .padding-left(20px);
 
+    .usable-entry {
+        position: relative;
+        .raw {
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            color: transparent;
+            transition: color 0.125s ease-in;
+            white-space: nowrap;
+            padding: 4px 12px 6px 12px;
+            z-index: 100;
+
+            &::before {
+                content: "Raw: ";
+                text-transform: uppercase;
+                font-size: 12px;
+            }
+        }
+
+        &:hover .raw {
+            color: @dv-c-accent-2;
+            background: fade(@dv-c-background, 95%);
+        }
+    }
 }
 </style>
 
