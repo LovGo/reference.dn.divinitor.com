@@ -13,7 +13,7 @@
     <template v-if="showModal">
         <div class="ui-string-modal" 
             :show="delayShowModal" 
-            :loaded="altRegionMessages && altRegionMessages.length > 0">
+            :loaded="altRegionMessages && altRegionMessages.length > 0" ref="modal">
             <div class="modal-title">Other Translations</div>
             <div class="modal-mid">M:{{ id }}</div>
             <div class="loading" v-if="altRegionMessages.length == 0">
@@ -126,7 +126,7 @@ export default Vue.extend({
                 this.altRegionMessages = null;
                 this.fetchData();
             }
-        }
+        },
     },
     created() {
         this.fetchData();
@@ -178,7 +178,7 @@ export default Vue.extend({
             });
             this.altRegionMessages = await Promise.all(promises);
         },
-        onClick() {
+        async onClick() {
             if (this.preventRecursive) {
                 return;
             }
@@ -188,13 +188,31 @@ export default Vue.extend({
                 this.delayShowModal = true;
             });
             if (this.altRegionMessages == null) {
-                this.loadOtherRegionData();
+                await this.loadOtherRegionData();
             }
+                
+            Vue.nextTick().then(() => this.positionModal());
         },
         dismissModal() {
             this.showModal = false;
             this.delayShowModal = false;
         },
+        async positionModal() {
+            if (this.showModal) {
+                const element = this.$refs.modal as HTMLDivElement;
+                const bb = element.getBoundingClientRect();
+                // Check that the tooltip is not going past the bottom of the page
+                const delta = bb.bottom - document.documentElement.clientHeight;
+                console.log(delta);
+                if (delta > 0) {
+                    await this.$anime({
+                        targets: [element],
+                        translateY: [-delta, -delta - 50],
+                        elasticity: 0,
+                    }).finished;
+                }
+            }
+        }
     }
 });
 </script>
@@ -218,7 +236,7 @@ export default Vue.extend({
         background: fade(@dv-c-background, 95%);
         z-index: 100;
         min-width: 250px;
-        max-width: 50vw;
+        // max-width: 50vw;
         min-height: 50px;
         max-height: 10px;
         padding-bottom: 70px;
@@ -294,6 +312,15 @@ export default Vue.extend({
 
         .alt-list {
             white-space: pre-line;
+            display: inline-grid;
+            grid-auto-flow: column;
+            grid-template-rows: repeat(2, auto);
+            max-height: 75vh;
+
+            .alt-list-entry {
+                padding-right: 8px;
+                min-width: 200px;
+            }
         }
     }
 }
