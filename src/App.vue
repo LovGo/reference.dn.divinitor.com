@@ -133,6 +133,7 @@ html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100%;
+    // height: 100%;
 
     position: relative;
     margin: 0;
@@ -146,6 +147,7 @@ html {
 body {
     position: relative;
     min-height: 100vh;
+    // height: 100%;
     padding: 0;
     width: 900px;
     border-left: @dv-c-foreground solid 1px;
@@ -162,7 +164,7 @@ body {
     background-color: @dv-c-background;
     background-attachment: fixed;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 #app[embed] {
@@ -226,6 +228,8 @@ body {
 .site-header {
     display: block;
     margin: 14px 20px;
+    margin-top: 0;
+    padding-top: 14px;
     position: relative;
     user-select: none;
     h1 {
