@@ -198,7 +198,7 @@ class SkillProvider {
             const other = pvp ? resp.data.pve : resp.data.pvp;
             this._skillLevelCache[cacheKey] = ret;
             const otherCacheKey = this._levelCacheKey(skillId, !pvp, r);
-            this._skillLevelCache[otherCacheKey] = ret;
+            this._skillLevelCache[otherCacheKey] = other;
 
             return ret;
         });

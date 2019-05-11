@@ -86,7 +86,7 @@ export default Vue.extend({
             this.checkers = await this.calcCheckers();  
         },
         async calcCheckers(): Promise<IChecker[]> {
-            const ret: IChecker[] = [];
+            let ret: IChecker[] = [];
             let paramIdx = 0;
             for (let i = 0; i < this.usableCheckers.length; ++i) {
                 const checker = this.usableCheckers[i];
@@ -142,7 +142,11 @@ export default Vue.extend({
 
                 v.desc = resStr;
                 v.params = v.params.filter(p => p != null);
-            };
+            }
+
+            // Filter checkers that have all undefined params
+            ret = ret.filter((v) => v.params.length && 
+                v.params.reduce((prev, cur) => cur !== undefined ? cur : prev, undefined as any) != undefined);
 
             return ret;
         }
@@ -156,6 +160,7 @@ export default Vue.extend({
 .skill-usable {
     margin: 4px 0;
     .padding-left(20px);
+    .padding-right(20px);
 
     .usable-entry {
         position: relative;

@@ -237,35 +237,16 @@
                         :processParams="activeRankData.processParams"/>
                 </div>
             </div>
-            <!-- <div class="rank-view">
-                <div class="processor-pane">
-                    <div>Processors</div>
-                    <div v-for="(p, i) in skillData.processors" :key="i">
-                        {{ p }}
-                    </div>
-                </div>
-                <div class="processor-pane">
-                    <div>ProcessParams</div>
-                    <div v-for="(p, i) in activeRankData.processParams" :key="i">
-                        {{ p }}
-                    </div>
-                </div>
-                <div class="processor-pane">
-                    <div>UsableCheckers</div>
-                    <div v-for="(p, i) in skillData.usableCheckers" :key="i">
-                        {{ p }}
-                    </div>
-                </div>
-                <div class="processor-pane">
-                    <div>CanUseParams</div>
-                    <div v-for="(p, i) in activeRankData.canUseParams" :key="i">
-                        {{ p }}
-                    </div>
-                </div>
-            </div> -->
             <div class="state-effect-visual" v-if="activeRankData.stateEffectIds.length || activeRankData.stateEffectOtherIds.length">
                 SEIDs {{ activeRankData.stateEffectIds.concat(activeRankData.stateEffectOtherIds).join(", ") }}
             </div>
+            </template>
+            <template v-else>
+                <div class="warn toast">
+                    <div class="content">
+                        Skill not available in {{ pvp ? 'PvP' : 'PvE'}}
+                    </div>
+                </div>
             </template>
         </div>
     </div>
@@ -311,6 +292,7 @@ interface IData {
     pvp: boolean;
     activeSkillRank: number;
     forceShowAllEffects: boolean;
+    activeRankData: ISkillLevel|null;
 }
 
 export default Vue.extend({
@@ -339,6 +321,7 @@ export default Vue.extend({
             pvp: false,
             activeSkillRank: 0,
             forceShowAllEffects: false,
+            activeRankData: null,
         };
     },
     watch: {
@@ -349,21 +332,19 @@ export default Vue.extend({
             this.fetchData();
         },
         activeSkillRank() {
+            this.setCurrentSkillLevelData();
             this.updateQueryParams();
         },
         pvp() {
-            this.updateQueryParams();
+            this.setCurrentSkillLevelData();
+            this.$nextTick().then(() => this.updateQueryParams());
         },
     },
     computed: {
         skillData(): ISkill|null {
             return this.skillDataLoader.value || null;
         },
-        skillLevelDataLoader(): LoadingErrorable<ISkillLevel[], any> {
-            return this.pvp ? this.skillLevelPvPDataLoader : this.skillLevelPvPDataLoader;  
-        },
         skillLevelData(): ISkillLevel[] {
-            console.log('eval skillLevelData', this.pvp);
             return (this.pvp ? this.skillLevelPvPDataLoader.value : this.skillLevelPvEDataLoader.value) || [];
         },
         revSkillLevelData(): ISkillLevel[] {
@@ -385,10 +366,6 @@ export default Vue.extend({
             }
 
             return true;
-        },
-        activeRankData(): ISkillLevel|null {
-            console.log('eval activeRankData', this.pvp);
-            return this.skillLevelData.find((l) => l.level == this.activeSkillRank) || null;  
         },
         realMaxSkillLevel(): number {
             if (this.skillLevelData) {
@@ -514,6 +491,7 @@ export default Vue.extend({
                     this.activeSkillRank = maxLvl;
                 }
 
+                this.setCurrentSkillLevelData();
                 this.updateQueryParams();
             } catch (e) {
                 this.skillDataLoader.failed(axiosErrorToString(e));
@@ -585,6 +563,12 @@ export default Vue.extend({
             });
         },
         
+        setCurrentSkillLevelData() {
+            const skillLevelData = (this.pvp ? this.skillLevelPvPDataLoader.value : this.skillLevelPvEDataLoader.value) || [];
+            console.log(this.pvp, skillLevelData);
+            this.activeRankData = skillLevelData.find((l) => l.level == this.activeSkillRank) || null;
+        },
+
         down() {
             if (this.activeSkillRank > this.realMinSkillLevel) {
                 --this.activeSkillRank;
@@ -769,7 +753,7 @@ export default Vue.extend({
                 }
 
                 .processor-pane {
-                    .margin-right(12px);
+                    .margin-right(24px);
                 }
             }
         }

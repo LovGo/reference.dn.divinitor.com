@@ -156,7 +156,7 @@ export default Vue.extend({
 
     .exec-entry {
         position: relative;
-        max-width: 300px;
+        max-width: 500px;
         .raw {
             pointer-events: none;
             position: absolute;
