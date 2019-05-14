@@ -642,7 +642,7 @@ export default {
                 for (let k in a.materials) {
                     let av = a.materials[k];
                     let bv = b.materials[k];
-                    console.log(av.itemId, bv.itemId);
+                    // console.log(av.itemId, bv.itemId);
                     if (av.itemId != bv.itemId) {
                         return false;
                     }

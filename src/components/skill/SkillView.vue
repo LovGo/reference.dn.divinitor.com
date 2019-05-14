@@ -565,7 +565,7 @@ export default Vue.extend({
         
         setCurrentSkillLevelData() {
             const skillLevelData = (this.pvp ? this.skillLevelPvPDataLoader.value : this.skillLevelPvEDataLoader.value) || [];
-            console.log(this.pvp, skillLevelData);
+            // console.log(this.pvp, skillLevelData);
             this.activeRankData = skillLevelData.find((l) => l.level == this.activeSkillRank) || null;
         },
 

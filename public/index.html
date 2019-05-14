@@ -99,6 +99,11 @@
         
         window.appInsights=appInsights,appInsights.queue&&0===appInsights.queue.length&&appInsights.trackPageView();
     </script>
+
+    <!-- Static region server -->
+    <script type="text/javascript">
+        window.STATIC_REGION = <%= VUE_APP_STATIC_REGION %>;
+    </script>
   </head>
   <body>
     <noscript>
