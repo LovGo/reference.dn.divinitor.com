@@ -203,12 +203,13 @@ export default Vue.extend({
                 const bb = element.getBoundingClientRect();
                 // Check that the tooltip is not going past the bottom of the page
                 const delta = bb.bottom - document.documentElement.clientHeight;
-                console.log(delta);
+                // console.log(delta);
                 if (delta > 0) {
                     await this.$anime({
                         targets: [element],
                         translateY: [-delta, -delta - 50],
                         elasticity: 0,
+                        duration: 0,
                     }).finished;
                 }
             }
@@ -249,8 +250,23 @@ export default Vue.extend({
         overflow: hidden;
         opacity: 0.0;
         margin-bottom: 20px;
+        box-shadow: 5px 0 10px fade(black, 50%);
 
-        transition: max-height ease-in 0.25s, opacity ease-in 0.125s;
+        @supports ((-webkit-backdrop-filter: blur(5px)) or (backdrop-filter: blur(5px))) {
+            background: fade(@dv-c-background, 50%);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            border: none;
+            border-left: 4px solid @dv-c-foreground;
+
+            button {
+                border-width: 1px;
+                background: transparent;
+                color: @dv-c-foreground;
+            }
+        }
+
+        transition: opacity ease-in 0.125s;
 
         .dv-section {
             animation: expand-in 0.25s;
