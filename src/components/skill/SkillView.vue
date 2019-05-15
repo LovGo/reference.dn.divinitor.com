@@ -1,5 +1,6 @@
 <template>
-<div class="skill-view">
+<transition name="fade-fast" mode="out-in">
+<div class="skill-view" :key="skillId">
     <div class="loading" v-if="skillDataLoader.loading"> 
         <loader :load-text="`Loading skill ${this.skillId}`"/>
     </div>
@@ -46,111 +47,9 @@
             <template slot="ok"><i class="fa fa-check"></i> Link copied!</template>
         </copy-link>
 
-        <div class="page-section">
-            <div class="title">Basic Info</div>
-            <div class="two-col">
-                <table class="col">
-                    <thead>
-                        <th>Property</th>
-                        <th>Value</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>Skill Type</th>
-                            <td>
-                                <div v-if="skillData.skillType == SkillType.ACTIVE">
-                                    Active skill
-                                </div>
-                                <div v-else-if="skillData.skillType == SkillType.PASSIVE">
-                                    Passive skill
-                                </div>
-                                <div v-else-if="skillData.skillType == SkillType.AUTOMATIC_PASSIVE">
-                                    Auto-triggered passive
-                                </div>
-                                <div v-else-if="skillData.skillType == SkillType.EX_PASSIVE">
-                                    Skill enhancement
-                                </div>
-                                <div v-else-if="skillData.skillType == SkillType.AUTOMATIC_ACTIVATION">
-                                    Automatically used
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Apply Type</th>
-                            <td>
-                                <span v-if="skillData.durationTypeStr == 'INSTANT'">Regular</span>
-                                <span v-else-if="skillData.durationTypeStr == 'BUFF'">Buff</span>
-                                <span v-else-if="skillData.durationTypeStr == 'DEBUFF'">Debuff</span>
-                                <span v-else-if="skillData.durationTypeStr == 'TIMED_TOGGLE'">Timed toggle</span>
-                                <span v-else-if="skillData.durationTypeStr == 'ACTIVE_TOGGLE'">Active toggle</span>
-                                <span v-else-if="skillData.durationTypeStr == 'AURA'">Aura</span>
-                                <span v-else-if="skillData.durationTypeStr == 'ACTIVE_TOGGLE_PET'">Pet skill on/off</span>
-                                <span v-else-if="skillData.durationTypeStr == 'SUMMON_DESUMMON_PET'">Toggle pet</span>
-                                <span v-else-if="skillData.durationTypeStr == 'CHANGE_STANCE'">Stance change</span>
-                                <span v-else-if="skillData.durationTypeStr == 'UNIFIED_SKILL'">Unified skill</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Primary Target</th>
-                            <td>
-                                <span v-if="skillData.targetTypeStr == 'SELF'">Caster</span>
-                                <span v-else-if="skillData.targetTypeStr == 'ENEMY'">Enemy</span>
-                                <span v-else-if="skillData.targetTypeStr == 'ALLIED'">Friendly units</span>
-                                <span v-else-if="skillData.targetTypeStr == 'PARTY_MEMBERS'">Party players</span>
-                                <span v-else-if="skillData.targetTypeStr == 'ALL'">All</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Elemental Type</th>
-                            <td class="element">
-                                <div class="fire" v-if="skillData.elementStr == 'FIRE'"><i class="fa fa-fire"></i> Fire</div>
-                                <div class="ice" v-else-if="skillData.elementStr == 'WATER'"><i class="fa fa-snowflake-o"></i> Ice</div>
-                                <div class="light" v-else-if="skillData.elementStr == 'LIGHT'"><i class="fa fa-bolt"></i> Light</div>
-                                <div class="dark" v-else-if="skillData.elementStr == 'DARK'"><i class="fa fa-adjust"></i> Dark</div>
-                                <div class="nonelemental" v-else><i class="fa fa-no-entry"></i> Non-elemental</div>
-                            </td>
-                        </tr>
-                        <tr v-if="skillData.requiredWeapons.length != 0">
-                            <th>Required Weapon(s)</th>
-                            <td>
-                                <div class="weapons">{{ weapons }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Max Skill Rank</th>
-                            <td v-if="isNaN(realMaxSkillLevel)">{{ skillData.spLevels }}</td>
-                            <td v-else>{{ realMaxSkillLevel }}</td>
-                        </tr>
-                        <tr>
-                            <th>Tech</th>
-                            <td>
-                                <div v-if="skillData.techLevels > 0">+{{ skillData.techLevels }}</div>
-                                <div v-else>Cannot tech</div>
-                            </td>
-                        </tr>
-                        <tr v-if="skillData.buffIcon && skillData.buffIcon.index != -1">
-                            <th>Buff Icon</th>
-                            <td>
-                                <sprite-icon :icon-info="skillData.buffIcon"/>
-                            </td>
-                        </tr>
-                        <tr v-if="skillData.debuffIcon && skillData.debuffIcon.index != -1">
-                            <th>Debuff Icon</th>
-                            <td>
-                                <sprite-icon :icon-info="skillData.debuffIcon"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- <div class="col skill-video">
-                    <div class="placeholder">Video here</div>
-                </div> -->
-            </div>
-            <div class="extends" v-if="skillData.baseSkillId">
-                <div class="label">This skill extends</div>
-                <skill-stub-link :skill-id="skillData.baseSkillId" />
-            </div>
-        </div>
+        <skill-basic-info
+            :skillData="skillData"
+            :skillLevelData="skillLevelData" />
 
         <div class="rank page-section">
             <div class="title">Skill Rank Info</div>
@@ -259,6 +158,7 @@
             v-on:retry="fetchData" />
     </div>
 </div>
+</transition>
 </template>
 
 <script lang="ts">
@@ -272,6 +172,7 @@ import BigErrorBox from "@/components/util/BigErrorBox.vue";
 import SkillStubLink from "@/components/skill/SkillStubLink.vue";
 import SkillUsable from "@/components/skill/SkillUsable.vue";
 import SkillExecution from "@/components/skill/SkillExecution.vue";
+import SkillBasicInfo from "@/components/skill/SkillBasicInfo.vue";
 
 import LoadingErrorable from "@/models/util/LoadingErrorable";
 import ISkill from '@/models/skills/ISkill';
@@ -302,6 +203,7 @@ export default Vue.extend({
         Loader,
         SpriteIcon,
         UiString,
+        SkillBasicInfo,
         SkillEffect,
         SkillStubLink,
         SkillUsable,
@@ -435,7 +337,7 @@ export default Vue.extend({
             }
 
             return "";
-        }
+        },
     },
     mounted() {
         this.extractDataFromUrl();
