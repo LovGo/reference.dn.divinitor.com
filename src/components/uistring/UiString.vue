@@ -200,17 +200,21 @@ export default Vue.extend({
         async positionModal() {
             if (this.showModal) {
                 const element = this.$refs.modal as HTMLDivElement;
-                const bb = element.getBoundingClientRect();
-                // Check that the tooltip is not going past the bottom of the page
-                const delta = bb.bottom - document.documentElement.clientHeight;
-                // console.log(delta);
-                if (delta > 0) {
-                    await this.$anime({
-                        targets: [element],
-                        translateY: [-delta, -delta - 50],
-                        elasticity: 0,
-                        duration: 0,
-                    }).finished;
+                if (element) {
+                    const bb = element.getBoundingClientRect();
+                    if (bb) {
+                        // Check that the tooltip is not going past the bottom of the page
+                        const delta = bb.bottom - document!.documentElement!.clientHeight;
+                        // console.log(delta);
+                        if (delta > 0) {
+                            await this.$anime({
+                                targets: [element],
+                                translateY: [-delta, -delta - 50],
+                                elasticity: 0,
+                                duration: 0,
+                            }).finished;
+                        }
+                    }
                 }
             }
         }
