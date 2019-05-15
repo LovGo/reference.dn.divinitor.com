@@ -14,7 +14,7 @@
     <meta property="og:site_name" content="Divinitor Minerva | DN Reference">
     <meta property="og:image" content="https://divinitor.com/resources/img/dv-logo.png">
     <meta property="og:title" content="Dragon Nest Reference">
-    <meta property="og:description" content="Reference information for Dragon Nest">
+    <meta property="og:description" content="<%= VUE_APP_OG_DESC %>">
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700" rel="stylesheet"> 
@@ -23,6 +23,7 @@
     <style>
         html {
             background-color: #131315;
+            overflow-y: scroll;
         }
         .header, .copyright {
             display: none;
@@ -37,7 +38,7 @@
             left: 0;
             right: 0;
             pointer-events: none;
-            margin-left: calc(100vw - 100%);
+            /* margin-right: calc(100vw - 100%); */
             opacity: 1.0;
             z-index: 300;
             background-color: #131315;
@@ -59,7 +60,7 @@
 
             border-left: 4px solid #98BCD4;
             padding: 8px 16px;
-            animation: 0.25s ease-in 0s 1 startup-fade-in;
+            animation: 0.5s ease-in 0s 1 startup-fade-in;
         }
         .startup > .container > .title {
             font-weight: normal;
@@ -78,7 +79,7 @@
             margin-top: 10px;
             padding-left: 3px;
             letter-spacing: 0.4em;
-            color: #3D4B54;
+            animation: 2s linear 0s infinite startup-pulse;
         }
         @keyframes startup-fade-in {
             0% {
@@ -86,6 +87,17 @@
             }
             100% {
                 opacity: 1.0;
+            }
+        }
+        @keyframes startup-pulse {
+            0% {
+                color: #3D4B54;
+            }
+            50% {
+                color: #69899c;
+            }
+            100% {
+                color: #3D4B54;
             }
         }
     </style>

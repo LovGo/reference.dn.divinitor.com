@@ -5,6 +5,7 @@
             <router-link to="/" class="header-link">
                 <h1>Divinitor Minerva</h1>
                 <div class="subtitle">Dragon Nest Game Reference</div>
+                <div class="subtitle" v-if="useInstanceText">Private server edition</div>
             </router-link>
         </div>
         <div class="mobile-header-right mobile-only">
@@ -99,6 +100,9 @@ export default Vue.extend({
         },
         hideAuth(): boolean {
             return this.$route.meta.redemption;
+        },
+        useInstanceText(): string {
+            return process.env.VUE_APP_USE_STATIC_SERVER || '';
         }
     },
     mounted() {
