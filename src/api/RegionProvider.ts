@@ -27,7 +27,7 @@ export enum SupportedRegions {
     BRAZIL = "br",
 };
 
-export const defaultRegion: SupportedRegions = SupportedRegions.NORTH_AMERICA;
+export const defaultRegion: SupportedRegions = process.env.VUE_APP_USE_STATIC_SERVER ? process.env.VUE_APP_STATIC_REGION_SHORTCODE as SupportedRegions : SupportedRegions.NORTH_AMERICA;
 
 export enum RegionInfoType {
     NONE = "",
