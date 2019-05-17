@@ -18,11 +18,11 @@ export interface IRegionProvider {
 export enum SupportedRegions {
     NORTH_AMERICA = "na",
     KOREA = "ko",
-    EUROPE = "eu",
+    // EUROPE = "eu",
     SOUTHEAST_ASIA = "sea",
     // JAPAN = "jp",
     // CHINA = "cn",
-    BRAZIL = "br",
+    // BRAZIL = "br",
 };
 
 export const defaultRegion: SupportedRegions = SupportedRegions.NORTH_AMERICA;
@@ -79,12 +79,12 @@ class RegionProvider implements IRegionProvider {
 
     public listRegions(type?: RegionInfoType): Promise<IRegion[]> {
         const regions: string[] = Object.values(SupportedRegions);
-        let promises: Promise<IRegion>[] = [];
+        let promises: Promise<IRegion|undefined>[] = [];
         for (let shortName of regions) {
-            promises.push(this.getRegionByShortName(shortName, type));
+            promises.push(this.getRegionByShortName(shortName, type).catch(e => undefined));
         }
 
-        return Promise.all(promises);
+        return Promise.all(promises).then((r) => r.filter(v => v != undefined)) as Promise<IRegion[]>;
     }
 
     private _normalizeShortName(name: string) {
