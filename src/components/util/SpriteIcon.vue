@@ -51,8 +51,8 @@ export default Vue.extend({
 
     .sprite-icon-resize {
         position: relative;
-        // transform-origin: top left;
-        transform-origin: top right;
+        transform-origin: top left;
+        // transform-origin: top right;
 
         .sprite-icon {
             position: relative;

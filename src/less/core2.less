@@ -316,6 +316,8 @@ button, .button {
     font-size: 16px;
     cursor: pointer;
 
+    transition: color 0.125s ease-in, background-color 0.125s ease-in, border-color 0.125s ease-in;
+
     &:hover {
         background: @dv-c-foreground;
         color: @dv-c-background;
@@ -335,6 +337,13 @@ button, .button {
             background: @dv-c-green;
             color: @dv-c-background;
         }
+    }
+    
+    &[disabled="disabled"],
+    &[disabled] {
+        color: @dv-c-disabled !important;
+        border-color: @dv-c-disabled !important;
+        pointer-events: none;
     }
 }
 
@@ -410,6 +419,17 @@ button, .button {
     transition: opacity ease-in 0.5s;
 }
 .fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+.fade-fast-enter-active {
+    transition: opacity ease-in 0.125s;
+}
+
+.fade-fast-leave-active {
+    transition: opacity ease-in 0.125s;
+}
+.fade-fast-enter, .fade-fast-leave-to {
     opacity: 0;
 }
 
