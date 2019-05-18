@@ -322,7 +322,7 @@
             <div class="section" v-if="containerItem">
                 <div class="title">Box Contents</div>
                 <item-charm
-                    :charmId="itemData.type.charmNum"
+                    :charmId="itemData.type.charmNum || itemData.type.param1"
                     :itemType="itemData.type"
                     :itemId="itemId"
                 />
@@ -330,7 +330,7 @@
             <div class="section" v-if="itemType == 'RANDOM'">
                 <div class="title">Box Contents</div>
                 <item-random
-                    :randomId="itemData.type.itemDropTableId"
+                    :randomId="itemData.type.itemDropTableId || itemData.type.param1"
                     :itemType="itemData.type"
                 >
                 </item-random>
@@ -531,8 +531,9 @@ export default {
         },
         containerItem() {
             let t = this.itemData.type.type;
+            let tid = this.itemData.type.typeId;
             return t === "ITEM_DROP_POUCH" || t === "MULTI_ITEM_DROP_POUCH" || t === "ITEM_DROP_DUAL_POUCH" ||
-                t === "HERO_POUCH";
+                t === "HERO_POUCH" || tid === 142;
         },
         forceBound() {
             //  Certain items (COUGH QUEST) are untradable at all times

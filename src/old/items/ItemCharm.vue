@@ -34,6 +34,9 @@
                 <div v-else-if="itemType.type == 'HERO_POUCH'">
                     This item gives the corresponding item for your class:
                 </div>
+                <div v-else-if="itemType.typeId === 142">
+                    This item increases your Gacha meter and gives one of the following items when opened:
+                </div>
             </div>
 
             <form class="filter" v-if="charms.entries.length > 20">

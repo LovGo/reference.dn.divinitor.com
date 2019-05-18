@@ -364,6 +364,11 @@ export default {
             return ret;
         }
 
+        switch (itemData.type.typeId) {
+            case 142:
+                return "altera box";
+        }
+
         return "item";
     },
     getCharm(charmId, region, okcb, errcb) {
