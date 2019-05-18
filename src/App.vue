@@ -5,6 +5,7 @@
             <router-link to="/" class="header-link">
                 <h1>Divinitor Minerva</h1>
                 <div class="subtitle">Dragon Nest Game Reference</div>
+                <div class="subtitle" v-if="useInstanceText">Private server edition</div>
             </router-link>
         </div>
         <div class="mobile-header-right mobile-only">
@@ -56,6 +57,7 @@
             <div class="detail">Now loading</div>
         </div>
     </div>
+    <div id="tooltip-host"></div>
 </div>
 </template>
 
@@ -98,6 +100,9 @@ export default Vue.extend({
         },
         hideAuth(): boolean {
             return this.$route.meta.redemption;
+        },
+        useInstanceText(): string {
+            return process.env.VUE_APP_USE_STATIC_SERVER || '';
         }
     },
     mounted() {
@@ -132,6 +137,7 @@ html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100%;
+    // height: 100%;
 
     position: relative;
     margin: 0;
@@ -145,6 +151,7 @@ html {
 body {
     position: relative;
     min-height: 100vh;
+    // height: 100%;
     padding: 0;
     width: 900px;
     border-left: @dv-c-foreground solid 1px;
@@ -161,7 +168,7 @@ body {
     background-color: @dv-c-background;
     background-attachment: fixed;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 #app[embed] {
@@ -225,6 +232,8 @@ body {
 .site-header {
     display: block;
     margin: 14px 20px;
+    margin-top: 0;
+    padding-top: 14px;
     position: relative;
     user-select: none;
     h1 {

@@ -28,6 +28,7 @@ export default Vue.extend({
     @media @wide-desktop {
         &:not([narrow]) {
             flex-basis: 50%;
+            max-width: 50%;
             &:first-child, &:nth-child(2) {
                 border-top-width: 1px;
             }

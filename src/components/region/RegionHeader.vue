@@ -1,6 +1,6 @@
 <template>
 <div class="locale-select">
-    <div class="selector" v-on:click="showSelector" :noclick="noclick">
+    <div class="selector" v-on:click="showSelector" :noclick="!canChangeServer">
         <i class="fa fa-globe"></i>{{ renderedName }} {{ renderedVersion}}
     </div>
 
@@ -42,7 +42,6 @@ import { Actions } from '@/storemutations';
 
 interface IData {
     showSelect: boolean;
-    noclick: boolean;
     regions: LoadingErrorable<IRegion[], any>;
     regionList: IRegion[];
     disable: boolean;
@@ -57,7 +56,6 @@ export default Vue.extend({
     data(): IData {
         return {
             showSelect: false,
-            noclick: false,
             regions: new LoadingErrorable(),
             regionList: [],
             disable: false,
@@ -80,7 +78,7 @@ export default Vue.extend({
             if (this.selectedRegion) {
                 const localizedName = this.selectedRegion.displayNames[this.selectedRegion.defaultLocale];
                 const defaultName = this.selectedRegion.displayNames.default;
-                if (localizedName !== defaultName) {
+                if (localizedName && localizedName !== defaultName) {
                     return `${localizedName} (${defaultName})`;
                 }
 
@@ -91,10 +89,13 @@ export default Vue.extend({
         },
         renderedVersion(): string {
             if (this.selectedRegion) {
-                return `v${this.selectedRegion.version}`;
+                return `v${this.selectedRegion.version || '?'}`;
             }
 
             return '';
+        },
+        canChangeServer(): boolean {
+            return this.regionList.length > 1;
         }
     },
     mounted() {
@@ -102,6 +103,10 @@ export default Vue.extend({
     },
     methods: {
         async showSelector() {
+            if (!this.canChangeServer) {
+                return;
+            }
+
             this.showSelect = true;
             await Vue.nextTick();
             this.$anime({

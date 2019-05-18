@@ -34,3 +34,72 @@ export enum SkillEffectApplyType {
     ENEMY,
     ALLY,
 }
+
+export enum SkillUsableChecker {
+    NULL = 0,
+    /**
+     * Params: RequiredState, Operator
+     */
+    CASTER_STATE,
+    /**
+     * Params: HP%, Operator
+     */
+    HAS_HP,
+    /**
+     * Params: Chance
+     */
+    PROBABILITY,
+    /**
+     * Params: RequiredState, Operator, Radius
+     */
+    TARGET_STATE,
+    CAN_MOVE,
+    CAN_JUMP,
+    IS_HIT,
+    /**
+     * Params: ToggleSkillID
+     */
+    TOGGLE_IS_ACTIVE,
+    ENERGY_CHARGE,
+    CAN_GROUND_MOVE,
+    TARGET_IN_RANGE,
+    /**
+     * Params: BubbleID, BubbleCount
+     */
+    HAS_BUBBLES,
+    SUMMON_IN_RANGE,
+    TARGET_STATE_EFFECT,
+}
+
+export enum SkillProcessor {
+    NULL = 0,
+    /**
+     * Params: ActionName
+     */
+    DO_ACTION,
+    /**
+     * Params: StartActionName, LoopActionName, EndActionName, Duration, MoveSpeed
+     */
+    DO_LOOPING_ACTION,
+    /**
+     * Params: FromWeaponID, ToWeaponID
+     */
+    CHANGE_PROJECTILE,
+    /**
+     * Params: Argument
+     */
+    DIVIDED_STATE_EFFECT_ARG,
+    IMPACT_BLOW,
+    /**
+     * Params: Range
+     */
+    AURA,
+    /**
+     * Params: Suffix, AffectedActionNames (up to 9)
+     */
+    ADD_ACTION_SUFFIX,
+    /**
+     * Params: Range, Chance, TargetEffect, Duration
+     */
+    APPLY_RANGED_STATE_EFFECT,
+}

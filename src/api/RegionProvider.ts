@@ -5,6 +5,8 @@ import ITypedMap from "@/models/util/ITypedMap";
 
 import Store from "@/store";
 import IRegion from '@/models/region/IRegion';
+import Axios from 'axios';
+import moment from 'moment';
 
 export interface IRegionProvider {
 
@@ -25,7 +27,7 @@ export enum SupportedRegions {
     // BRAZIL = "br",
 };
 
-export const defaultRegion: SupportedRegions = SupportedRegions.NORTH_AMERICA;
+export const defaultRegion: SupportedRegions = process.env.VUE_APP_USE_STATIC_SERVER ? process.env.VUE_APP_STATIC_REGION_SHORTCODE as SupportedRegions : SupportedRegions.NORTH_AMERICA;
 
 export enum RegionInfoType {
     NONE = "",
@@ -100,7 +102,58 @@ class RegionProvider implements IRegionProvider {
     }
 };
 
-export default new RegionProvider() as IRegionProvider;
+class StaticRegionProvider implements IRegionProvider {
+
+    private cachedVersion: number;
+    private cachedTime: string;
+
+    constructor() {
+        console.log("Using static region provider");
+        this.cachedVersion = -1;
+        this.cachedTime = '';
+    }
+
+    public async getRegionByShortName(shortName: string, type?: RegionInfoType | undefined): Promise<IRegion> {
+        return await this._getStaticRegion();
+    }
+
+    public async getRegionById(id: number, type?: RegionInfoType | undefined): Promise<IRegion> {
+        return await this._getStaticRegion();
+    }
+
+    public async listRegions(type?: RegionInfoType | undefined): Promise<IRegion[]> {
+        return [ await this._getStaticRegion() ];
+    }
+
+    private async _getStaticRegion(): Promise<IRegion> {
+        const ret = window.STATIC_REGION!;
+
+        // Get version
+        if (this.cachedVersion < 0 || !this.cachedTime) {
+            const res = await Axios.get<string>(process.env.VUE_APP_STATIC_REGION_VERSION_CFG_URL);
+            let rawVersion = res.data.split('\n')[0];
+            if (rawVersion.startsWith('Version ')) {
+                rawVersion = rawVersion.substring('Version '.length).trim();
+                const parsed = parseInt(rawVersion);
+                if (!isNaN(parsed)) {
+                    this.cachedVersion = parsed;
+                }
+            }
+
+            const patchDateStr = res.headers['last-modified'];
+            const patchDate = moment(patchDateStr);
+            this.cachedTime = patchDate.toISOString();
+        }
+
+        return {
+            ...ret,
+            version: this.cachedVersion,
+            patchedTime: this.cachedTime,
+        };
+    }
+}
+
+export default (process.env.VUE_APP_USE_STATIC_SERVER ? new StaticRegionProvider() : new RegionProvider()) as IRegionProvider;
 
 export function ensureRegion(region?: string): string {
     if (!region) {

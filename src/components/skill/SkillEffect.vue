@@ -18,7 +18,7 @@
         <span class="value" v-else-if="effect.effectApplyTypeStr == 'ALLY'">allies</span>
     </div>
     <div class="describe">
-        {{ description }}
+        {{ description }} <span class="raw">"{{ value.value }}"</span>
     </div>
 </div>
 </template>
@@ -29,6 +29,7 @@ import ISkillEffect from '@/models/skills/ISkillEffect';
 import ISkillEffectValue from '@/models/skills/ISkillEffectValue';
 import { Blows } from "@/models/skills/IStateBlow";
 import { filters } from '@/filters/Filters';
+import ISkillLevel from '../../models/skills/ISkillLevel';
 
 interface IData {
     description: string;
@@ -41,6 +42,12 @@ export default Vue.extend({
         },
         "value": {
             type: Object as () => ISkillEffectValue,
+        },
+        "forceShow": {
+            type: Boolean as () => boolean,
+        },
+        "activeRankData": {
+            type: Object as () => ISkillLevel,
         },
     },
     data(): IData {
@@ -58,15 +65,34 @@ export default Vue.extend({
     },
     computed: {
         effectName(): string {
-            const blows = Blows[this.effect.effectClass];
+            let effectClass = this.effect.effectClass;
+            let suffix = "";
+            if (effectClass === 0) {
+                if (this.effect.index === 1 && this.activeRankData.pdmgBoardDamage != 0) {
+                    effectClass = 2;
+                    suffix = " (Slot 0)";
+                } else if (this.effect.index === 2 && this.activeRankData.mdmgBoardDamage != 0) {
+                    effectClass = 29;
+                    suffix = " (Slot 1)";
+                }
+            }
+
+            const blows = Blows[effectClass];
             if (blows) {
-                return blows.name;
+                return blows.name + suffix;
             }
 
             return "";
         },
         display(): boolean {
-            return !(this.effect.effectClass == 0 || this.value.value == "");
+            // Slot 0 and slot 1 are used for PDMG and MDMG if effectClass is zero
+            if (this.effect.effectClass === 0) {
+                if (this.effect.index <= 2) {
+                    return !!this.value.value && this.value.value !== '0';
+                }
+            }
+
+            return this.forceShow || !(this.effect.effectClass == 0 && (!!this.value.value || this.value.value == ''));
         },
     },
     mounted() {
@@ -74,7 +100,16 @@ export default Vue.extend({
     },
     methods: {
         async getDescription(): Promise<string> {
-            const blow = Blows[this.effect.effectClass];
+            let effectClass = this.effect.effectClass;
+            if (effectClass === 0) {
+                if (this.effect.index === 1 && this.activeRankData.pdmgBoardDamage != 0) {
+                    effectClass = 2;
+                } else if (this.effect.index === 2 && this.activeRankData.mdmgBoardDamage != 0) {
+                    effectClass = 29;
+                }
+            }
+
+            const blow = Blows[effectClass];
             if (blow) {
                 if (blow.describe) {
                     let desc = blow.describe(this.effect, this.value);
@@ -83,9 +118,7 @@ export default Vue.extend({
                     } else if (desc == null) {
                         return "";
                     } else {
-                        if (desc instanceof Promise) {
-                            desc = await desc;
-                        }
+                        desc = await desc;
 
                         if (desc == null) {
                             return "";
@@ -184,6 +217,22 @@ export default Vue.extend({
 
     .describe {
         margin: 8px 0;
+
+        .raw {
+            color: transparent;
+            transition: color 0.125s ease-in;
+
+            &::before {
+                content: "Parameter: ";
+                text-transform: uppercase;
+                font-size: 12px;
+                padding-left: 10px;
+            }
+        }
+
+        &:hover .raw {
+            color: @dv-c-accent-2;
+        }
     }
 }
 

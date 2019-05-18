@@ -1,11 +1,9 @@
 <template>
-<div class="skill-stub" :fill="fill">
+<div class="skill-stub" :fill="fill"
+    @mouseenter="onHoverIn" @mouseleave="onHoverOut"
+    ref="stubRoot">
     <div class="info" v-if="skill.isSuccess() && skill.value"
-            :type="skillTypeToString(skill.value.skillType)"
-             @mouseover="hoverIn" @mouseleave="hoverOut">
-        <div class="tooltip">
-            <skill-stub-tooltip :skill-data="skill.value" :show="isHover" />
-        </div>
+            :type="skillTypeToString(skill.value.skillType)">
         <div class="icon">
             <div class="skill-icon">
                 <sprite-icon v-if="skill.value.skillIcon.index == 0 && skill.value.buffIcon && skill.value.buffIcon.index != 0" 
@@ -75,6 +73,9 @@
             <loader :load-text="`Skill ${skillId}`" />
         </div>
     </div>
+    <div class="tooltip" v-if="isHover">
+        <skill-stub-tooltip :skill-data="skill.value" :show="true" />
+    </div>
 </div>
 </template>
 
@@ -92,9 +93,13 @@ import ISkill from '@/models/skills/ISkill';
 import { SkillType } from '@/models/skills/SkillEnums';
 import { filters } from '@/filters/Filters';
 
+import { debounce } from 'lodash';
+
 interface IData {
     skill: LoadingErrorable<ISkill, any>;
     isHover: boolean;
+    hoverIn(): void;
+    hoverOut(): void;
 }
 
 export default Vue.extend({
@@ -118,6 +123,8 @@ export default Vue.extend({
         return {
             skill: new LoadingErrorable(),
             isHover: false,
+            hoverIn: () => {},
+            hoverOut: () => {},
         };
     },
     watch: {
@@ -129,6 +136,12 @@ export default Vue.extend({
         }
     },
     mounted() {
+        this.hoverIn = debounce(() => {
+            this.isHover = true;
+        }, 250);
+        this.hoverOut = debounce(() => {
+            this.isHover = false;
+        }, 500);
         this.fetchData();
     },
     computed: {
@@ -157,10 +170,11 @@ export default Vue.extend({
         skillTypeToString(type: SkillType): string {
             return filters.skillType(type);
         },
-        hoverIn() {
+        onHoverIn() {
             this.isHover = true;
         },
-        hoverOut() {
+        onHoverOut(event: MouseEvent) {
+            // if (event.)
             this.isHover = false;
         }
     }
@@ -181,10 +195,25 @@ export default Vue.extend({
         width: 100%;
     }
 
+    >.tooltip {
+        position: absolute;
+        z-index: 100;
+        pointer-events: none;
+        opacity: 0.0;
+        top: 0;
+        transition: opacity 0.125s ease-in;
+    }
+
+    &:hover >.tooltip {
+        opacity: 1.0;
+    }
+
+
     .info {
         position: relative;
         display: flex;
         min-width: 0;
+        overflow: hidden;
 
         &[type="active"] {
             .icon,
@@ -206,14 +235,6 @@ export default Vue.extend({
             .detail {
                 border-color: @dv-c-red;
             }
-        }
-
-        .tooltip {
-            position: absolute;
-            top: -100%;
-            .left(0);
-            z-index: 100;
-            pointer-events: none;
         }
 
         .icon {
