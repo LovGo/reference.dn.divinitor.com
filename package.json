@@ -13,28 +13,28 @@
     "lodash": "^4.17.11",
     "three": "^0.98.0",
     "three-addons": "^1.2.0",
-    "vue": "^2.5.17",
+    "vue": "^2.6.10",
     "vue-animejs": "^1.0.1",
-    "vue-chartjs": "^3.4.0",
+    "vue-chartjs": "^3.4.2",
     "vue-class-component": "^6.0.0",
     "vue-infinite-scroll": "^2.0.2",
     "vue-moment": "^4.0.0",
     "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.6",
-    "@types/animejs": "^2.0.0",
+    "@babel/core": "^7.4.5",
+    "@types/animejs": "^2.0.2",
     "@types/jwt-decode": "^2.2.1",
-    "@types/lodash": "^4.14.124",
+    "@types/lodash": "^4.14.132",
     "@types/three": "^0.93.19",
-    "@vue/cli-plugin-babel": "^3.7.0",
-    "@vue/cli-plugin-typescript": "^3.7.0",
+    "@vue/cli-plugin-babel": "^3.8.0",
+    "@vue/cli-plugin-typescript": "^3.8.1",
     "@vue/cli-service": "^3.7.0",
-    "less": "^3.0.4",
+    "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "typescript": "^3.0.0",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.6.10"
   }
 }
