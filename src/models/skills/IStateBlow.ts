@@ -221,7 +221,27 @@ export const Blows: ITypedMap<IStateBlow> = {
             return null;
         },
     },
+    42: {
+        name: "Burn",
+        describe(effect, value) {
+            if (value) {
+                let v = value.value;
+                let split = v.split(";");
+                let chance = Number(split[0]) * 100;
+                let damagePercent = Number(split[1]);
+                let damage = Number(split[2]);
 
+                const damageStr = (isNaN(damagePercent) || damagePercent == 0) ? filters.thousands(damage) : `${filters.percent(damagePercent)}%`;
+
+                return {
+                    text: `${chance}% chance to afflict ${damageStr} fire damage every 2s`,
+                    appendDuration: true,
+                };
+            }
+
+            return null;
+        }
+    },
     43: {
         name: "Electrocution",
         describe(effect, value) {
@@ -229,10 +249,12 @@ export const Blows: ITypedMap<IStateBlow> = {
                 let v = value.value;
                 let split = v.split(";");
                 let chance = Number(split[0]) * 100;
-                let damage = Number(split[2]);
+                let damage = split[1] && Number(split[1]);
+
+                const damageStr = damage ? `Light Resist ${damage < 0 ? 'reduced' : 'increased'} by ${damage * 100}%` : '';
 
                 return {
-                    text: `${chance}% chance to electrocute`,
+                    text: `${chance}% chance to electrocute${damageStr ? ', ' + damageStr : ''}`,
                     appendDuration: true,
                 };
             }
@@ -253,7 +275,7 @@ export const Blows: ITypedMap<IStateBlow> = {
                 const damageStr = (isNaN(damagePercent) || damagePercent == 0) ? filters.thousands(damage) : `${filters.percent(damagePercent)}%`;
 
                 return {
-                    text: `${chance}% to afflict ${damageStr} dark damage every 2s`,
+                    text: `${chance}% chance to afflict ${damageStr} dark damage every 2s`,
                     appendDuration: true,
                 };
             }
@@ -889,6 +911,63 @@ export const Blows: ITypedMap<IStateBlow> = {
                     text: `Grants immunity from effect(s) applied by ${freeSkillNames.join(", ")}`,
                     appendDuration: true,
                 };
+            }
+
+            return null;
+        }
+    },
+
+    254: {
+        name: "Show state effect at target",
+        async describe(effect, value) {
+            if (value) {
+                const split = value.value.split(";");
+                
+                const opt1 = split[0];
+                const opt2 = split[1];
+                const opt3 = split[2];
+                const stateEffectId = Number(split[3]);
+
+                // TODO await state effect
+                const stateEffectDesc = `State Effect ${stateEffectId}`;
+
+                return {
+                    text: `Displays ${stateEffectDesc} at the target, options ${opt1},${opt2},${opt3}`,
+                    appendDuration: true,
+                };
+            }
+
+            return null;
+        }
+    },
+
+    275: {
+        name: "Disallow healing",
+        async describe(effect, value) {
+            if (value) {
+                const split = value.value.split(";");
+                const idCount = split.length;
+                if (idCount > 0) {
+                    const skillIds = split
+                        .map((v) => Number(v))
+                        .filter((v) => !isNaN(v) && v > 1);
+
+                    let allowedSkillNames = (await Promise.all(skillIds
+                        .filter((v) => v > 0)
+                        .map(async (v) => await SkillProvider.getSkill(v))
+                        .map(async (v) => {
+                            const vv = await v;
+                            return vv.name.message + ` (${vv.id})`;
+                        })
+                        .filter((v, i, s) => s.indexOf(v) == i)));
+
+                    const allowedSkillNamesList =  allowedSkillNames.join(", ");
+
+                    return {
+                        text: `Disallows healing${ allowedSkillNamesList ? ', except from ' + allowedSkillNamesList : ''}`,
+                        appendDuration: true,
+                    };
+                }
             }
 
             return null;
