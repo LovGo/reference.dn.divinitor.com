@@ -15,7 +15,7 @@
     "three-addons": "^1.2.0",
     "vue": "^2.5.17",
     "vue-animejs": "^1.0.1",
-    "vue-chartjs": "^3.4.0",
+    "vue-chartjs": "^3.4.2",
     "vue-class-component": "^6.0.0",
     "vue-infinite-scroll": "^2.0.2",
     "vue-moment": "^4.0.0",
