@@ -27,7 +27,7 @@
     "@babel/core": "^7.4.5",
     "@types/animejs": "^2.0.0",
     "@types/jwt-decode": "^2.2.1",
-    "@types/lodash": "^4.14.124",
+    "@types/lodash": "^4.14.132",
     "@types/three": "^0.93.19",
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-typescript": "^3.8.1",
