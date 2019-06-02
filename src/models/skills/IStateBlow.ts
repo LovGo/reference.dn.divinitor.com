@@ -1083,12 +1083,24 @@ export const Blows: ITypedMap<IStateBlow> = {
                 let freeSkillNames = (await Promise.all(freeSkills
                     .filter((v) => v > 0)
                     .map(async (v) => await SkillProvider.getSkill(v))
-                    .map(async (v) => (await v).name.message)))
+                    .map(async (v) => {
+                        const av = await v;
+                        return `${av.name.message} (${av.id})`;
+                    })))
                     .filter((v, i, s) => s.indexOf(v) == i);
 
+                let pairs: string[] = freeSkillNames
+                    .map((v, i, a) => {
+                        if (i % 2 == 1) {
+                            return `${a[i - 1]} -> ${v}`
+                        }
+
+                        return null;
+                    })
+                    .filter((v) => v != null) as string[];
 
                 return {
-                    text: `Skills ${freeSkillNames.join(", ")} are enhanced`,
+                    text: `Skills are enhanced: ${pairs.join(", ")}`,
                     appendDuration: true,
                 };
             }
