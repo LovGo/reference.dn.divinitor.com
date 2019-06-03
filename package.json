@@ -31,7 +31,7 @@
     "@types/three": "^0.93.19",
     "@vue/cli-plugin-babel": "^3.8.0",
     "@vue/cli-plugin-typescript": "^3.8.1",
-    "@vue/cli-service": "^3.7.0",
+    "@vue/cli-service": "^3.8.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "typescript": "^3.0.0",
