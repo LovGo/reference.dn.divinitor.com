@@ -413,7 +413,7 @@ export default {
         };
     },
     created() {
-        if (this.$fOn(this.$f.DisableGoldenGoose) || this.$fOn(this.$f.GoldenGooseDefaultOff)) {
+        if (this.$fOn(this.$f.DisableGoldenGoose)) {
             this.useGoldenGoose = false;
         }
 
