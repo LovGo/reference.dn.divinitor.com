@@ -185,6 +185,9 @@ export default new Router({
         {
             path: "/skills",
             component: Blank,
+            meta: {
+                auth: true,
+            },
             children: [
                 {
                     path: "",

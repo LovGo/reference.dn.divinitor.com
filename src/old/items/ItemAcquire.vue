@@ -548,7 +548,7 @@ export default {
             this.tunerData = null;
             this.activeCraftGroup = 0;
             this.useGoldenGoose = true;
-            if (this.$fOn(this.$f.DisableGoldenGoose) || this.$fOn(this.$f.GoldenGooseDefaultOff)) {
+            if (this.$fOn(this.$f.DisableGoldenGoose)) {
                 this.useGoldenGoose = false;
             }
             
