@@ -21,10 +21,6 @@
         </div>
     </div>
 
-    <a href="#" target="_blank">
-        Explore this map on ATLAS
-    </a>
-
     <h3>
         General
     </h3>
@@ -46,23 +42,6 @@
     <h3>
         Music
     </h3>
-    <p>content</p>
-
-
-
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
-    <p>content</p>
     <p>content</p>
 </div>
 </template>
@@ -148,13 +127,6 @@ export default Vue.extend({
                     content: "#";
                     color: @dv-c-accent-1;
                 }
-            }
-        }
-
-        &:hover {
-            .hero-overlay,
-            .image-name {
-                opacity: 0.0;
             }
         }
 

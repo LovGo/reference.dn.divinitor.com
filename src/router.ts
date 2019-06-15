@@ -40,6 +40,8 @@ const Resources = () => import(/* webpackChunkName: "resources" */ "@/views/Reso
 const ResourcesHome = () => import(/* webpackChunkName: "resources" */ "@/old/resources/ResourcesHome.vue");
 const GameClient = () => import(/* webpackChunkName: "resources" */ "@/old/resources/gameclient/GameClient.vue");
 
+const DntSchemaToInterface = () => import(/* webpackChunkName: "debug" */ "@/views/debug/DntSchemaToInterface.vue");
+
 import NotFound from "@/views/NotFound.vue";
 
 Vue.use(Router)
@@ -254,6 +256,10 @@ export default new Router({
                   component: GameClient
                 }
             ],
+        },
+        {
+            path: '/debug/dntschema',
+            component: DntSchemaToInterface,
         },
         {
             path: "*",
