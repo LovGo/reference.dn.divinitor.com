@@ -1,66 +1,119 @@
 <template>
 <div class="map-view">
+    <template v-if="mapData">
     <div class="hero">
         <div class="hero-image" :style="`background-image: url(${heroImgUrl});`"/>
         <div class="hero-overlay">
             <div class="map-id">
-                <!-- 11 -->
-                14764
+                {{ mapData.id }}
             </div>
             <h1 class="title">
                 <div class="welcome">
                     Welcome to
                 </div>
-                <!-- Saint's Haven -->
-                Forest Dragon Nest
+                {{ mapData.name.message }}
+                <span v-if="mapData.levelUi && mapData.levelUi.id">({{ mapData.levelUi.message }})</span>
             </h1>
             <div class="image-name">
-                <!-- Loading_SaintHaven_New_Limbo01.jpg -->
-                Loading_14761.jpg
+                {{ mapData.loadingImage }}
             </div>
         </div>
     </div>
 
-    <h3>
-        General
-    </h3>
-    <p>content</p>
+    <map-basic-info :mapData="mapData"/>
 
-    <h3>
-        Map
-    </h3>
-    <p>content</p>
+    <map-gates :mapData="mapData"/>
 
-    <!-- If there's an M menu map, add an option to flip between minimap and M map -->
-
-
-    <h3>
-        Portals
-    </h3>
-    <p>content</p>
-
-    <h3>
-        Music
-    </h3>
-    <p>content</p>
+    <!-- {{ mapData }} -->
+    </template>
+    <template v-else-if="error">
+        {{ error }}
+    </template>
+    <template v-else>
+        <loader :loadText="`Loading map ${cleanId}`" />
+    </template>
 </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { ApiHttpClient } from '@/globals';
+import MapProvider from '@/api/MapProvider';
+import IGameMap from '@/models/maps/IGameMap';
+
+import Loader from '@/components/util/Loader.vue';
+import MapBasicInfo from '@/components/map/MapBasicInfo.vue';
+import MapGates from '@/components/map/MapGates.vue';
+import { axiosErrorToString } from '../../helpers/AxiosErrorUtils';
 
 interface IData {
-
+    mapData: IGameMap|null;
+    error: string;
 }
 
 export default Vue.extend({
-    computed: {
-        heroImgUrl(): string {
-            // return ApiHttpClient.defaults.baseURL + "/server/na/files/Loading_SaintHaven_New_Limbo01.jpg";
-            return ApiHttpClient.defaults.baseURL + "/server/na/files/Loading_14761.jpg";
+    components: {
+        MapBasicInfo,
+        MapGates,
+        Loader,
+    },
+    props: {
+        id: {
+            type: String as () => string,
         },
     },
+    computed: {
+        heroImgUrl(): string {
+            if (this.mapData) {
+                return ApiHttpClient.defaults.baseURL + "/server/na/files/" + this.mapData.loadingImage;
+            }
+            return '#';
+        },
+        cleanId(): number {
+            const split = this.id.split('-', 2);
+            const idPart = split[0];
+            return Number(idPart);
+        },
+        slug(): string {
+            if (this.mapData) {
+                return `${this.cleanId}-${this.mapData.toolEntries[0].toolName}`;
+            }
+            return this.id;
+        }
+    },
+    data(): IData {
+        return {
+            mapData: null,
+            error: '',
+        };
+    },
+    watch: {
+        id() {
+            this.load();
+        }
+    },
+    mounted() {
+        this.load();
+    },
+    methods: {
+        async load() {
+            this.mapData = null;
+            try {
+                this.mapData = await MapProvider.getMap(this.cleanId);
+                this.updateUrl();
+            } catch (e) {
+                this.error = axiosErrorToString(e);
+            }
+        },
+        updateUrl() {
+            if (this.slug != this.id) {
+                this.$router.replace({
+                    path: this.$route.path.replace(this.id, this.slug),
+                    query: this.$route.query,
+                });
+            }
+        }
+    }
 });
 </script>
 

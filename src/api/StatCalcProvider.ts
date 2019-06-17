@@ -3,6 +3,7 @@ import RequestCache from '@/models/util/RequestCache';
 import Store from "@/store";
 
 import { ApiHttpClient } from "@/globals";
+import { ensureRegion } from './RegionProvider';
 
 export interface IStatCalcResult {
     capped: boolean;
@@ -48,7 +49,7 @@ class StatCalcProvider implements IStatCalcProvider {
     }
 
     public async calculatePercent(level: number, stat: string, value: number, region?: string): Promise<IStatCalcResult> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         let caps = await this._getStatCaps(level, region);
         let cap = (<ITypedMap<number>><unknown>caps)[stat];
         let maxPercent = capPercents[stat];
@@ -62,7 +63,7 @@ class StatCalcProvider implements IStatCalcProvider {
     }
 
     public async calculateValue(level: number, stat: string, percent: number, region?: string): Promise<IStatCalcResult> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         let caps = await this._getStatCaps(level, region);
         let cap = (<ITypedMap<number>><unknown>caps)[stat];
         
@@ -100,14 +101,6 @@ class StatCalcProvider implements IStatCalcProvider {
 
             return ret;
         });
-    }
-
-    private _ensureRegion(region?: string): string {
-        if (!region) {
-            return Store.state.regionCode;
-        }
-
-        return region;
     }
 
     private _cacheKey(level: number, region: string) {

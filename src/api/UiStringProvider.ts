@@ -6,6 +6,7 @@ import Vue from 'vue';
 
 import { ApiHttpClient } from "@/globals";
 import IUiStringVariants from '@/models/uistring/IUiStringVariants';
+import { ensureRegion } from './RegionProvider';
 
 export enum UiStringFormat {
     RAW = "raw",
@@ -44,7 +45,7 @@ class UiStringProvider implements IUiStringProvider {
         region?: string, 
         params?: string, 
         format: UiStringFormat = UiStringFormat.RAW): Promise<IUiStringMessage> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         if (params) {
             params = encodeURIComponent(params);
         }
@@ -91,7 +92,7 @@ class UiStringProvider implements IUiStringProvider {
     public async getVariants(mid: number,
         region?: string,
         params?: string): Promise<IUiStringVariants> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         let rawKey = this._cacheKey(mid, region, params, UiStringFormat.RAW);
         let htmlKey = this._cacheKey(mid, region, params, UiStringFormat.HTML);
         let stripKey = this._cacheKey(mid, region, params, UiStringFormat.STRIPPED);
@@ -121,14 +122,6 @@ class UiStringProvider implements IUiStringProvider {
             ret.id = mid;
             return ret;
         });
-    }
-
-    private _ensureRegion(region?: string): string {
-        if (!region) {
-            return Store.state.regionCode;
-        }
-
-        return region;
     }
     
     private _cacheKey(id: number, region: string, params?: string, format?: UiStringFormat) {

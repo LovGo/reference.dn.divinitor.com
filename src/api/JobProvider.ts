@@ -8,6 +8,8 @@ import store from '@/store';
 import IIconInfo from '@/models/util/IIconInfo';
 import { IJobScaling, IJobScalingV0, IJobScalingV1 } from '@/models/jobs/IJobScaling';
 import IJobScalingTableRow from '@/models/jobs/raw/IJobScalingTableRow';
+import TableProvider from './TableProvider';
+import { ensureRegion } from './RegionProvider';
 
 export interface IJobProvider {
     
@@ -45,7 +47,7 @@ class JobProvider implements IJobProvider {
     }
 
     public async getJob(id: number, getParents: boolean = false, region?: string): Promise<IJob> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         let key = this._cacheKey(id, region);
         let cached = this._jobsCache[key];
         if (cached) {
@@ -75,7 +77,7 @@ class JobProvider implements IJobProvider {
     }
 
     public async getJobs(ids: number[], region?: string): Promise<IJob[]> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         let promises: Promise<IJob|null>[] = [];
         let alreadyCached: IJob[] = [];
         let needsRequest: number[] = [];
@@ -113,7 +115,7 @@ class JobProvider implements IJobProvider {
     }
 
     public async getAllJobs(region: string): Promise<IJob[]> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
 
         let cached = this._allJobsCache[region];
         if (cached) {
@@ -151,7 +153,7 @@ class JobProvider implements IJobProvider {
     }
 
     public getJobScaling(id: number, region?: string): Promise<IJobScaling> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         let key = this._cacheKey(id, region);
         let cached = this._jobStatCache[key];
         if (cached) {
@@ -169,7 +171,7 @@ class JobProvider implements IJobProvider {
     }
 
     public async getJobsScaling(ids: number[], region?: string): Promise<IJobScaling[]> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
 
         let promises: Promise<IJobScaling|null>[] = [];
         let alreadyCached: IJobScaling[] = [];
@@ -191,10 +193,12 @@ class JobProvider implements IJobProvider {
             promises.push(this.getJobScaling(needsRequest[0], region));
         } else if (needsRequest.length > 1) {
             const idList = needsRequest.join(",");
-            const res = await ApiHttpClient.get<ITypedMap<IJobScalingTableRow>>(`server/${region}/tables/rebootplayerweighttable/${idList}`, {})
-                .then((r) => r.data, (e) => null)
-                .then((data) => data ? Object.keys(data).map((k) => data[k]) : [])
-                .then((r) => r.map((v) => this._scalingDataToObject(v)));
+            const rows = await TableProvider.getTableRows<IJobScalingTableRow>('rebootplayerweighttable', needsRequest, region);
+            const res = rows.map((v) => this._scalingDataToObject(v));
+            // const res = await ApiHttpClient.get<ITypedMap<IJobScalingTableRow>>(`server/${region}/tables/rebootplayerweighttable/${idList}`, {})
+            //     .then((r) => r.data, (e) => null)
+            //     .then((data) => data ? Object.keys(data).map((k) => data[k]) : [])
+            //     .then((r) => r.map((v) => this._scalingDataToObject(v)));
 
             res.forEach((r) => {
                 const key = this._cacheKey(r.jobId, region!);
@@ -208,7 +212,7 @@ class JobProvider implements IJobProvider {
     }
 
     public async getAllJobsScaling(region?: string): Promise<IJobScaling[]> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         const res = await ApiHttpClient.get<IJobScaling[]>(`server/${region}/jobs/scalings`, {});
         const ret = res.data;
         ret.forEach((s) => {
@@ -220,16 +224,8 @@ class JobProvider implements IJobProvider {
     }
 
     private _getIconUrl(region?: string): string {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         return `${ApiHttpClient.defaults.baseURL}/server/${region}/dds/jobicon_main/png`;
-    }
-
-    private _ensureRegion(region?: string): string {
-        if (!region) {
-            return store.state.regionCode;
-        }
-
-        return region;
     }
 
     private _cacheKey(id: number, region: string) {

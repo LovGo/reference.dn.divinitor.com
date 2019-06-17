@@ -17,6 +17,7 @@ import ISkillLevelTableRow from '@/models/skills/raw/ISkillLevelTableRow';
 import ISkillTreeEntry from '@/models/skills/ISkillTreeEntry';
 import ISkillEffectValue from '@/models/skills/ISkillEffectValue';
 import { ISkillLevelResponse } from '@/models/skills/raw/ISkillLevelResponse';
+import { ensureRegion } from './RegionProvider';
 
 export interface ISkillProvider {
     getSkill(id: number, region?: string): Promise<ISkill>;
@@ -46,7 +47,7 @@ class SkillProvider {
     }
 
     public async getSkill(id: number, region?: string): Promise<ISkill> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
 
         const cacheKey = this._cacheKey(id, region);
         const cached = this._skillCache[cacheKey];
@@ -81,7 +82,7 @@ class SkillProvider {
     }
 
     public async searchSkillsByName(name: string, region?: string): Promise<ISkill[]> {
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
 
         const resp = await ApiHttpClient.get<ISkill[]>(`/server/${region}/skills/search`, {
             params: {
@@ -142,7 +143,7 @@ class SkillProvider {
         const UNIT_SIZE = 50;
 
         
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         const pageNum = (page + 1).toString().padStart(2, "0");
         const url = `${ApiHttpClient.defaults.baseURL}/server/${region}/dds/skillicon${pageNum}/png`;
 
@@ -167,7 +168,7 @@ class SkillProvider {
         let column = iconIndex % 10;
         const UNIT_SIZE = 25;
 
-        region = this._ensureRegion(region);
+        region = ensureRegion(region);
         const pageNum = (page + 1).toString().padStart(2, "0");
         const url = `${ApiHttpClient.defaults.baseURL}/server/${region}/dds/bufficon${pageNum}/png`;
 
@@ -182,7 +183,7 @@ class SkillProvider {
     }
 
     public async getSkillLevels(skillId: number, pvp?: boolean, region?: string): Promise<ISkillLevel[]> {
-        const r = this._ensureRegion(region);
+        const r = ensureRegion(region);
 
         pvp = !!pvp;
 
@@ -206,14 +207,6 @@ class SkillProvider {
 
     public async getSkillTreeInfo(): Promise<ISkillTreeEntry|null> {
         return null;
-    }
-
-    private _ensureRegion(region?: string): string {
-        if (!region) {
-            return store.state.regionCode;
-        }
-
-        return region;
     }
 
     private _cacheKey(id: number, region: string) {
