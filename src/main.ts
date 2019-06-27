@@ -13,7 +13,6 @@ import * as Constants from "./constants";
 import VueMoment from "vue-moment";
 
 import Axios, { AxiosRequestConfig } from "axios";
-import moment from "moment";
 
 Vue.config.productionTip = false
 
@@ -95,7 +94,7 @@ new Vue({
          * Redirects to auth page if accessing a route that requires auth when accessing a route directly
          */
         redirectDirectLinkIfUnauthenticatedNotEmbedded() {
-            if (!this.isEmbedded() && this.$route.matched.some((r) => r.meta.auth)) {
+            if (!this.isEmbedded() && this.$route.matched.some((r) => r.meta.auth) && !this.$fOn(this.$f.RequireLogin)) {
                 if (!this.isAuthenticated()) {
                     this.$router.push({
                         name: "auth",
@@ -176,7 +175,7 @@ new Vue({
                 }
             }
 
-            if (requiresAuth && !isAuthed && !isEmbedded) {
+            if (requiresAuth && !isAuthed && !isEmbedded && !this.$fOn(this.$f.RequireLogin)) {
                 next({
                     name: "auth",
                     query: {
