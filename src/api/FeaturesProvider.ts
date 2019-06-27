@@ -18,9 +18,13 @@ export const netFeatures: ITypedMap<IFeature> = {
         enabled: true,
     },
     Three: {
-        regions: ["na", "duck", "cel", "sea"],
+        regions: ["na", "duck", "cel", "sea", "inf"],
         enabled: true,
-    }
+    },
+    RequireLogin: {
+        regions: ["inf"],
+        enabled: true,
+    },
 };
 
 export function getFeatureState(feature: IFeature): boolean {
