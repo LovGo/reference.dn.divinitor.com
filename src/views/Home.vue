@@ -16,11 +16,19 @@
         bosses, nests, items, skills, and more are or will be available here.
     </p>
     <p>
-        Begin by selecting a category in the navigation pane. Change regions using the region selector in the top right.
+        Begin by selecting a category in the navigation pane. 
+        <template v-if="!staticServer">
+            Change regions using the region selector in the top right.
+        </template>
     </p>
-    <p>
-        <a href="https://discord.gg/BeqJcCq" target="_blank">Join my Discord server!</a><br/>
-        <a href="https://www.patreon.com/divinitor" target="_blank">Support me on Patreon!</a>
+    <p v-if="pserverHome || pserverDiscord || pserverDonate">
+        <a :href="pserverHome" target="_blank" v-if="pserverHome">{{ pserverName }} Homepage<br/></a>
+        <a :href="pserverDiscord" target="_blank" v-if="pserverDiscord">Join the {{ pserverName }} Discord server!<br/></a>
+        <a :href="pserverDonate" target="_blank" v-if="pserverDonate">Support {{ pserverName }} by donating!</a>
+    </p>
+    <p v-else>
+        <a href="https://discord.gg/BeqJcCq" target="_blank">Join Vahr's Discord server!</a><br/>
+        <a href="https://www.patreon.com/divinitor" target="_blank">Support Vahr on Patreon!</a>
     </p>
 
     <h2>Region Information</h2>
@@ -78,6 +86,23 @@ export default Vue.extend({
     },
     created() {
         this.fetchData();
+    },
+    computed: {
+        pserverHome(): string {
+            return process.env.VUE_APP_STATIC_REGION_HOMEPAGE;
+        },
+        pserverDiscord(): string {
+            return process.env.VUE_APP_STATIC_REGION_DISCORD;
+        },
+        pserverDonate(): string {
+            return process.env.VUE_APP_STATIC_REGION_DONATE;
+        },
+        pserverName(): string {
+            return (this.regionInfo.value && this.regionInfo.value.displayNames.default) || '';
+        },
+        staticServer(): string {
+            return process.env.VUE_APP_USE_STATIC_SERVER;
+        },
     },
     methods: {
         fetchData() {

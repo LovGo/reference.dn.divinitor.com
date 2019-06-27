@@ -130,9 +130,13 @@ class StaticRegionProvider implements IRegionProvider {
 
         // Get version
         if (this.cachedVersion < 0 || !this.cachedTime) {
-            const res = await Axios.get<string>(process.env.VUE_APP_STATIC_REGION_VERSION_CFG_URL);
+            const res = await Axios.get<string>(process.env.VUE_APP_STATIC_REGION_VERSION_CFG_URL,
+                {
+                    responseType: 'string',
+                    transformResponse: undefined,
+                });
             if (process.env.VUE_APP_STATIC_REGION_USE_EXACT_VERSION === 'true') {
-                this.cachedVersion = res.data;
+                this.cachedVersion = String(res.data);
             } else {
                 let rawVersion = res.data.split('\n')[0];
                 if (rawVersion.startsWith('Version ')) {
@@ -157,7 +161,8 @@ class StaticRegionProvider implements IRegionProvider {
     }
 }
 
-export default (process.env.VUE_APP_USE_STATIC_SERVER ? new StaticRegionProvider() : new RegionProvider()) as IRegionProvider;
+const provider = (process.env.VUE_APP_USE_STATIC_SERVER ? new StaticRegionProvider() : new RegionProvider());
+export default provider as IRegionProvider;
 
 export function ensureRegion(region?: string): string {
     if (!region) {
@@ -165,4 +170,8 @@ export function ensureRegion(region?: string): string {
     }
 
     return region;
+}
+
+export async function getCurrentRegion(): Promise<IRegion> {
+    return await provider.getRegionByShortName(Store.state.regionCode);
 }
