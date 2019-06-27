@@ -8,6 +8,6 @@ export default interface IRegion {
     defaultLocale: string;
     displayNames: ITypedMap<string>;
     patchConfigList: IPatchConfigList;
-    version: number;
+    version: number|string;
     patchedTime: string;
 };

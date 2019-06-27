@@ -104,7 +104,7 @@ class RegionProvider implements IRegionProvider {
 
 class StaticRegionProvider implements IRegionProvider {
 
-    private cachedVersion: number;
+    private cachedVersion: number|string;
     private cachedTime: string;
 
     constructor() {
@@ -131,12 +131,16 @@ class StaticRegionProvider implements IRegionProvider {
         // Get version
         if (this.cachedVersion < 0 || !this.cachedTime) {
             const res = await Axios.get<string>(process.env.VUE_APP_STATIC_REGION_VERSION_CFG_URL);
-            let rawVersion = res.data.split('\n')[0];
-            if (rawVersion.startsWith('Version ')) {
-                rawVersion = rawVersion.substring('Version '.length).trim();
-                const parsed = parseInt(rawVersion);
-                if (!isNaN(parsed)) {
-                    this.cachedVersion = parsed;
+            if (process.env.VUE_APP_STATIC_REGION_USE_EXACT_VERSION === 'true') {
+                this.cachedVersion = res.data;
+            } else {
+                let rawVersion = res.data.split('\n')[0];
+                if (rawVersion.startsWith('Version ')) {
+                    rawVersion = rawVersion.substring('Version '.length).trim();
+                    const parsed = parseInt(rawVersion);
+                    if (!isNaN(parsed)) {
+                        this.cachedVersion = parsed;
+                    }
                 }
             }
 
