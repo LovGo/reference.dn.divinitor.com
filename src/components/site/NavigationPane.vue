@@ -17,8 +17,21 @@
         </ul>
 
         <div class="related-links">
+            <div class="link-header" v-if="pserverHome || pserverDiscord">
+                {{ pserverInfo.displayNames.default }}
+            </div>
+            <div class="link" v-if="pserverHome">
+                <a :href="pserverHome" target="_blank">Home</a>
+            </div>
+            <div class="link" v-if="pserverDiscord">
+                <a :href="pserverDiscord" target="_blank">Discord</a>
+            </div>
+            <template v-if="!reduceSidebar">
+            <div class="link-header" v-if="pserverHome || pserverDiscord">
+                Divinitor
+            </div>
             <div class="link">
-                <a href="https://divinitor.com" target="_blank">Divinitor Home</a>
+                <a href="https://divinitor.com" target="_blank">Home</a>
             </div>
             <div class="link">
                 <a href="https://www.patreon.com/divinitor" target="_blank">Patreon</a>
@@ -27,12 +40,12 @@
                 <a href="https://discord.gg/BeqJcCq" target="_blank">Discord</a>
             </div>
             <div class="link">
-                <a href="https://blog.divinitor.com" target="_blank">Divinitor Blog</a>
+                <a href="https://blog.divinitor.com" target="_blank">Blog</a>
             </div>
             <div class="link">
-                <a href="https://labs.divinitor.com" target="_blank">Divinitor Labs</a>
+                <a href="https://labs.divinitor.com" target="_blank">Labs</a>
             </div>
-
+            </template>
         </div>
     </div>
     <div class="mobile-only">
@@ -62,9 +75,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import Store from "@/store";
+import IRegion from '../../models/region/IRegion';
+import RegionProvider, { getCurrentRegion } from '../../api/RegionProvider';
 
 interface IData {
     mobileOpenState: boolean;
+    pserverInfo: IRegion|null;
 }
 
 export default Vue.extend({
@@ -72,15 +88,30 @@ export default Vue.extend({
         authed(): boolean {
             return this.$store.getters.authenticated;
         },
+        reduceSidebar(): boolean {
+            return process.env.VUE_APP_STATIC_REGION_REDUCE_SIDEBAR === 'true';
+        },
+        pserverHome(): string {
+            return process.env.VUE_APP_STATIC_REGION_HOMEPAGE;
+        },
+        pserverDiscord(): string {
+            return process.env.VUE_APP_STATIC_REGION_DISCORD;
+        },
     },
     data(): IData {
         return {
             mobileOpenState: false,
+            pserverInfo: null,
         };
     },
     watch: {
         ["$route"]() {
             this.setMenuState(false);
+        }
+    },
+    async mounted() {
+        if (process.env.VUE_APP_USE_STATIC_SERVER) {
+            this.pserverInfo = await getCurrentRegion();
         }
     },
     methods: {
@@ -210,6 +241,15 @@ export default Vue.extend({
 
     .related-links {
         margin: 20px 0 0 12px;
+
+        .link-header {
+            font-family: @dv-f-geomanist;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            line-height: 18px;
+            color: @dv-c-accent-3;
+        }
 
         .link {
             font-family: @dv-f-geomanist;

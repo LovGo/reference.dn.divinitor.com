@@ -42,8 +42,8 @@
     </div>
 
     <div class="copyright">
-        Vahrhedral and Divinitor &copy; 2018 Vahrheit<br/>
-        Dragon Nest &copy; 2018 Eyedentity Games, Inc.<br/>
+        Divinitor &copy; 2019 Vahr (Vincent Zhang)<br/>
+        Dragon Nest &copy; 2019 Eyedentity Games, Inc.<br/>
         Divinitor makes no claims of ownership<br/>
         of content sourced from Dragon Nest
     </div>
