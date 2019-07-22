@@ -41,6 +41,7 @@ import { Actions } from '@/storemutations';
 import IToken from '@/models/util/IToken';
 import LoadingErrorable from "@/models/util/LoadingErrorable";
 import IDevlinTokenResponse from '@/models/auth/IDevlinTokenResponse';
+import AuthProvider from '@/api/AuthProvider';
 
 interface IData {
     loginStatus: LoadingErrorable<any, any>;
@@ -86,22 +87,19 @@ export default Vue.extend({
         }
     },
     methods: {
-        promptLogin() {
+        async promptLogin() {
             if (this.loginStatus.loading) {
                 return;
             }
 
             this.loginStatus.startLoad();
             this.loginStatus.customStatus = "Waiting for you to log in";
-            DiscordLoginProvider.performDiscordOAuth2Flow().then((code) => {
-                this.loginStatus.customStatus = "Verifying login";
-                return DiscordLoginProvider.redeemCode(code);
-            }).then((authResult: IRedeemedAuthResult) => {
-                // this.loginStatus.done(true);
-                this.$store.dispatch(Actions.SetAuthToken, authResult);
-            }).catch((error: Error) => {
+            try {
+                const token = await AuthProvider.performDevlinOAuth2Flow();
+                this.$store.dispatch(Actions.SetAuthToken, token);
+            } catch (error) {
                 this.loginStatus.failed(error);
-            });
+            }
         },
         logOut() {
             this.$store.dispatch(Actions.ClearAuthToken);
