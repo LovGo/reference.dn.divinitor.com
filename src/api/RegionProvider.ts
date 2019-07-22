@@ -130,7 +130,7 @@ class StaticRegionProvider implements IRegionProvider {
 
         // Get version
         if (this.cachedVersion < 0 || !this.cachedTime) {
-            const res = await Axios.get<string>(process.env.VUE_APP_STATIC_REGION_VERSION_CFG_URL,
+            const res = await Axios.get<string>(process.env.VUE_APP_STATIC_REGION_VERSION_CFG_URL!,
                 {
                     responseType: 'string',
                     transformResponse: undefined,
