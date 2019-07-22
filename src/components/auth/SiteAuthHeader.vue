@@ -40,6 +40,7 @@ import IRedeemedAuthResult from '@/models/auth/IRedeemedAuthResult';
 import { Actions } from '@/storemutations';
 import IToken from '@/models/util/IToken';
 import LoadingErrorable from "@/models/util/LoadingErrorable";
+import IDevlinTokenResponse from '@/models/auth/IDevlinTokenResponse';
 
 interface IData {
     loginStatus: LoadingErrorable<any, any>;
@@ -57,17 +58,28 @@ export default Vue.extend({
         authenticated(): boolean {
             return this.$store.getters.authenticated;
         },
+        authInfo(): IDevlinTokenResponse|null {
+            return this.$store.getters.authInfo as IDevlinTokenResponse|null;
+        },
         username(): string {
-            return (<IToken>this.$store.getters.authInfo).username;
+            const authInfo = this.authInfo;
+            return (authInfo && authInfo.profile && authInfo.profile.username) || '';
         },
         avatar(): string|null {
-            const token = this.$store.getters.authInfo as IToken;
-            if (token.avatar) {
+            const authInfo = this.authInfo;
+            if (!authInfo || !authInfo.profile) {
+                return null;
+            }
+
+            const avatar = authInfo.profile.avatar;
+            const dsid = authInfo.profile.id;
+
+            if (avatar) {
                 let ext = "png";
-                if (token.avatar.startsWith("a_")) {
+                if (avatar.startsWith("a_")) {
                     ext = "gif";
                 }
-                return `https://cdn.discordapp.com/avatars/${token.dsid}/${token.avatar}.${ext}?size=64`;
+                return `https://cdn.discordapp.com/avatars/${dsid}/${avatar}.${ext}?size=64`;
             }
 
             return null;

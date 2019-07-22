@@ -31,7 +31,7 @@
                         </p>
 
                         <div class="got-it">
-                            <button v-on:click="changePage(2, 1)"
+                            <button class="dv-button" v-on:click="changePage(2, 1)"
                                 v-anime="{
                                     borderColor: ['#98BCD4', '#dcf1ff', '#98BCD4', '#98BCD4'],
                                     loop: true,
@@ -120,16 +120,24 @@
                 <div class="page" :active="page == 3" :id="3">
                     <div class="content content-in">
                         <span v-if="authenticated && loginStatus == 0">
-                            <h1>You're already logged in</h1>
+                            <h1>You're logged in</h1>
                             <p>
-                                Nice! You've already logged in to Minerva via Discord 
-                                as <strong>{{authInfo.username}}</strong>.
+                                Nice! You've logged in to Minerva via Devlin as
                             </p>
+                            
+                            <div class="user-info">
+                                <img class="left discord-avatar" v-if="avatar" :src="avatar" alt="?"/>
+                                <div class="right">
+                                    <strong>{{ authInfo.profile.username }}</strong><span class="discrim">#{{ authInfo.profile.discriminator }}</span>
+                                    <div class="id"><span>{{ authInfo.profile.id }}</span></div>
+                                </div>
+                            </div>
+
                             <div class="got-it">
-                                <button v-on:click="logOut">
+                                <button class="dv-button" v-on:click="logOut">
                                     No stop wait log me out
                                 </button>
-                                <button v-on:click="finish"
+                                <button class="dv-button" v-on:click="finish"
                                     v-anime="{
                                         borderColor: ['#98BCD4', '#dcf1ff', '#98BCD4', '#98BCD4'],
                                         loop: true,
@@ -142,10 +150,9 @@
                             </div>
                         </span>
                         <span v-else>
-                            <h1>Log in with Discord (Optional)</h1>
+                            <h1>Log in with Devlin (Optional)</h1>
                             <p>
-                                You can log in using Discord to gain access to closed-beta features if you are a member
-                                in a Discord that has Minerva Closed Beta access. There are some features that are
+                                You can log in using Divinitor Devlin to gain access to members-only features. There are some features that are
                                 available to guests, however, so if you're just here for that then meander on down 
                                 to that "No thanks" link below.
                             </p>
@@ -153,7 +160,10 @@
                                 Success! You are now logged in.
                             </div>
                             <div class="discord-login" v-else-if="loginStatus == 0">
-                                <button class="discord-button button" v-on:click="openDiscordAuth"
+
+                                <discord-hero-button class="big-login-button" :optional="false" v-on:done="next" />
+
+                                <!-- <button class="discord-button button" v-on:click="openDiscordAuth"
                                     v-anime="{
                                         borderColor: ['#98BCD4', '#dcf1ff', '#98BCD4', '#98BCD4'],
                                         loop: true,
@@ -163,7 +173,7 @@
                                     }">
                                     <div class="login-label">Log in with</div>
                                     <img src="./../assets/discord_big_white.svg" class="discord-logo">
-                                </button>
+                                </button> -->
                                 <br/>
                                 <div class="no-thanks">
                                     <a href="#" v-on:click="finish">No thanks, just let me in</a>
@@ -245,6 +255,8 @@ import IRegion from '@/models/region/IRegion';
 import { Actions } from '@/storemutations';
 import DiscordLoginProvider from "@/api/DiscordLoginProvider";
 import IRedeemedAuthResult from '@/models/auth/IRedeemedAuthResult';
+import IDevlinTokenResponse from '@/models/auth/IDevlinTokenResponse';
+import DiscordHeroButton from '@/components/auth/DiscordHeroButton.vue';
 
 enum LoginStatus {
     IDLE = 0,
@@ -278,6 +290,7 @@ export default Vue.extend({
     },
     components: {
         RegionSelect,
+        DiscordHeroButton,
     },
     mounted() {
         this.loadRegions();
@@ -291,6 +304,25 @@ export default Vue.extend({
             "authenticated",
             "authInfo",
         ]),
+        avatar(): string|null {
+            const authInfo = (this as any).authInfo as IDevlinTokenResponse;
+            if (authInfo && authInfo.profile) {
+                let av = authInfo.profile.avatar;
+                if (!av) {
+                    // determine discord default avatar using discrim
+                    const discrim = Number(authInfo.profile.discriminator) % 5;
+                    return `https://cdn.discordapp.com/embed/avatars/${discrim}.png?size=128`;
+                }
+
+                let ext = "png";
+                if (av.startsWith("a_")) {
+                    ext = "gif";
+                }
+                return `https://cdn.discordapp.com/avatars/${authInfo.profile.id}/${av}.${ext}?size=128`;
+            }
+
+            return null;
+        },
     },
     methods: {
         changePage(index: number, step?: number) {
@@ -469,6 +501,60 @@ export default Vue.extend({
             }
         }
 
+        .user-info {
+            text-align: center;
+            padding: 0;
+
+            &::after {
+                content: "";
+                clear: both;
+                display: table;
+            }
+            .right {
+                margin-top: 8px;
+                margin-bottom: 2px;
+                font-size: 24px;
+
+                .discrim {
+                    color: lighten(@dv-c-body, -25%);
+                    font-size: 0.75em;
+                }
+
+                .id {
+                    font-size: 10px;
+                    span {
+                        color: fade(@dv-c-idle, 50%);
+                        transition: color 0.125s ease-in;
+
+                        &:hover {
+                            color: @dv-c-accent-2;
+                        }
+                    }
+                }
+            }
+
+            .left {
+                display: block;
+                @size: 96px;
+                margin: 4px;
+                border-radius: 50%;
+                border: 2px solid @dv-c-foreground;
+                // box-sizing: border-box;
+                width: @size;
+                height: @size;
+
+                &.discord-avatar {
+                    width: @size;
+                    height: @size;
+                    display: inline-block;
+                    text-align: center;
+                    line-height: @size;
+                    vertical-align: middle;
+                    font-size: 24px;
+                }
+            }
+        }
+
         .got-it {
             text-align: center;
             position: absolute;
@@ -503,6 +589,10 @@ export default Vue.extend({
                 .discord-logo {
                     width: 200px;
                 }
+            }
+
+            .big-login-button {
+                min-height: 135px;
             }
 
             .no-thanks {

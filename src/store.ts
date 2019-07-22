@@ -5,6 +5,8 @@ import {defaultRegion} from "@/api/RegionProvider";
 import JwtDecode from "jwt-decode";
 import IToken from './models/util/IToken';
 import IRedeemedAuthResult from "./models/auth/IRedeemedAuthResult";
+import IDevlinTokenResponse from './models/auth/IDevlinTokenResponse';
+import IJwtTokenBase from './models/auth/IJwtTokenBase';
 import moment from "moment";
 
 Vue.use(Vuex);
@@ -12,11 +14,12 @@ Vue.use(Vuex);
 const RegionCodeStoreName = "dv.ref.dn.regionCode";
 const FirstRunStoreName = "dv.ref.dn.firstRunAck";
 const AuthStoreName = "dv.ref.dn.auth";
+const DevlinAuthStoreName = "dv.ref.dn.devlinauth";
 
 export interface IState {
     regionCode: string;
     firstRunAck: boolean,
-    auth: IRedeemedAuthResult|null;
+    auth: IDevlinTokenResponse|null;
     pageLoading: boolean;
 }
 
@@ -39,13 +42,13 @@ export default new Vuex.Store<IState>({
             state.firstRunAck = true;
             localStorage.setItem(FirstRunStoreName, String(state.firstRunAck));
         },
-        [MutationTypes.SetAuthToken](state, authToken: IRedeemedAuthResult) {
+        [MutationTypes.SetAuthToken](state, authToken: IDevlinTokenResponse) {
             state.auth = authToken;
-            localStorage.setItem(AuthStoreName, JSON.stringify(authToken));
+            localStorage.setItem(DevlinAuthStoreName, JSON.stringify(authToken));
         },
         [MutationTypes.ClearAuthToken](state) {
             state.auth = null;
-            localStorage.removeItem(AuthStoreName);
+            localStorage.removeItem(DevlinAuthStoreName);
         },
         [MutationTypes.SetPageLoading](state, value: boolean) {
             state.pageLoading = value;
@@ -64,7 +67,7 @@ export default new Vuex.Store<IState>({
 
             commit(MutationTypes.SetRegion, savedRegionCode);
 
-            const savedAuthStr = localStorage.getItem(AuthStoreName);
+            const savedAuthStr = localStorage.getItem(DevlinAuthStoreName);
             if (savedAuthStr) {
                 const savedAuth = JSON.parse(savedAuthStr);
                 if (savedAuth) {
@@ -78,7 +81,7 @@ export default new Vuex.Store<IState>({
         [Actions.SetRegionSoft]({ commit, state }, regionCode) {
             commit(MutationTypes.SetRegionSoft, regionCode);
         },
-        [Actions.SetAuthToken]({ commit, state }, auth: IRedeemedAuthResult) {
+        [Actions.SetAuthToken]({ commit, state }, auth: IDevlinTokenResponse) {
             commit(MutationTypes.SetAuthToken, auth);
         },
         [Actions.ClearAuthToken]({ commit, state }) {
@@ -102,28 +105,28 @@ export default new Vuex.Store<IState>({
             // }
 
             const currentTime = new Date().getTime() / 1000;
-            return state.auth != null && JwtDecode<IToken>(state.auth.access_token).exp >= currentTime;
+            return state.auth != null && JwtDecode<IJwtTokenBase>(state.auth.accessToken).exp >= currentTime;
         },
         expired: (state): boolean => {
             const currentTime = new Date().getTime() / 1000;
-            return state.auth == null || JwtDecode<IToken>(state.auth.access_token).exp < currentTime;
+            return state.auth == null || JwtDecode<IJwtTokenBase>(state.auth.accessToken).exp < currentTime;
         },
         authToken: (state): string|null => {
             if (!state.auth) {
                 return null;
             }
 
-            return state.auth.token_type + " " + state.auth.access_token;
+            return state.auth.tokenType + " " + state.auth.accessToken;
         },
         showFirstRun: (state): boolean => {
             return !state.firstRunAck;
         },
-        authInfo: (state): IToken|null => {
+        authInfo: (state): IDevlinTokenResponse|null => {
             if (state.auth == null) {
                 return null;
             }
 
-            return JwtDecode<IToken>(state.auth.access_token);
+            return state.auth;
         },
         pageLoading: (state): boolean => {
             return state.pageLoading;

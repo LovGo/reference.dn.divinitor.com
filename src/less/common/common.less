@@ -2,6 +2,26 @@
 @import "../geomanist.less";
 @import "variables.less";
 
+.button-bar {
+    margin: 8px 0;
+
+    button, .dv-button {
+        border-right-width: 0px;
+        &:last-child {
+            border-right-width: 2px;
+        }
+    }
+
+    &.equal {
+        display: flex;
+        flex-direction: row;
+
+        button, .dv-button {
+            flex: 1 1 0;
+        }
+    }
+}
+
 .dv-button {
     @fg-color: @dv-c-foreground;
     @bg-color: @dv-c-background;
@@ -127,6 +147,17 @@
         &:hover, &:active {
             color: @bg-color;
         }
+    }
+
+    &[disabled="disabled"], &[disabled] {
+        color: @dv-c-disabled !important;
+        border-color: @dv-c-disabled !important;
+        pointer-events: none;
+    }
+
+    &.small {
+        font-size: 10px;
+        padding: 4px 8px;
     }
 }
 
