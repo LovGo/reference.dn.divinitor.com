@@ -89,19 +89,19 @@ export default Vue.extend({
     },
     computed: {
         pserverHome(): string {
-            return process.env.VUE_APP_STATIC_REGION_HOMEPAGE;
+            return process.env.VUE_APP_STATIC_REGION_HOMEPAGE!;
         },
         pserverDiscord(): string {
-            return process.env.VUE_APP_STATIC_REGION_DISCORD;
+            return process.env.VUE_APP_STATIC_REGION_DISCORD!;
         },
         pserverDonate(): string {
-            return process.env.VUE_APP_STATIC_REGION_DONATE;
+            return process.env.VUE_APP_STATIC_REGION_DONATE!;
         },
         pserverName(): string {
             return (this.regionInfo.value && this.regionInfo.value.displayNames.default) || '';
         },
         staticServer(): string {
-            return process.env.VUE_APP_USE_STATIC_SERVER;
+            return process.env.VUE_APP_USE_STATIC_SERVER!;
         },
     },
     methods: {
