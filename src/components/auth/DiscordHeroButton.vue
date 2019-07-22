@@ -4,7 +4,7 @@
         Success! You are now logged in.
     </div>
     <div class="discord-login" v-else-if="loginStatus == 0">
-        <button class="discord-button button" v-on:click="openDiscordAuth"
+        <button class="dv-button discord-button button" v-on:click="openDiscordAuth"
             v-anime="{
                 borderColor: ['#98BCD4', '#dcf1ff', '#98BCD4', '#98BCD4'],
                 loop: true,
@@ -12,8 +12,7 @@
                 delay: 750,
                 easing: 'easeInOutExpo'
             }">
-            <div class="login-label">Log in with</div>
-            <img src="@/assets/discord_big_white.svg" class="discord-logo">
+            <div class="login-label">Log in</div>
         </button>
         <br/>
         <div class="no-thanks" v-if="optional">
@@ -31,26 +30,26 @@
             duration: 750,
             elasticity: 100,
         }">
-        <div class="loading-blinker" /> Waiting for you to log in on the Discord popup window...
+        <div class="loading-blinker" /> Waiting for you to log in on the Devlin popup window...
     </div>
     <div class="discord-waiting" v-else-if="loginStatus == 2">
         <div class="loading-blinker" /> Verifying login information...
     </div>
     <div class="discord-error" v-else-if="loginStatus == 4">
         <h4 class="head">
-            Whoops, we couldn't log you in with Discord :(
+            Whoops, we couldn't log you in :(
         </h4>
         <div class="detail" v-if="discordLoginError">
             {{ discordLoginError.message }}
         </div>
         <div class="button-row">
-            <button v-on:click="openDiscordAuth">Try again</button>
-            <button v-if="optional" v-on:click="skip">Skip for now</button>
+            <button class="dv-button" v-on:click="openDiscordAuth">Try again</button>
+            <button class="dv-button" v-if="optional" v-on:click="skip">Skip for now</button>
         </div>
     </div>
 
     <div class="got-it" v-if="loginStatus == 3">
-            <button v-on:click="finish"
+            <button class="dv-button" v-on:click="finish"
                 v-anime="{
                     borderColor: ['#98BCD4', '#dcf1ff', '#98BCD4', '#98BCD4'],
                     loop: true,
@@ -69,7 +68,9 @@ import Vue from 'vue';
 
 import { Actions } from '@/storemutations';
 import DiscordLoginProvider from "@/api/DiscordLoginProvider";
+import AuthProvder from '@/api/AuthProvider';
 import IRedeemedAuthResult from '@/models/auth/IRedeemedAuthResult';
+import AuthProvider from '@/api/AuthProvider';
 
 enum LoginStatus {
     IDLE = 0,
@@ -116,15 +117,14 @@ export default Vue.extend({
             });
             this.loginStatus = LoginStatus.DISCORD_PROMPT;
             this.discordLoginError = null;
-            setTimeout(() => {
-                DiscordLoginProvider.performDiscordOAuth2Flow().then((code) => {
-                    this.loginStatus = LoginStatus.VERIFICATION;
-                    return DiscordLoginProvider.redeemCode(code);
-                }).then((authResult: IRedeemedAuthResult) => {
+            setTimeout(async() => {
+                try {
+                    const token = await AuthProvider.performDevlinOAuth2Flow();
                     this.loginStatus = LoginStatus.DONE;
-                    this.$store.dispatch(Actions.SetAuthToken, authResult);
+                    this.$store.dispatch(Actions.SetAuthToken, token);
                     this.$emit("done");
-                }).catch((error: Error) => {
+                } catch (error) {
+                    console.error(error);
                     this.loginStatus = LoginStatus.ERROR;
                     this.discordLoginError = error;
                     Vue.nextTick().then(() => {
@@ -143,7 +143,7 @@ export default Vue.extend({
                             elasticity: 800,
                         });
                     });
-                });
+                }
             }, 1000);
 
         }
@@ -158,10 +158,10 @@ export default Vue.extend({
     .discord-login {
         .discord-button {
             text-align: center;
-            width: 300px;
-            height: 110px;
+            // width: 300px;
+            // height: 110px;
             .login-label {
-                margin-top: 12px;
+                // margin-top: 12px;
             }
             .discord-logo {
                 width: 200px;

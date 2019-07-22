@@ -92,10 +92,10 @@ export default Vue.extend({
             return process.env.VUE_APP_STATIC_REGION_REDUCE_SIDEBAR === 'true';
         },
         pserverHome(): string {
-            return process.env.VUE_APP_STATIC_REGION_HOMEPAGE;
+            return process.env.VUE_APP_STATIC_REGION_HOMEPAGE!;
         },
         pserverDiscord(): string {
-            return process.env.VUE_APP_STATIC_REGION_DISCORD;
+            return process.env.VUE_APP_STATIC_REGION_DISCORD!;
         },
     },
     data(): IData {
