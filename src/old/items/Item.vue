@@ -59,7 +59,7 @@
                         <span class="iid">#{{ itemId }}</span>
                     </div>
                     <h2 class="head">
-                        <span class="enhance" v-if="enhanceLevel > 0">+{{ enhanceLevel }}</span>
+                        <span class="enhance" v-if="enhanceLevel > 0">+{{ enhanceLevel }} </span>
                         <ui-string 
                             :mid="nameMessage.id" 
                             :alt="nameMessage.message" 
@@ -70,11 +70,11 @@
                     <div class="remark">
                         <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span>
                         <template v-if="itemData.tier">
-                            <span class="tier" v-html="itemData.tier"></span>
+                            <span class="tier" v-html="itemData.tier"></span>&nbsp;
                         </template>
                         <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }} </span> 
-                        <span v-if="canUse" class="can-use">{{ canUse }}</span>
-                        <span v-if="itemData.cashItem" class="cash">Cash</span>
+                        <span v-if="canUse" class="can-use">{{ canUse }} </span>
+                        <span v-if="itemData.cashItem" class="cash">Cash </span>
                         {{ category }}
                     </div>
                 </div>
