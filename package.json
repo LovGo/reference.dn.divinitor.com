@@ -12,7 +12,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.14",
-    "three": "^0.106.2",
+    "three": "^0.108.0",
     "three-addons": "^1.2.0",
     "vue": "^2.6.10",
     "vue-animejs": "^1.0.1",
