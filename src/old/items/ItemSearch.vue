@@ -29,13 +29,14 @@
             </div>
 
             <div class="name-class-filter">
-                <input id="filter-name" type="text" v-model="filter.nameSearch" placeholder="Item name"/>
+                <input id="filter-name" type="text" v-model="filter.nameSearch" placeholder="Search by item name..."/>
 
                 <!-- <label for="filter-class">Class</label>
                 <input id="filter-class" type="text" v-model="filter.selectClass" /> -->
             </div>
             
             <div class="grade-filter">
+                <label>Rank</label>
                 <span class="normal">
                     <input id="filter-grade-normal" type="checkbox" v-model="filter.grades.normal" />
                     <label for="filter-grade-normal">Normal</label>
@@ -300,6 +301,18 @@ export default {
     .search-form {
         .button-row {
             margin-top: 10px;
+        }
+
+        .filter {
+            align-items: baseline;
+        }
+
+        .name-class-filter {
+            input {
+                font-size: 24px;
+                width: 100%;
+                padding-left: 4px;
+            }
         }
     }
 

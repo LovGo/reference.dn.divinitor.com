@@ -11,7 +11,7 @@
             </div>
             <div class="title">
                 <div class="remark">
-                    <span class="id">#{{ this.skillId }}</span>
+                    <span class="id">#{{ this.skillId }} / {{ this.skillData.ownerTable }}</span>
                 </div>
                 <h2 class="head">
                     <ui-string class="name" :message-data="this.skillData.name" />
@@ -84,6 +84,18 @@
                             {{ activeRankData.cooldown | milliseconds }}s
                         </div>
                     </div>
+                    <div class="entry" v-if="skillData.globalCooldownPvE > 0 && !pvp">
+                        <div class="key">Shared Cooldown: </div>
+                        <div class="value">
+                            {{ skillData.globalCooldownPvE | milliseconds }}s (G {{ skillData.globalSkillGroupId }})
+                        </div>
+                    </div>
+                    <div class="entry" v-if="skillData.globalCooldownPvP > 0 && pvp">
+                        <div class="key">Shared Cooldown: </div>
+                        <div class="value">
+                            {{ skillData.globalCooldownPvP | milliseconds }}s (G {{ skillData.globalSkillGroupId }})
+                        </div>
+                    </div>
                     <div class="entry" v-if="activeRankData.addThreat > 0">
                         <div class="key">Additional Threat: </div>
                         <div class="value">
@@ -102,6 +114,12 @@
                         <div class="key">Internal MDMG: </div>
                         <div class="value">
                             {{ (activeRankData.mdmgBoardDamage + 1) | statPercent }}
+                        </div>
+                    </div>
+                    <div class="entry">
+                        <div class="key">SLTID: </div>
+                        <div class="value">
+                            {{ activeRankData.id }}
                         </div>
                     </div>
                 </div>

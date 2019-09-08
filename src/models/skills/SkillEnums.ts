@@ -101,5 +101,22 @@ export enum SkillProcessor {
     /**
      * Params: Range, Chance, TargetEffect, Duration
      */
-    APPLY_RANGED_STATE_EFFECT,
+    APPLY_RANGED_STATE_EFFECT = 8,
+    /**
+     * Params: Param (BubbleId;Count;ActionName;BubbleId;Count;ActionName...)
+     */
+    MODIFY_ON_BUBBLE_COUNT = 12,
+    /**
+     * Params: Param (MaxCTCStacks;Unk2)
+     */
+    CTC = 15,
+    /**
+     * Params: Direction
+     * Append _Direction (e.g. _Front if Direction is "Front") to the action name if the given direction is pressed
+     */
+    MODIFY_ON_DIRECTION = 17,
+    /**
+     * Params: Param (MonsterID;Count;ActionName;...)
+     */
+    MODIFY_ON_SUMMON_COUNT = 19,
 }

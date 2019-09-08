@@ -881,6 +881,10 @@ export default {
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
+
+        &.estimation {
+            margin-top: 50px;
+        }
     }
     
 
@@ -1040,8 +1044,8 @@ export default {
         position: absolute;
         height: 420px;
         top: 0;
-        .left( 0);
-        .right( 0);
+        .left(0);
+        .right(0);
         bottom: 0;
 
         .help {

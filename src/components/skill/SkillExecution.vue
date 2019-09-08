@@ -33,8 +33,42 @@ const processorMap: {[k: number /* SkillProcessor */]: (params: string[]) => str
     [SkillProcessor.AURA]: (params) => `Apply effect as an aura ${params[0]} units in radius`,
     [SkillProcessor.ADD_ACTION_SUFFIX]: (params) => `Add suffix '${params[0]}' to actions ${params.slice(1).map((s) => "'" + s + "'").join(', ')}`,
     [SkillProcessor.APPLY_RANGED_STATE_EFFECT]: (params) => `Apply state effect ${params[2]} for ${Number(params[3]) / 1000}s to targets within ${params[0]} units at a ${params[1]}% chance`,
+    [SkillProcessor.MODIFY_ON_BUBBLE_COUNT]: (params) => modifyOnBubbleCount(params),
+    [SkillProcessor.CTC]: (params) => `Store up to ${params[0]} cooldown charges`,
+    [SkillProcessor.MODIFY_ON_DIRECTION]: (params) => `If the ${params[0]} key is pressed, append _${params[0]} to the action name`,
+    [SkillProcessor.MODIFY_ON_SUMMON_COUNT]: (params) => modifyOnMonsterCount(params),
 };
 
+function modifyOnBubbleCount(params: string[]): string {
+    let ret: string[] = [];
+    const split = params[0].split(';');
+    for (let i = 0; i < split.length / 3; ++i) {
+        const j = i * 3;
+        const bubbleId = split[j];
+        const bubbleCount = split[j + 1];
+        const actionName = split[j + 2];
+        const fragment = `At ${bubbleCount}x bubble ${bubbleId}, use action ${actionName}`;
+        ret.push(fragment);
+    }
+
+    return ret.join('; ');
+}
+
+
+function modifyOnMonsterCount(params: string[]): string {
+    let ret: string[] = [];
+    const split = params[0].split(';');
+    for (let i = 0; i < split.length / 3; ++i) {
+        const j = i * 3;
+        const monsterId = split[j];
+        const monsterCount = split[j + 1];
+        const actionName = split[j + 2];
+        const fragment = `At ${monsterCount}x monster ${monsterId}, use action ${actionName}`;
+        ret.push(fragment);
+    }
+
+    return ret.join('; ');
+}
 export default Vue.extend({
     props: {
         processors: {
@@ -88,13 +122,21 @@ export default Vue.extend({
                     case SkillProcessor.CHANGE_PROJECTILE:
                         ret.push({
                             type: processorId,
-                            params: [this.processParams[paramIdx++], this.processParams[paramIdx++]],
+                            params: [
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                            ],
                         });
                         break;
                     case SkillProcessor.APPLY_RANGED_STATE_EFFECT:
                         ret.push({
                             type: processorId,
-                            params: [this.processParams[paramIdx++], this.processParams[paramIdx++], this.processParams[paramIdx++], this.processParams[paramIdx++]],
+                            params: [
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                            ],
                         });
                         break;
                     case SkillProcessor.DO_LOOPING_ACTION:
@@ -105,7 +147,7 @@ export default Vue.extend({
                                 this.processParams[paramIdx++],
                                 this.processParams[paramIdx++],
                                 this.processParams[paramIdx++],
-                                this.processParams[paramIdx++]
+                                this.processParams[paramIdx++],
                             ],
                         });
                         break;
@@ -123,6 +165,27 @@ export default Vue.extend({
                         ret.push({
                             type: processorId,
                             params,
+                        });
+                        break;
+                    case SkillProcessor.APPLY_RANGED_STATE_EFFECT:
+                        ret.push({
+                            type: processorId,
+                            params: [
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                            ],
+                        });
+                        break;
+                    case SkillProcessor.CTC:
+                    case SkillProcessor.MODIFY_ON_DIRECTION:
+                    case SkillProcessor.MODIFY_ON_SUMMON_COUNT:
+                        ret.push({
+                            type: processorId,
+                            params: [
+                                this.processParams[paramIdx++],
+                            ],
                         });
                         break;
                 }

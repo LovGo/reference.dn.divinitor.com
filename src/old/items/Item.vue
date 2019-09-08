@@ -56,7 +56,7 @@
                 </div>
                 <div class="title">
                     <div class="remark">
-                        <span class="iid">#{{ itemId }}</span>
+                        <span class="iid">#{{ itemId }} / {{ ownerTable }}</span>
                     </div>
                     <h2 class="head">
                         <span class="enhance" v-if="enhanceLevel > 0">+{{ enhanceLevel }} </span>
@@ -518,6 +518,13 @@ export default {
                 id: Number((this.itemData.name && this.itemData.name._NameID) || 0),
                 message: this.name,
             };
+        },
+        ownerTable() {
+            if (this.itemData) {
+                return this.itemData.ownerTable;
+            }
+
+            return 'virt.itemtable';
         },
         canUse() {
             if (this.itemData.needClass) {
