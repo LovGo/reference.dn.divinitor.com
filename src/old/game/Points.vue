@@ -94,6 +94,10 @@ export default {
         .text-align(left);
         min-width: 100px;
         background: @dv-c-background;
+        @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+            background: fade(@dv-c-background, 80%);
+            backdrop-filter: blur(8px);
+        }
         z-index: 10;
         pointer-events: none;
         padding: 10px 16px;

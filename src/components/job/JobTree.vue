@@ -172,6 +172,9 @@ export default Vue.extend({
 
             &:hover {
                 background: fade(@dv-c-foreground, 20%);
+                @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+                    backdrop-filter: blur(4px);
+                }
             }
 
             &[awakened]::after {

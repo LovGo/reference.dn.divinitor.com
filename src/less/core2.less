@@ -270,6 +270,10 @@ strong {
         &.active {
             background-color: @dv-c-foreground;
             color: @dv-c-background;
+            @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+                background: fade(@dv-c-foreground, 90%);
+                backdrop-filter: blur(8px);
+            }
             // animation: button-breathe 5s infinite linear;
         }
 
@@ -645,13 +649,16 @@ button, .button {
     .name-class-filter {
         flex: 1 1 auto;
         white-space: nowrap;
-        
 
         label {
             color: @dv-c-accent-2;
             text-transform: uppercase;
             letter-spacing: 0.2em;
             font-size: 12px;
+        }
+
+        input[type="text"] {
+            min-width: 300px;
         }
     }
 
@@ -664,6 +671,14 @@ button, .button {
         width: 100%;
         flex: 1 0 auto;
         padding: 4px 0;
+
+        label {
+            color: @dv-c-accent-1;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 12px;
+            margin-right: 8px;
+        }
 
         span {
             display: inline-block;
@@ -1153,7 +1168,7 @@ input[type="text"] {
     font-size: 14px;
     .text-align(left);
     min-width: 200px;
-    border-bottom: 1px @dv-c-idle solid;
+    border-bottom: 1px fade(@dv-c-foreground, 50%) solid;
     transition: border-color ease-in 0.125s;
     font-family: @dv-f-lato;
 

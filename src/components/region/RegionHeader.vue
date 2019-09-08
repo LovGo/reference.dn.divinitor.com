@@ -209,6 +209,10 @@ export default Vue.extend({
         left: 0;
         z-index: 100;
         background: fade(@dv-c-background, 80%);
+        @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+            background: fade(@dv-c-background, 40%);
+            backdrop-filter: blur(8px);
+        }
 
         &[disable] {
             pointer-events: none;
