@@ -17,7 +17,7 @@
     "vue": "^2.6.10",
     "vue-animejs": "^1.0.1",
     "vue-chartjs": "^3.4.2",
-    "vue-class-component": "^6.0.0",
+    "vue-class-component": "^7.1.0",
     "vue-infinite-scroll": "^2.0.2",
     "vue-moment": "^4.0.0",
     "vue-property-decorator": "^7.0.0",
