@@ -56,7 +56,7 @@
                 </div>
                 <div class="title">
                     <div class="remark">
-                        <span class="iid">#{{ itemId }} / {{ ownerTable }}</span>
+                        <span class="iid">#{{ itemId }}<span class="divider">/</span>{{ ownerTable }}</span>
                     </div>
                     <h2 class="head">
                         <span class="enhance" v-if="enhanceLevel > 0">+{{ enhanceLevel }} </span>
@@ -789,6 +789,13 @@ export default {
                 font-size: 12px;
                 letter-spacing: 0.2em;
                 text-transform: uppercase;
+
+                .iid {
+                    .divider {
+                        margin: 0 6px;
+                        color: @dv-c-idle;
+                    }
+                }
 
                 .tier {
                     display: inline-block;
