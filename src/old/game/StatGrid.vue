@@ -89,8 +89,8 @@
             <td v-else>
                 &#8210;
             </td>
-            <td class="enhance" v-if="enhanceStatSet">
-                <span v-if="pdmgPSet.min == pdmgPSet.max">
+            <td class="enhance" v-if="enhanceStatSet && pdmgPESet">
+                <span v-if="pdmgPESet.min == pdmgPESet.max">
                     +{{ pdmgPESet.min | statPercent }}
                 </span>
                 <span v-else>
@@ -100,12 +100,28 @@
             <td v-else-if="enhanceStatSet">
                 &#8210;
             </td>
-            <td class="total" v-if="enhanceStatSet">
+            <td class="total" v-if="enhanceStatSet && pdmgPESet">
                 <span v-if="pdmgPESet.min + pdmgPSet.min == pdmgPESet.max + pdmgPSet.max">
                     {{ pdmgPESet.min + pdmgPSet.min | statPercent }}
                 </span>
                 <span v-else>
                     {{ pdmgPESet.min + pdmgPSet.min | statPercent }} - {{ pdmgPESet.max + pdmgPSet.max | statPercent }}
+                </span>
+            </td>
+            <td class="total" v-else-if="enhanceStatSet && pdmgPSet">
+                <span v-if="pdmgPSet.min == pdmgPSet.max">
+                    {{ pdmgPSet.min | statPercent }}
+                </span>
+                <span v-else>
+                    {{ pdmgPSet.min | statPercent }} - {{ pdmgPSet.max | statPercent }}
+                </span>
+            </td>
+            <td class="total" v-else-if="enhanceStatSet && pdmgPESet">
+                <span v-if="pdmgPESet.min == pdmgPESet.max">
+                    {{ pdmgPESet.min | statPercent }}
+                </span>
+                <span v-else>
+                    {{ pdmgPESet.min | statPercent }} - {{ pdmgPESet.max | statPercent }}
                 </span>
             </td>
         </tr>
@@ -122,8 +138,8 @@
             <td v-else>
                 &#8210;
             </td>
-            <td class="enhance" v-if="enhanceStatSet">
-                <span v-if="mdmgPSet.min == mdmgPSet.max">
+            <td class="enhance" v-if="enhanceStatSet && mdmgPESet">
+                <span v-if="mdmgPESet.min == mdmgPESet.max">
                     +{{ mdmgPESet.min | statPercent }}
                 </span>
                 <span v-else>
@@ -133,12 +149,28 @@
             <td v-else-if="enhanceStatSet">
                 &#8210;
             </td>
-            <td class="total" v-if="enhanceStatSet">
+            <td class="total" v-if="enhanceStatSet && mdmgPESet">
                 <span v-if="mdmgPESet.min + mdmgPSet.min == mdmgPESet.max + mdmgPSet.max">
                     {{ mdmgPESet.min + mdmgPSet.min | statPercent }}
                 </span>
                 <span v-else>
                     {{ mdmgPESet.min + mdmgPSet.min | statPercent }} - {{ mdmgPESet.max + mdmgPSet.max | statPercent }}
+                </span>
+            </td>
+            <td class="total" v-else-if="enhanceStatSet && mdmgPSet">
+                <span v-if="mdmgPSet.min == mdmgPSet.max">
+                    {{ mdmgPSet.min | statPercent }}
+                </span>
+                <span v-else>
+                    {{ mdmgPSet.min | statPercent }} - {{ mdmgPSet.max | statPercent }}
+                </span>
+            </td>
+            <td class="total" v-else-if="enhanceStatSet && mdmgPESet">
+                <span v-if="mdmgPESet.min == mdmgPESet.max">
+                    {{ mdmgPESet.min | statPercent }}
+                </span>
+                <span v-else>
+                    {{ mdmgPESet.min | statPercent }} - {{ mdmgPESet.max | statPercent }}
                 </span>
             </td>
         </tr>
