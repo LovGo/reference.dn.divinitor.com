@@ -27,7 +27,7 @@
             :active="potentialId == d.id"
             v-on:click="select(d.id)">
             <skill-stub :skill-id="d.skill.id" :fill="true" />
-            <div class="pid">{{d.id}}:{{d.potentialNumber}}</div>
+            <div class="pid">{{d.id}}:{{d.potentialNumber}} <span class="potential-key">{{ d.idx }}</span></div>
         </div>
     </div>
     <div class="potential-list" v-else :scrollable="potentialData.length > 30">
@@ -37,7 +37,7 @@
             :active="potentialId == d.id"
             v-on:click="select(d.id)"
             v-if="!shouldFilter(d) || availableStats.length == 0">
-            <div class="pid">{{d.id}}:{{d.potentialNumber}}</div>
+            <div class="pid">{{d.id}}:{{d.potentialNumber}} <span class="potential-key">{{ d.idx }}</span></div>
             <div class="grid-cover">
                 <stat-grid
                     :statSet="statSet(d)"
@@ -93,6 +93,14 @@ export default {
     computed: {
         sortedData() {
             let ret = this.potentialData.slice();
+            
+            ret.sort((a, b) => {
+                return a.id - b.id;
+            });
+
+            for (let i = 0; i < ret.length; ++i) {
+                ret[i].idx = i + 1;
+            }
 
             ret.sort((a, b) => {
                 let cmp = b.rate - a.rate;
@@ -318,7 +326,11 @@ export default {
 
                 .pid {
                     color: @dv-c-foreground;
+                    .potential-key {
+                        color: @dv-c-foreground;
+                    }
                 }
+
                 .rate {
                     color: @dv-c-foreground;
                     &::after {
@@ -346,6 +358,11 @@ export default {
                 .right( 6px);
                 color: transparent;
                 transition: color ease-in 0.125s;
+
+                .potential-key {
+                    transition: color ease-in 0.125s;
+                    color: fade(@dv-c-foreground, 20%);
+                }
             }
 
             .grid-cover {
