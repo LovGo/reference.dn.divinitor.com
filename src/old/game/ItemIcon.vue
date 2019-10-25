@@ -1,4 +1,4 @@
-<<template>
+<template>
     <div class="item-icon" :title="iconIndex">
         <div class="enhance" v-if="enhanceLvl > 0">{{ enhanceLvl }}</div>
         <div class="count" v-if="count > 1">{{ count | thousands}}</div>
