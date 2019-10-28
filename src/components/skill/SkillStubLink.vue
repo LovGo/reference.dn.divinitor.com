@@ -3,7 +3,7 @@
 <router-link class="skill-stub-link" 
     :to="`/skills/${linkTarget}`"
     :fill="fill">
-    <skill-stub :skill-id="skillId" :fill="fill" :skill-data="skillData" v-on:done="onLoaded"/>
+    <skill-stub :skill-id="skillId" :fill="fill" :skill-data="skillData" :icon-only="iconOnly" v-on:done="onLoaded"/>
 </router-link>
 </div>
 </template>
@@ -28,6 +28,9 @@ export default Vue.extend({
         },
         "skillData": {
             type: Object as () => ISkill,
+        },
+        "iconOnly": {
+            type: Boolean as () => boolean,
         },
     },
     components: {

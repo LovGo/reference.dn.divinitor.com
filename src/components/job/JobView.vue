@@ -47,6 +47,12 @@
             </div>
             <job-stat-scaling :job-id="job.value.id" />
         </div>
+        <div class="dv-section">
+            <div class="dividing title">
+                Skill Tree
+            </div>
+            <skill-tree :job-id="job.value.id" />
+        </div>
         <p>
             Additional features and info are coming soon
         </p>
@@ -72,6 +78,7 @@ import SpriteIcon from "@/components/util/SpriteIcon.vue";
 import Loader from "@/components/util/Loader.vue";
 import JobStatScaling from "@/components/job/JobStatScaling.vue";
 import UiString from "@/components/uistring/UiString.vue";
+import SkillTree from "@/components/skill/SkillTree.vue";
 
 interface IData {
     job: LoadingErrorable<IJob, any>;
@@ -83,6 +90,7 @@ export default Vue.extend({
         SpriteIcon,
         JobStatScaling,
         UiString,
+        SkillTree,
     },
     props: {
         "jobId": {}
