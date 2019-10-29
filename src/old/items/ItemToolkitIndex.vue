@@ -3,6 +3,7 @@
         <div class="kit-list">
             <router-link to="drop" class="kit-item">Item Drop</router-link>
             <router-link to="dropgroup" class="kit-item">Item Drop Group</router-link>
+            <router-link to="itemshop" class="kit-item">Item Shop</router-link>
         </div>
     </div>
 </template>

@@ -18,7 +18,7 @@
                             :type="itemData.type.type"
                         ></item-icon>
                     </div>
-                    <div class="itemtip">
+                    <div class="itemtip" v-if="!noTip">
                         <div class="remark">
                             <span class="iid">#{{ itemId }}</span>
                         </div>
@@ -28,15 +28,16 @@
                             <span class="count" v-if="count && count > 1">{{count}}</span>
                         </div>
                         <div class="remark">
-                            <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
-                            <span v-if="itemData.tier" class="tier" v-html="itemData.tier"></span>
-                            <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
-                            <span v-if="timeLimit">{{ timeLimit }}-day</span>
-                            <span v-else-if="itemData.durationDays">{{ itemData.durationDays }}-day</span>
-                            <span v-if="canUse" class="can-use">{{ canUse }}</span>
-                            <span v-if="itemData.cashItem" class="cash">Cash</span>
+                            <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span>
+                            <span v-if="itemData.tier" class="tier"><span v-html="itemData.tier"/> </span>
+                            <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }} </span>
+                            <span v-if="timeLimit">{{ timeLimit }}-day </span>
+                            <span v-else-if="itemData.durationDays">{{ itemData.durationDays }}-day </span>
+                            <span v-if="canUse" class="can-use">{{ canUse }} </span>
+                            <span v-if="itemData.cashItem" class="cash">Cash </span>
                             {{ category }}
                         </div>
+                        <slot></slot>
                     </div>
                     <div class="potential" v-if="potentialNum">
                         <div class="wrapper">
@@ -49,6 +50,56 @@
                 </div>
             </transition>
         </router-link>
+        <template v-else>
+            <transition name="fade">
+            <div v-if="loading" class="loading">
+                <load-indicator
+                :loadText="'#' + itemId"></load-indicator>
+            </div>
+            </transition>
+            <transition name="fade">
+                <div v-if="!loading" class="entry" @click="$emit('click', userData)">
+                    <div class="icon">
+                        <item-icon 
+                            class="centering"
+                            :iconIndex="itemData.iconIndex" 
+                            :rank="itemData.rank"
+                            :count="stackSize"
+                            :type="itemData.type.type"
+                        ></item-icon>
+                    </div>
+                    <div class="itemtip" v-if="!noTip">
+                        <div class="remark">
+                            <span class="iid">#{{ itemId }}</span>
+                        </div>
+                        <div class="head">
+                            <span v-if="goldAmt">{{ goldAmt | thousands }}</span>
+                            {{ name }}
+                            <span class="count" v-if="count && count > 1">{{count}}</span>
+                        </div>
+                        <div class="remark">
+                            <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span>
+                            <span v-if="itemData.tier" class="tier"><span v-html="itemData.tier"/> </span>
+                            <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }} </span>
+                            <span v-if="timeLimit">{{ timeLimit }}-day </span>
+                            <span v-else-if="itemData.durationDays">{{ itemData.durationDays }}-day </span>
+                            <span v-if="canUse" class="can-use">{{ canUse }} </span>
+                            <span v-if="itemData.cashItem" class="cash">Cash </span>
+                            {{ category }}
+                        </div>
+                        <slot></slot>
+                    </div>
+                    <div class="potential" v-if="potentialNum">
+                        <div class="wrapper">
+                            Option
+                            <div class="potential-entry" v-for="s in potentialStatList" :key="s.abbv">
+                                {{s.abbv}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </template>
     </div>
 </template>
 
@@ -69,12 +120,13 @@ export default {
         "itemId", 
         "count", 
         "itemStub", 
-        "noLink", 
-        "onClick",
+        "noLink",
         "timeLimit",
         "goldAmt",
         "potentialNum",
-        "rate"
+        "rate",
+        "userData",
+        "noTip",
     ],
     name: "item-icon-tooltip",
     data: function() {
@@ -198,13 +250,15 @@ export default {
     .entry {
         position: relative;
         color: @dv-c-body;
-        padding: 2px 4px 0 4px;
-        width: 50px;
-        height: 50px;
+        // padding: 2px 4px 0 4px;
+        width: 58px;
+        height: 58px;
         transition: background-color 0.125s ease-in;
+        cursor: pointer;
 
         .icon{
             padding-top: 2px;
+            padding-left: 4px;
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
@@ -265,6 +319,7 @@ export default {
 
                 .tier {
                     display: inline-block;
+                    margin-right: 0.4em;
                 }
 
                 .level {
@@ -344,6 +399,8 @@ export default {
     }
 
     .loading {
+        position: absolute;
+
         .loader-box {
             position: absolute;
             top: 0;

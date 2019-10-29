@@ -1,5 +1,6 @@
 <template>
-<div class="skill-stub-tooltip" :show="show">
+<div class="skill-stub-tooltip" :show="show"
+    :type="skillTypeToString(skillData.skillType)">
     <div class="skill-name">
             <div class="skill-icon">
                 <sprite-icon v-if="skillData.skillIcon.index == 0 && skillData.buffIcon && skillData.buffIcon.index != 0" 
@@ -178,6 +179,7 @@ import ISkillLevel from '@/models/skills/ISkillLevel';
 import SkillProvider from '@/api/SkillProvider';
 import { SkillType } from '@/models/skills/SkillEnums';
 import ITypedMap from '@/models/util/ITypedMap';
+import { filters } from '@/filters/Filters';
 
 interface IData {
     skillLevelData: ISkillLevel[];
@@ -259,6 +261,9 @@ export default Vue.extend({
             this.skillLevelData = [];
             this.skillLevelData.push(...(await SkillProvider.getSkillLevels(this.skillData.id)));
             this.fetched = true;
+        },
+        skillTypeToString(type: SkillType): string {
+            return filters.skillType(type);
         }
     }
 });
@@ -273,8 +278,23 @@ export default Vue.extend({
     pointer-events: none;
 
     padding: 10px;
-    border: 1px solid @dv-c-foreground;
+    border: 1px solid @rank-divine;
     background: @dv-c-background;
+
+    &[type="active"] {
+        border-color: @dv-c-foreground;
+        .skill-name {
+            color: @dv-c-foreground;
+        }
+    }
+
+    &[type="enhancement"],
+    &[type="enhancement"] {
+        border-color: @rank-unique;
+        .skill-name {
+            color: @rank-unique;
+        }
+    }
 
     z-index: 100;
     width: 200px;
@@ -294,7 +314,7 @@ export default Vue.extend({
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-family: @dv-f-geomanist;
-        color: @dv-c-foreground;
+        color: @rank-divine;
         margin-bottom: 8px;
     }
 

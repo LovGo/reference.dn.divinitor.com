@@ -6,7 +6,7 @@
         <div v-else class="icon"  
             :style="`background:url(${url}) -${coords.x * 0.75 / 2}px -${coords.y * 0.75 / 2}px; background-size: 800% 800%;`"></div>
         <span class="pts" v-if="!hideText"><span v-if="amount">{{ amount | thousands }} </span><span v-if="!hideName">{{ pointData.name }}</span></span>
-        <div class="point-tooltip">
+        <div class="point-tooltip" v-if="!noTip">
             <h2>
                 <div class="icon"  
                     :style="`background:url(${url}) -${coords.x * 0.75 / 2}px -${coords.y * 0.75 / 2}px; background-size: 800% 800%;`"></div>
@@ -26,7 +26,7 @@
 <script>
 import Points from '@/old/api/points';
 export default {
-    props: ["pointId", "amount", "hideText", "hideName", "big"],
+    props: ["pointId", "amount", "hideText", "hideName", "big", "noTip"],
     data: function() {
         return {
             pointData: null,

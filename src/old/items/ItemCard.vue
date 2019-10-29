@@ -31,7 +31,7 @@
                         </div>
                         <div class="remark">
                             <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
-                            <span v-if="itemData.tier" class="tier" v-html="itemData.tier"></span>
+                            <span v-if="itemData.tier" class="tier" v-html="itemData.tier + ' '"></span>
                             <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }} </span> 
                             <span v-if="timeLimit">{{ timeLimit }}-day </span>
                             <span v-else-if="itemData.durationDays">{{ itemData.durationDays }}-day </span>
@@ -95,12 +95,12 @@
                         </div>
                         <div class="remark">
                             <span v-if="itemData.level > 1" class="level">{{ itemData.level }} </span> 
-                            <span v-if="itemData.tier" class="tier" v-html="itemData.tier"></span>
-                            <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }}</span> 
-                            <span v-if="timeLimit">{{ timeLimit }}-day</span>
-                            <span v-else-if="itemData.durationDays">{{ itemData.durationDays }}-day</span>
-                            <span v-if="canUse" class="can-use">{{ canUse }}</span>
-                            <span v-if="itemData.cashItem" class="cash">Cash</span>
+                            <span v-if="itemData.tier" class="tier" v-html="itemData.tier + ' '"></span>
+                            <span :class="'rank-' + itemData.rank.toLowerCase()">{{ itemData.rank }} </span> 
+                            <span v-if="timeLimit">{{ timeLimit }}-day </span>
+                            <span v-else-if="itemData.durationDays">{{ itemData.durationDays }}-day </span>
+                            <span v-if="canUse" class="can-use">{{ canUse }} </span>
+                            <span v-if="itemData.cashItem" class="cash">Cash </span>
                             {{ category }}
                         </div>
                     </div>
@@ -139,7 +139,7 @@ export default {
         "potentialNum",
         "rate"
     ],
-    name: "item-page",
+    name: "item-card",
     data: function() {
         return {
             stackSize: 0,
