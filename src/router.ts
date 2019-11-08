@@ -22,6 +22,7 @@ const ItemToolkit = () => import(/* webpackChunkName: "old-items" */ "@/old/item
 const ItemToolkitIndex = () => import(/* webpackChunkName: "old-items" */ "@/old/items/ItemToolkitIndex.vue");
 const ItemDrop = () => import(/* webpackChunkName: "old-items" */ "@/old/items/ItemDrop.vue");
 const ItemDropGroup = () => import(/* webpackChunkName: "old-items" */ "@/old/items/ItemDropGroup.vue");
+const ItemShopToolkit = () => import(/* webpackChunkName: "items" */ "@/components/item/shop/ShopToolKit.vue");
 
 const Maps = () => import(/* webpackChunkName: "maps" */ "@/views/Maps.vue");
 const MapViewMock = () => import(/* webpackChunkName: "maps" */ "@/components/map/MapViewMock.vue");
@@ -149,6 +150,11 @@ export default new Router({
                     path: 'drop/:id?',
                     name: 'item-drop',
                     component: ItemDrop
+                  },
+                  {
+                    path: 'itemshop/:id?',
+                    name: 'item-shop',
+                    component: ItemShopToolkit,
                   }
                 ]
               }

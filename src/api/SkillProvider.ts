@@ -17,6 +17,7 @@ import ISkillLevelTableRow from '@/models/skills/raw/ISkillLevelTableRow';
 import ISkillTreeEntry from '@/models/skills/ISkillTreeEntry';
 import ISkillEffectValue from '@/models/skills/ISkillEffectValue';
 import { ISkillLevelResponse } from '@/models/skills/raw/ISkillLevelResponse';
+import ISkillTreeTableRow from '@/models/skills/raw/ISkillTreeTableRow';
 
 export interface ISkillProvider {
     getSkill(id: number, region?: string): Promise<ISkill>;
@@ -27,7 +28,7 @@ export interface ISkillProvider {
 
     getSkillLevels(skillId: number, pvp?: boolean, region?: string): Promise<ISkillLevel[]>;
 
-    getSkillTreeInfo(skillId: number): Promise<ISkillTreeEntry|null>;
+    getSkillTreeInfo(job: number, region?: string): Promise<ISkillTreeEntry[]>;
 }
 
 class SkillProvider {
@@ -38,11 +39,16 @@ class SkillProvider {
     private _skillLevelCache: ITypedMap<ISkillLevel[]>;
     private _skillLevelReqCache: RequestCache<ISkillLevel[]>;
 
+    private _skillTreeCache: ITypedMap<ISkillTreeEntry[]>;
+    private _skillTreeReqCache: RequestCache<ISkillTreeEntry[]>;
+
     constructor() {
         this._skillCache = {};
         this._skillReqCache = new RequestCache();
         this._skillLevelCache = {};
         this._skillLevelReqCache = new RequestCache();
+        this._skillTreeCache = {};
+        this._skillTreeReqCache = new RequestCache();
     }
 
     public async getSkill(id: number, region?: string): Promise<ISkill> {
@@ -204,8 +210,29 @@ class SkillProvider {
         });
     }
 
-    public async getSkillTreeInfo(): Promise<ISkillTreeEntry|null> {
-        return null;
+    public async getSkillTreeInfo(job: number, region?: string): Promise<ISkillTreeEntry[]> {
+        region = this._ensureRegion(region);
+
+        const cacheKey = this._treeCacheKey(job, region);
+        const cached = this._skillTreeCache[cacheKey];
+        if (cached) {
+            return cached;
+        }
+
+        return this._skillTreeReqCache.tryCache(cacheKey, async () => {
+            const skillListResp = await ApiHttpClient.get<number[]>(`/server/${region}/tables/virt.skilltable/columns/_NeedJob/eq/${job}?limit=1000`);
+            const skillList = skillListResp.data.join(',');
+            const resp = await ApiHttpClient.get<ISkillTreeTableRow[]>(`/server/${region}/tables/skilltreetable/columns/_SkillTableID/in/${skillList}/data`);
+            const ret: ISkillTreeEntry[] = resp.data.map((r) => ({
+                skillId: r._SkillTableID,
+                tab: r._SkillTapID,
+                index: r._TreeSlotIndex,
+                isAwakened: r._AwakenForceLevel > 0,
+            }))
+            this._skillTreeCache[cacheKey] = ret;
+
+            return ret;
+        });
     }
 
     private _ensureRegion(region?: string): string {
@@ -222,6 +249,10 @@ class SkillProvider {
 
     private _levelCacheKey(skillId: number, pvp: boolean, region: string) {
         return `${region}:${skillId}:${pvp ? 1 : 0}`;
+    }
+
+    private _treeCacheKey(job: number, region: string) {
+        return `${region}:${job}`;
     }
 }
 

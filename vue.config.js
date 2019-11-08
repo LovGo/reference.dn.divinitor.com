@@ -1,4 +1,11 @@
+const path = require('path');
 module.exports = {
+    chainWebpack: config => {
+        config.resolve.alias
+            .set('@components', path.join(__dirname, 'src/components'))
+            .set('@api', path.join(__dirname, 'src/api'))
+            .set('@models', path.join(__dirname, 'src/models'))
+    },
     devServer: {
         proxy: {
             '/api': {

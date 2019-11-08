@@ -13,7 +13,7 @@
                 <sprite-icon v-else :icon-info="skill.value.skillIcon" />
             </div>
         </div>
-        <div class="detail">
+        <div class="detail" v-if="!iconOnly">
             <div class="id">
                 {{ skill.value.id }}
             </div>
@@ -112,6 +112,9 @@ export default Vue.extend({
         },
         "skillData": {
             type: Object as () => ISkill,
+        },
+        "iconOnly": {
+            type: Boolean as () => boolean,
         },
     },
     components: {
