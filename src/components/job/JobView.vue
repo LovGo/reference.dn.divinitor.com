@@ -153,6 +153,7 @@ export default Vue.extend({
 @import "./../../less/core.less";
 
 .job-view {
+    margin-bottom: 100vh;
     .result {
 
         .breadcrumb {
