@@ -386,6 +386,7 @@ export const Blows: ITypedMap<IStateBlow> = {
     87: statIncreasePercent("STR"),
     88: statIncreasePercent("AGI"),
     89: statIncreasePercent("INT"),
+    90: statIncreasePercent("VIT"),
 
     94: statIncreasePercent("Magic defense"),
     96: {
@@ -985,7 +986,7 @@ export const Blows: ITypedMap<IStateBlow> = {
                 let damageBoost = Number(split[2]);
 
                 return {
-                    text: `Upon striking an enemy under ${filters.percent(thresholdHpPercent)}% HP, gain ${filters.percent(damageBoost)}% damage per ${filters.percent(hpThresholdRatio)}% HP above ${filters.percent(thresholdHpPercent)}%`,
+                    text: `Upon striking an enemy over ${filters.percent(thresholdHpPercent)}% HP, gain ${filters.percent(damageBoost)}% damage per ${filters.percent(hpThresholdRatio)}% HP above ${filters.percent(thresholdHpPercent)}%`,
                 };
             }
 
