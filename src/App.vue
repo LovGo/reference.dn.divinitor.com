@@ -42,7 +42,7 @@
     </div>
 
     <div class="copyright">
-        Divinitor &copy; 2019 Vahr (Vincent Zhang)<br/>
+        Divinitor &copy; 2019 Vahr<span>#9959</span> (Vincent Zhang)<br/>
         Dragon Nest &copy; 2019 Eyedentity Games, Inc.<br/>
         Divinitor makes no claims of ownership<br/>
         of content sourced from Dragon Nest
