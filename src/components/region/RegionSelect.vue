@@ -2,7 +2,7 @@
 <div class="region-select">
     <div class="regions">
         <div class="region"
-            v-for="r in regions"
+            v-for="r in displayRegions"
             :key="r.id"
             v-on:click="select(r)"
             :active="r.shortName == selected">
@@ -11,7 +11,7 @@
                 <div class="subheader">{{ subscript(r) }}</div>
             </div>
 
-            <div class="version">
+            <div class="version" v-if="r.version">
                 v{{ r.version }}
             </div>
         </div>
@@ -22,6 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import IRegion from "@/models/region/IRegion";
+import { localRegion } from '../../api/RegionProvider';
 
 interface IData {
     selected: string;
@@ -44,6 +45,11 @@ export default Vue.extend({
     data(): IData {
         return {
             selected: "",
+        }
+    },
+    computed: {
+        displayRegions(): IRegion[] {
+            return this.regions.filter((v) => v.id > 0 || this.selected === localRegion);
         }
     },
     mounted() {

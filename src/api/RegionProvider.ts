@@ -29,6 +29,21 @@ export enum SupportedRegions {
 
 export const defaultRegion: SupportedRegions = process.env.VUE_APP_USE_STATIC_SERVER ? process.env.VUE_APP_STATIC_REGION_SHORTCODE as SupportedRegions : SupportedRegions.NORTH_AMERICA;
 
+export const localRegion = 'local';
+
+const localRegionInfo = {
+    id: 0,
+    shortName:"local",
+    staticName:"LOCAL",
+    defaultLocale:"en",
+    displayNames:{"default":"Local"},
+    patchConfigList: {
+        sourceUrl: "",
+    },
+    patchedTime: "",
+    version: 0,
+};
+
 export enum RegionInfoType {
     NONE = "",
     CONFIG = "config",
@@ -48,6 +63,10 @@ class RegionProvider implements IRegionProvider {
 
     public getRegionByShortName(shortName: string, type?: RegionInfoType): Promise<IRegion> {
         shortName = this._normalizeShortName(shortName);
+        if (shortName === localRegion) {
+            return Promise.resolve(localRegionInfo);
+        }
+
         const cacheKey = this._cacheKey(shortName, type);
         const cached = this._cache[cacheKey];
         if (cached) {
@@ -64,6 +83,10 @@ class RegionProvider implements IRegionProvider {
     }
 
     public getRegionById(id: number, type?: RegionInfoType): Promise<IRegion> {
+        if (id === -1) {
+            return Promise.resolve(localRegionInfo);
+        }
+
         const cacheKey = this._cacheKey(id, type);
         const cached = this._cache[cacheKey];
         if (cached) {
@@ -85,6 +108,8 @@ class RegionProvider implements IRegionProvider {
         for (let shortName of regions) {
             promises.push(this.getRegionByShortName(shortName, type).catch(e => undefined));
         }
+
+        promises.push(Promise.resolve(localRegionInfo));
 
         return Promise.all(promises).then((r) => r.filter(v => v != undefined)) as Promise<IRegion[]>;
     }

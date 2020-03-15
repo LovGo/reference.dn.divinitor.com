@@ -53,12 +53,16 @@ new Vue({
             if (storedApiRoute || route.query[Constants.ApiPathKey]) {
                 let apiRouteName = ((route.query[Constants.ApiPathKey] || storedApiRoute) ||
                     Constants.DefaultApiPath);
-                if (!apiRouteName.startsWith("/")) {
+                if (apiRouteName === 'local') {
+                    apiRouteName = 'http://localhost:8081/api';
+                    this.$store.dispatch(Actions.SetRegion, 'local');
+                }
+
+                if (!apiRouteName.startsWith("/") && !apiRouteName.startsWith("http")) {
                     apiRouteName = "/" + apiRouteName;
                 }
 
                 Globals.ApiHttpClient.defaults.baseURL = apiRouteName;
-                // console.log(`Using ${Globals.ApiHttpClient.defaults.baseURL}`);
 
                 if (apiRouteName !== Constants.DefaultApiPath) {
                     window.localStorage.setItem(Constants.ApiPathKey, apiRouteName);
@@ -67,7 +71,6 @@ new Vue({
                 }
             } else {
                 Globals.ApiHttpClient.defaults.baseURL = Constants.DefaultApiPath;
-                // console.log(`Using ${Globals.ApiHttpClient.defaults.baseURL}`);
             }
         },
         /**
