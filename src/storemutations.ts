@@ -6,6 +6,7 @@ export const MutationTypes = {
     AcknowledgeUpdateNotification: "ack_update",
     SetFirstRunCompleted: "ack_first_run",
     SetPageLoading: "page_loading",
+    SetBaseUrl: "base_url"
 };
 
 export const Actions = {

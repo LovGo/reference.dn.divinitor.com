@@ -36,7 +36,7 @@ import Vue from 'vue';
 import RegionSelect from "@/components/region/RegionSelect.vue";
 import LoadingErrorable from '@/models/util/LoadingErrorable';
 import IRegion from '@/models/region/IRegion';
-import RegionProvider from '@/api/RegionProvider';
+import RegionProvider, { localRegion } from '@/api/RegionProvider';
 import Loader from "@/components/util/Loader.vue";
 import { Actions } from '@/storemutations';
 
@@ -88,14 +88,14 @@ export default Vue.extend({
             return 'Unknown region';
         },
         renderedVersion(): string {
-            if (this.selectedRegion) {
-                return `v${this.selectedRegion.version || '?'}`;
+            if (this.selectedRegion && this.selectedRegion.id > 0) {
+                return `v${this.selectedRegion.version || '???'}`;
             }
 
             return '';
         },
         canChangeServer(): boolean {
-            return this.regionList.length > 1;
+            return this.regionList.length > 1 || this.selectedRegionCode === localRegion;
         }
     },
     mounted() {

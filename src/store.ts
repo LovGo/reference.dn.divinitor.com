@@ -1,13 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { Actions, MutationTypes } from "./storemutations";
-import {defaultRegion} from "@/api/RegionProvider";
+import RegionProvider, { defaultRegion, localRegion } from "@/api/RegionProvider";
 import JwtDecode from "jwt-decode";
-import IToken from './models/util/IToken';
-import IRedeemedAuthResult from "./models/auth/IRedeemedAuthResult";
 import IDevlinTokenResponse from './models/auth/IDevlinTokenResponse';
 import IJwtTokenBase from './models/auth/IJwtTokenBase';
-import moment from "moment";
+import { ApiHttpClient } from './globals';
 
 Vue.use(Vuex);
 
@@ -31,11 +29,11 @@ export default new Vuex.Store<IState>({
         pageLoading: false,
     },
     mutations: {
-        [MutationTypes.SetRegion](state, regionCode) {
+        [MutationTypes.SetRegion](state, regionCode: string) {
             state.regionCode = regionCode;
             localStorage.setItem(RegionCodeStoreName, regionCode);
         },
-        [MutationTypes.SetRegionSoft](state, regionCode) {
+        [MutationTypes.SetRegionSoft](state, regionCode: string) {
             state.regionCode = regionCode;
         },
         [MutationTypes.SetFirstRunCompleted](state) {
