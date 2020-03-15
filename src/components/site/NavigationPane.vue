@@ -17,7 +17,7 @@
         </ul>
 
         <div class="related-links">
-            <div class="link-header" v-if="pserverHome || pserverDiscord">
+            <div class="link-header" v-if="pserverInfo && (pserverHome || pserverDiscord)">
                 {{ pserverInfo.displayNames.default }}
             </div>
             <div class="link" v-if="pserverHome">
