@@ -32,7 +32,7 @@ export const defaultRegion: SupportedRegions = process.env.VUE_APP_USE_STATIC_SE
 export const localRegion = 'local';
 
 const localRegionInfo = {
-    id: 0,
+    id: -1,
     shortName:"local",
     staticName:"LOCAL",
     defaultLocale:"en",
@@ -83,7 +83,7 @@ class RegionProvider implements IRegionProvider {
     }
 
     public getRegionById(id: number, type?: RegionInfoType): Promise<IRegion> {
-        if (id === 0) {
+        if (id === -1) {
             return Promise.resolve(localRegionInfo);
         }
 
@@ -153,7 +153,8 @@ class StaticRegionProvider implements IRegionProvider {
     }
 
     public async listRegions(type?: RegionInfoType | undefined): Promise<IRegion[]> {
-        return [ await this._getStaticRegion() ];
+        const res = await this._getStaticRegion();
+        return [ res ];
     }
 
     private async _getStaticRegion(): Promise<IRegion> {
