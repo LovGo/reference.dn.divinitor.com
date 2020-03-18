@@ -49,7 +49,7 @@ export default Vue.extend({
     },
     computed: {
         displayRegions(): IRegion[] {
-            return this.regions.filter((v) => v.id > 0 || this.selected === localRegion);
+            return this.regions.filter((v) => v.id >= 0 || this.selected === localRegion);
         }
     },
     mounted() {
