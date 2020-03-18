@@ -161,7 +161,7 @@
                             </div>
                             <div class="discord-login" v-else-if="loginStatus == 0">
 
-                                <discord-hero-button class="big-login-button" :optional="false" v-on:done="next" />
+                                <discord-hero-button class="big-login-button" :optional="false" v-on:done="nextPage" />
 
                                 <!-- <button class="discord-button button" v-on:click="openDiscordAuth"
                                     v-anime="{

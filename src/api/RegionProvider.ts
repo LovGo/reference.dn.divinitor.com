@@ -83,7 +83,7 @@ class RegionProvider implements IRegionProvider {
     }
 
     public getRegionById(id: number, type?: RegionInfoType): Promise<IRegion> {
-        if (id === -1) {
+        if (id === 0) {
             return Promise.resolve(localRegionInfo);
         }
 
@@ -139,10 +139,16 @@ class StaticRegionProvider implements IRegionProvider {
     }
 
     public async getRegionByShortName(shortName: string, type?: RegionInfoType | undefined): Promise<IRegion> {
+        if (shortName === localRegion) {
+            return Promise.resolve(localRegionInfo);
+        }
         return await this._getStaticRegion();
     }
 
     public async getRegionById(id: number, type?: RegionInfoType | undefined): Promise<IRegion> {
+        if (id === 0) {
+            return Promise.resolve(localRegionInfo);
+        }
         return await this._getStaticRegion();
     }
 
