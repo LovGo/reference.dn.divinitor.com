@@ -119,6 +119,24 @@
                 </div>
                 <div class="page" :active="page == 3" :id="3">
                     <div class="content content-in">
+                        <h1>Log in with Devlin (Optional)</h1>
+                        <p>
+                            You can log in using Divinitor Devlin using the Log In button on the top right to gain access to certain
+                            limited features.
+                        </p>
+                        <div class="got-it">
+                            <button class="dv-button" v-on:click="finish"
+                                v-anime="{
+                                    borderColor: ['#98BCD4', '#dcf1ff', '#98BCD4', '#98BCD4'],
+                                    loop: true,
+                                    duration: 3000,
+                                    delay: 750,
+                                    easing: 'easeInOutExpo'
+                                }">
+                                Awesome, let's go
+                            </button>
+                        </div>
+                        <template v-if="false">
                         <span v-if="authenticated && loginStatus == 0">
                             <h1>You're logged in</h1>
                             <p>
@@ -221,6 +239,7 @@
                                     </button>
                             </div>
                         </span>
+                        </template>
                     </div>
                 </div>
 
