@@ -28,6 +28,7 @@ const Maps = () => import(/* webpackChunkName: "maps" */ "@/views/Maps.vue");
 const MapViewMock = () => import(/* webpackChunkName: "maps" */ "@/components/map/MapViewMock.vue");
 
 const Monsters = () => import(/* webpackChunkName: "monsters" */ "@/views/Monsters.vue");
+const Monster = () => import(/* webpackChunkName: "monsters" */ "@/components/monsters/MonsterView.vue");
 
 const Skills = () => import(/* webpackChunkName: "skills" */ "@/views/Skills.vue");
 const SkillView = () => import(/* webpackChunkName: "skills" */ "@/components/skill/SkillView.vue");
@@ -186,6 +187,12 @@ export default new Router({
                     name: "monsters",
                     component: Monsters,
                 },
+                {
+                    path: ":monsterSlug",
+                    name: 'monster-view',
+                    props: true,
+                    component: Monster,
+                }
             ],
         },
         {

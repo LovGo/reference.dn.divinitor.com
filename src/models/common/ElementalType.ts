@@ -5,3 +5,11 @@ export enum ElementalType {
     LIGHT = 2,
     DARK = 3,
 }
+
+export enum ElementalTypeString {
+    NONE = 'NONE',
+    FIRE = 'FIRE',
+    WATER = 'WATER',
+    LIGHT = 'LIGHT',
+    DARK = 'DARK',
+}
