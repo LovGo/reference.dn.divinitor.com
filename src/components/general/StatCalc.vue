@@ -24,6 +24,7 @@ import UiString from "@/components/uistring/UiString.vue";
 import StatCalcCard from "@/components/general/StatCalcCard.vue";
 
 import StatCalcProvider,{ IStatCalcResult } from "@/api/StatCalcProvider";
+import { getFeatureState, netFeatures } from '../../api/FeaturesProvider';
 
 interface IData {
     globalLvl: number;
@@ -39,7 +40,7 @@ export default Vue.extend({
     },
     data(): IData {
         return {
-            globalLvl: 95,
+            globalLvl: getFeatureState(netFeatures.Use70Cap) ? 70 : 95,
             stat: "",
             value: 0,
         };
