@@ -3,6 +3,7 @@ import RequestCache from '@/models/util/RequestCache';
 import Store from "@/store";
 
 import { ApiHttpClient } from "@/globals";
+import { getFeatureState, netFeatures } from './FeaturesProvider';
 
 export interface IStatCalcResult {
     capped: boolean;
@@ -29,7 +30,7 @@ export interface IStatCaps {
 const capPercents: ITypedMap<number> = {
     defense: 0.85,
     critical: 0.89,
-    finalDamage: 1.0,
+    finalDamage: getFeatureState(netFeatures.FdOverCap) ? 1.2 : 1.0,
     criticalDamage: 1.0,
 };
 

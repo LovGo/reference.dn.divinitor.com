@@ -25,6 +25,14 @@ export const netFeatures: ITypedMap<IFeature> = {
         regions: ["inf"],
         enabled: true,
     },
+    FdOverCap: {
+        regions: ["sea", "ko", "na"],
+        enabled: true,
+    },
+    Use70Cap: {
+        regions: ["duck"],
+        enabled: true,
+    },
 };
 
 export function getFeatureState(feature: IFeature): boolean {
