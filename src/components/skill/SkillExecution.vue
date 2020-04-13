@@ -181,6 +181,8 @@ export default Vue.extend({
                     case SkillProcessor.CTC:
                     case SkillProcessor.MODIFY_ON_DIRECTION:
                     case SkillProcessor.MODIFY_ON_SUMMON_COUNT:
+                    case SkillProcessor.MODIFY_ON_BUBBLE_COUNT:
+                    case SkillProcessor.IMPACT_BLOW:
                         ret.push({
                             type: processorId,
                             params: [
