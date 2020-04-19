@@ -66,7 +66,7 @@
                             <td>{{ d.difficulty }}</td>
                             <td>{{ monster.baseStats.hp * d.statWeights.hp | stat }}</td>
                             <td>{{ monster.baseStats.pdmg.min * d.statWeights.pdmg.min | stat }} - {{ monster.baseStats.pdmg.max * d.statWeights.pdmg.max | stat }}</td>
-                            <td>{{ monster.baseStats.mdmg.min * d.statWeights.mdmg.min | stat }} - {{ monster.baseStats.pdmg.max * d.statWeights.pdmg.max | stat }}</td>
+                            <td>{{ monster.baseStats.mdmg.min * d.statWeights.mdmg.min | stat }} - {{ monster.baseStats.mdmg.max * d.statWeights.mdmg.max | stat }}</td>
                             <td>{{ monster.baseStats.pdef * d.statWeights.pdef | stat }}</td>
                             <td>{{ monster.baseStats.mdef * d.statWeights.mdef | stat }}</td>
                             <td>{{ monster.baseStats.crit * d.statWeights.crit | stat }}</td>
