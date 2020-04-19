@@ -45,7 +45,8 @@
 import Vue from 'vue';
 
 import StatCalcProvider,{ IStatCalcResult } from "@/api/StatCalcProvider";
-import ITypedMap from '@/models/util/ITypedmap';
+import ITypedMap from '@/models/util/ITypedMap';
+import { getFeatureState, netFeatures } from '@/api/FeaturesProvider';
 
 interface ILimits {
     minPercent: number;
@@ -70,7 +71,7 @@ export default Vue.extend({
     },
     data(): IData {
         return {
-            level: 95,
+            level: getFeatureState(netFeatures.Use70Cap) ? 70 : 95,
             value: 0,
             percent: 0,
             limits: {
