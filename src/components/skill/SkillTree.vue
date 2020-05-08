@@ -71,7 +71,11 @@ export default Vue.extend({
     computed: {
         skills(): ISkillTreeEntry[] {
             if (this.tree.value) {
-                return this.tree.value.filter((s) => !s.isAwakened);
+                if (this.jobInfo && this.jobInfo.jobNumber === 2) {
+                    return this.tree.value.filter((s) => !s.isAwakened);
+                } else {
+                    return this.tree.value;
+                }
             }
 
             return [];
@@ -85,7 +89,7 @@ export default Vue.extend({
             return ret;
         },
         awakeningSkills(): ISkillTreeEntry[] {
-            if (this.tree.value) {
+            if (this.tree.value && this.jobInfo && this.jobInfo.jobNumber === 2) {
                 return this.tree.value.filter((s) => s.isAwakened);
             }
 
