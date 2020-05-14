@@ -591,10 +591,9 @@ export default {
 
                     Shop.getShopName(v.shopId, this.$store.state.regionCode,
                         (res) => {
-                            v.shopName = res;
+                            v.shopName = res + " (" + v.shopId + ")";
                         },
                         (err) => {
-                            console.log(err);
                             v.shopName = "Shop " + v.shopId;
                         }
                     );
