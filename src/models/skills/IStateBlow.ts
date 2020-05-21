@@ -505,13 +505,13 @@ export const Blows: ITypedMap<IStateBlow> = {
     },
 
     132: {
-        name: "Generate Threat",
+        name: "Provoke",
         describe(effect, value) {
             if (value) {
                 let param = Number(value.value);
                 if (!isNaN(param)) {
                     return {
-                        text: `Caster's threat to unit increased by ${filters.thousands(param, undefined, true)}`,
+                        text: `Caster has provoke priority level ${filters.thousands(param, undefined, true)}`,
                         appendDuration: true,
                     };
                 }
