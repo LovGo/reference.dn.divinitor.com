@@ -110,6 +110,17 @@
                                 Lv {{ activeRankData.requiredLevel }}
                             </div>
                         </div>
+                        <div class="entry" v-if="activeRankData.needHp > 0 || activeRankData.hpConsumeType > 0">
+                            <div class="key">HP cost: </div>
+                            <div class="value">
+                                <template v-if="activeRankData.hpConsumeType > 0">
+                                    {{ activeRankData.hpConsumeType | statPercent }}
+                                </template>
+                                <template v-else>
+                                    {{ activeRankData.needHp | thousands }}
+                                </template>
+                            </div>
+                        </div>
                         <div class="entry" v-if="activeRankData.needSp > 0">
                             <div class="key">Mana cost: </div>
                             <div class="value">
@@ -120,6 +131,12 @@
                             <div class="key">Additional Threat: </div>
                             <div class="value">
                                 {{ activeRankData.addThreat | thousands }}
+                            </div>
+                        </div>
+                        <div class="entry" v-if="activeRankData.heroPoints">
+                            <div class="key">Hero points: </div>
+                            <div class="value">
+                                {{ activeRankData.heroPoints | thousands }}
                             </div>
                         </div>
                         <ui-string :message-data="activeRankData.skillDesc" :params="activeRankData.skillDescParam" :format="'html'" />

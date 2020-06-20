@@ -27,4 +27,5 @@ export default interface ISkillLevel {
     addThreat: number;
     pdmgBoardDamage: number;
     mdmgBoardDamage: number;
+    heroPoints?: number;
 }
