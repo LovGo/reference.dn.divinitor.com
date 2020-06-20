@@ -10,9 +10,9 @@
             <template v-else>{{ alt ? alt : "M:" + id }}</template>
         </span>
     </div>
-    <template v-if="showModal">
-        <div class="ui-string-modal" 
-            :show="delayShowModal" 
+    <template v-if="showModal && altRegionMessages != null">
+        <div class="ui-string-modal"
+            :show="delayShowModal"
             :loaded="altRegionMessages && altRegionMessages.length > 0" ref="modal">
             <div class="modal-title">Other Translations</div>
             <div class="modal-mid">M:{{ id }}</div>
@@ -167,8 +167,13 @@ export default Vue.extend({
             });
         },
         async loadOtherRegionData() {
+            const regions: IRegion[] = (await RegionProvider.listRegions()).filter((r) => r.shortName != this.resolvedRegion);
+            if (regions.length === 0) {
+                this.altRegionMessages = null;
+                return;
+            }
+
             this.altRegionMessages = [];
-            const regions = (await RegionProvider.listRegions()).filter((r) => r.shortName != this.resolvedRegion);
             let promises: Promise<IAltRegionMessage>[] = regions.map(async (region) => {
                 const message = await UiStringProvider.get(this.id, region.shortName, this.params, this.format);
                 return {

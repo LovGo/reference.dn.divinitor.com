@@ -61,24 +61,23 @@
                             <div class="ice" v-else-if="skillData.elementStr == 'WATER'"><i class="fa fa-snowflake-o"></i> Ice</div>
                             <div class="light" v-else-if="skillData.elementStr == 'LIGHT'"><i class="fa fa-bolt"></i> Light</div>
                             <div class="dark" v-else-if="skillData.elementStr == 'DARK'"><i class="fa fa-adjust"></i> Dark</div>
-                            <div class="nonelemental" v-else><i class="fa fa-no-entry"></i> Non-elemental</div>
+                            <div class="nonelemental" v-else><i class="fa fa-no-entry"></i> None</div>
                         </td>
                     </tr>
                     <tr v-if="skillData.requiredWeapons.length != 0">
                         <th>Required Weapon(s)</th>
                         <td>
-                            <div class="weapons">{{ weapons }}</div>
+                            <div class="weapons" :title="weapons">{{ weaponsNice }}</div>
                         </td>
                     </tr>
                     <tr>
                         <th>Max Skill Rank</th>
-                        <td v-if="isNaN(realMaxSkillLevel)">{{ skillData.spLevels }}</td>
-                        <td v-else>{{ realMaxSkillLevel }}</td>
+                        <td>{{ skillData.spLevels }}</td>
                     </tr>
                     <tr>
-                        <th>Tech</th>
+                        <th>Max Tech Rank</th>
                         <td>
-                            <div v-if="skillData.techLevels > 0">+{{ skillData.techLevels }}</div>
+                            <div v-if="skillData.techLevels > 0">{{ realMaxSkillLevel }} (+{{ skillData.techLevels }})</div>
                             <div v-else>Cannot tech</div>
                         </td>
                     </tr>
@@ -113,7 +112,7 @@ import SpriteIcon from "@/components/util/SpriteIcon.vue";
 import SkillStubLink from "@/components/skill/SkillStubLink.vue";
 import ISkill from '../../models/skills/ISkill';
 import ISkillLevel from '../../models/skills/ISkillLevel';
-import { WeaponType } from '../../models/items/ItemEnums';
+import { WeaponType, WeaponTypeName } from '../../models/items/ItemEnums';
 import { SkillType } from '../../models/skills/SkillEnums';
 export default Vue.extend({
     components: {
@@ -154,17 +153,27 @@ export default Vue.extend({
         weapons(): string {
             if (this.skillData) {
                 return this.skillData.requiredWeapons.map((v) => {
-                    const n = WeaponType[v];
-                    if (n) {
-                        return n;
-                    }
-
-                    return `Weap ${v}`;
+                    return `${v}`;
                 }).join(", ");
             }
 
             return "";
         },
+        weaponsNice(): string {
+            if (this.skillData) {
+                return this.skillData.requiredWeapons.map((v) => {
+                    const n = WeaponTypeName[v as WeaponType];
+                    if (n) {
+                        return n;
+                    }
+
+                    return `Weap ${v}`;
+                }).join(', ');
+            }
+
+            return '';
+            
+        }
     }
 })
 </script>
