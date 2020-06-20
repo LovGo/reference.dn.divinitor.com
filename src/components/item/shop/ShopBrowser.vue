@@ -134,6 +134,11 @@ export default Vue.extend({
             pageNumber: 0,
         };
     },
+    watch: {
+        shopId() {
+            this.load();
+        }
+    },
     computed: {
         numPages(): number {
             if (this.shopData.value) {
