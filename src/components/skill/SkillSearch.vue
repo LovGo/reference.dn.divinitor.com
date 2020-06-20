@@ -3,7 +3,7 @@
     <h2>Search</h2>
     <form class="search-form" v-on:submit.prevent="searchSkill">
         <div class="name-class-filter">
-            <input id="filter-name" type="text" v-model="query" placeholder="Skill name"/>
+            <input id="filter-name" type="text" v-model="query" placeholder="Skill name or ID"/>
         </div>
         <div class="button-row">
             <button class="submit" v-on:click.prevent="searchSkill" :disabled="!valid">Search</button>
@@ -87,7 +87,21 @@ export default Vue.extend({
             }
 
             this.loading = true;
-            this.skills = await SkillProvider.searchSkillsByName(this.query);
+            const asN = Number(this.query);
+            if (!isNaN(asN)) {
+                try {
+                    const sk = await SkillProvider.getSkill(asN)
+                    if (sk) {
+                        this.skills = [sk];
+                    } else {
+                        this.skills = [];
+                    }
+                } catch (e) {
+                    this.skills = [];
+                }
+            } else {
+                this.skills = await SkillProvider.searchSkillsByName(this.query);
+            }
             this.loading = false;
 
             this.$emit("query", this.query);
