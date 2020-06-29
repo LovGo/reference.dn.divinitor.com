@@ -33,8 +33,11 @@ const processorMap: {[k: number /* SkillProcessor */]: (params: string[]) => str
     [SkillProcessor.AURA]: (params) => `Apply effect as an aura ${params[0]} units in radius`,
     [SkillProcessor.ADD_ACTION_SUFFIX]: (params) => `Add suffix '${params[0]}' to actions ${params.slice(1).map((s) => "'" + s + "'").join(', ')}`,
     [SkillProcessor.APPLY_RANGED_STATE_EFFECT]: (params) => `Apply state effect ${params[2]} for ${Number(params[3]) / 1000}s to targets within ${params[0]} units at a ${params[1]}% chance`,
-    [SkillProcessor.MODIFY_ON_BUBBLE_COUNT]: (params) => modifyOnBubbleCount(params),
+    [SkillProcessor.MODIFY_ACTION_ON_BUBBLE_COUNT]: (params) => modifyOnBubbleCount(params),
+    [SkillProcessor.MODIFY_STATE_EFFECT_ON_BUBBLE_COUNT]: (params) => `ModifyStateEffectOnBubbleCount ${params[0]}`,
+    [SkillProcessor.SUMMON_DO_ACTION]: (params) => `SummonDoAction '${params[0]}'`,
     [SkillProcessor.CTC]: (params) => `Store up to ${params[0]} cooldown charges`,
+    [SkillProcessor.UNKNOWN16]: (params) => `Looping action '${params[0]}', '${params[1]}', '${params[2]}' for ${Number(params[3]) / 1000}s` + (params[4] ? ` with ${params[4]} movement speed` : '') + ` on collision do ${params[5]} unk1 ${params[6]} unk2 ${params[7]}`,
     [SkillProcessor.MODIFY_ON_DIRECTION]: (params) => `If the ${params[0]} key is pressed, append _${params[0]} to the action name`,
     [SkillProcessor.MODIFY_ON_SUMMON_COUNT]: (params) => modifyOnMonsterCount(params),
 };
@@ -151,6 +154,21 @@ export default Vue.extend({
                             ],
                         });
                         break;
+                    case SkillProcessor.UNKNOWN16:
+                        ret.push({
+                            type: processorId,
+                            params: [
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                                this.processParams[paramIdx++],
+                            ],
+                        });
+                        break;
                     case SkillProcessor.ADD_ACTION_SUFFIX:
                         const params: string[] = [];
                         for (; paramIdx < this.processParams.length; ++paramIdx) {
@@ -181,8 +199,10 @@ export default Vue.extend({
                     case SkillProcessor.CTC:
                     case SkillProcessor.MODIFY_ON_DIRECTION:
                     case SkillProcessor.MODIFY_ON_SUMMON_COUNT:
-                    case SkillProcessor.MODIFY_ON_BUBBLE_COUNT:
+                    case SkillProcessor.MODIFY_ACTION_ON_BUBBLE_COUNT:
+                    case SkillProcessor.MODIFY_STATE_EFFECT_ON_BUBBLE_COUNT:
                     case SkillProcessor.IMPACT_BLOW:
+                    case SkillProcessor.SUMMON_DO_ACTION:
                         ret.push({
                             type: processorId,
                             params: [
@@ -194,7 +214,7 @@ export default Vue.extend({
             }
 
             for (let v of ret) {
-                const res = (processorMap[v.type] && processorMap[v.type](v.params)) || '';
+                const res = (processorMap[v.type] && processorMap[v.type](v.params)) || `Unk${v.type} ${v.params[0]}`;
                 let resStr = '';
                 if (typeof res === 'string') {
                     resStr = res;

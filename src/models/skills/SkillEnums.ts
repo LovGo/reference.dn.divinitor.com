@@ -102,14 +102,27 @@ export enum SkillProcessor {
      * Params: Range, Chance, TargetEffect, Duration
      */
     APPLY_RANGED_STATE_EFFECT = 8,
+    
     /**
-     * Params: Param (BubbleId;Count;ActionName;BubbleId;Count;ActionName...)
+     * When you have Count bubbles, consume them and perform action
+     * Params: Param (BubbleId1;Count1;ActionName1;BubbleId2;Count2;ActionName2;...)
      */
-    MODIFY_ON_BUBBLE_COUNT = 12,
+    MODIFY_ACTION_ON_BUBBLE_COUNT = 12,
+    /**
+     * When you have Count bubbles, consume them and apply state effect index
+     * Params: Param (BubbleId1;Count1;[EffectIdx11][EffectIdx12]...;BubbleId2;Count2;[EffectIdx21][EffectIdx22]...;...)
+     */
+    MODIFY_STATE_EFFECT_ON_BUBBLE_COUNT = 13,
+    
+    SUMMON_DO_ACTION,
+    
     /**
      * Params: Param (MaxCTCStacks;Unk2)
      */
     CTC = 15,
+
+    UNKNOWN16,
+    
     /**
      * Params: Direction
      * Append _Direction (e.g. _Front if Direction is "Front") to the action name if the given direction is pressed
