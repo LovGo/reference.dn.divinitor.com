@@ -95,7 +95,7 @@ export default new Router({
             path: "/jobs",
             component: Blank,
             meta: {
-                auth: true,
+                auth: !process.env.VUE_APP_ALLOW_UNAUTH,
             },
             children: [
                 {
@@ -115,7 +115,7 @@ export default new Router({
             path: "/items",
             component: Items,
             meta: {
-                auth: true,
+                auth: !process.env.VUE_APP_ALLOW_UNAUTH,
             },
             children: [
               {
@@ -199,7 +199,7 @@ export default new Router({
             path: "/skills",
             component: Blank,
             meta: {
-                auth: true,
+                auth: !process.env.VUE_APP_ALLOW_UNAUTH,
             },
             children: [
                 {
