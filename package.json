@@ -30,7 +30,7 @@
     "@types/animejs": "^2.0.2",
     "@types/jsonwebtoken": "^8.3.2",
     "@types/jwt-decode": "^2.2.1",
-    "@types/lodash": "^4.14.136",
+    "@types/lodash": "^4.14.159",
     "@types/three": "^0.93.19",
     "@types/urlsafe-base64": "^1.0.28",
     "@vue/cli-plugin-babel": "^3.11.0",
