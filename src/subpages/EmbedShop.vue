@@ -59,6 +59,7 @@ html {
     -moz-osx-font-smoothing: grayscale;
     padding: 0;
     margin: 0;
+    overflow: hidden;
 }
 
 body {
