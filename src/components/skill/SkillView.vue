@@ -54,13 +54,13 @@
         <div class="rank page-section">
             <div class="title">Skill Rank Info</div>
 
-            <div class="warn toast">
+            <!-- <div class="warn toast">
                 <div class="content">
                     <div class="heading">*Beeping truck noises*</div>
                     This section is highly experimental and obviously not complete. Pardon the layout and bugs!
                     <br/>Some information may be incomplete or incorrect.
                 </div>
-            </div>
+            </div> -->
 
             <div class="options">
                 <div class="checkbox">
