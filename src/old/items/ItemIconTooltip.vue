@@ -275,10 +275,10 @@ export default {
         .itemtip {
             position: absolute;
             
-            &.top {
+            &.up {
                 bottom: 100%;
             }
-            &.bottom {
+            &.down {
                 top: 100%;
             }
 
