@@ -24,7 +24,7 @@
                             :count="slot.quantity"
                             :userData="slot"
                             :noLink="!useClick"
-                            :directionHint="i > 15 ? 'up' : 'down'"
+                            :directionHint="i > 14 ? 'up' : 'down'"
                             @click="clickItem"
                             >
                             <div class="purchase-details">
