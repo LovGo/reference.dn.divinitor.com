@@ -23,6 +23,8 @@
                             :itemId="slot.itemId"
                             :count="slot.quantity"
                             :userData="slot"
+                            :noLink="!useClick"
+                            @click="clickItem"
                             >
                             <div class="purchase-details">
                                 <div class="seals section" v-if="slot.seals >= 0">
@@ -120,7 +122,11 @@ export default Vue.extend({
     props: {
         shopId: {
             type: Number as () => number,
-        }
+        },
+        useClick: {
+            type: Boolean as () => boolean,
+            default: false,
+        },
     },
     components: {
         Loader,
@@ -217,6 +223,9 @@ export default Vue.extend({
                 default:
                     return `${entry.limitCount} per unknown:${entry.limitReset}`;
             }
+        },
+        clickItem(ud: IItemShopTabEntry) {
+            this.$emit('click', ud);
         }
     }
 });
@@ -230,6 +239,7 @@ export default Vue.extend({
     .result {
         display: flex;
         flex-direction: row;
+        justify-content: center;
         .shop-pane {
             @tile-size: 58px;
 

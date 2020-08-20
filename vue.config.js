@@ -20,5 +20,15 @@ module.exports = {
                 }
             }
         }
+    },
+    pages: {
+        index: {
+            entry: 'src/main.ts',
+            template: 'public/index.html',
+        },
+        embedShop: {
+            entry: 'src/subpages/embedShop.ts',
+            template: 'public/embed.html',
+        },
     }
 };

@@ -4,7 +4,7 @@
             <transition name="fade">
             <div v-if="loading" class="loading">
                 <load-indicator
-                :loadText="'#' + itemId"></load-indicator>
+                :loadText="''"></load-indicator>
             </div>
             </transition>
             <transition name="fade">
@@ -54,7 +54,7 @@
             <transition name="fade">
             <div v-if="loading" class="loading">
                 <load-indicator
-                :loadText="'#' + itemId"></load-indicator>
+                :loadText="''"></load-indicator>
             </div>
             </transition>
             <transition name="fade">
