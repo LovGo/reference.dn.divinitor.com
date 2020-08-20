@@ -18,7 +18,7 @@
                             :type="itemData.type.type"
                         ></item-icon>
                     </div>
-                    <div class="itemtip" v-if="!noTip">
+                    <div :class="'itemtip ' + directionHint" v-if="!noTip">
                         <div class="remark">
                             <span class="iid">#{{ itemId }}</span>
                         </div>
@@ -68,7 +68,7 @@
                             :type="itemData.type.type"
                         ></item-icon>
                     </div>
-                    <div class="itemtip" v-if="!noTip">
+                    <div :class="'itemtip ' + directionHint" v-if="!noTip">
                         <div class="remark">
                             <span class="iid">#{{ itemId }}</span>
                         </div>
@@ -127,6 +127,7 @@ export default {
         "rate",
         "userData",
         "noTip",
+        'directionHint',
     ],
     name: "item-icon-tooltip",
     data: function() {
@@ -273,7 +274,14 @@ export default {
         
         .itemtip {
             position: absolute;
-            bottom: 100%;
+            
+            &.top {
+                bottom: 100%;
+            }
+            &.bottom {
+                top: 100%;
+            }
+
             .left(0);
             opacity: 0.0;
             // transform: translateX(-50%);
