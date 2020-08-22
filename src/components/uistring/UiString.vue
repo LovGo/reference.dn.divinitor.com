@@ -10,27 +10,32 @@
             <template v-else>{{ alt ? alt : "M:" + id }}</template>
         </span>
     </div>
-    <template v-if="showModal && altRegionMessages != null">
+    <template v-if="showModal">
         <div class="ui-string-modal"
             :show="delayShowModal"
             :loaded="altRegionMessages && altRegionMessages.length > 0" ref="modal">
-            <div class="modal-title">Other Translations</div>
-            <div class="modal-mid">M:{{ id }}</div>
-            <div class="loading" v-if="altRegionMessages.length == 0">
-                Loading other locales...
-            </div>
-
-            <div class="alt-list">
-                <div class="alt-list-entry" 
-                    v-for="alt in altRegionMessages"
-                    :key="alt.region.id">
-                    <div class="dv-section">
-                        <div class="dividing title">{{ alt.region.displayNames.default }}</div>
-                        <ui-string :message-data="alt.message" :format="format" :prevent-recursive="true" />
-                    </div>
+            <template v-if="altRegionMessages != null">
+                <div class="modal-title">Other Translations</div>
+                <div class="modal-mid">M:{{ id }}</div>
+                <div class="loading" v-if="altRegionMessages.length == 0">
+                    Loading other locales...
                 </div>
 
-            </div>
+                <div class="alt-list">
+                    <div class="alt-list-entry" 
+                        v-for="alt in altRegionMessages"
+                        :key="alt.region.id">
+                        <div class="dv-section">
+                            <div class="dividing title">{{ alt.region.displayNames.default }}</div>
+                            <ui-string :message-data="alt.message" :format="format" :prevent-recursive="true" />
+                        </div>
+                    </div>
+
+                </div>
+            </template>
+            <template v-else>
+                <div class="modal-mid">M:{{ id }}</div>
+            </template>
             
             <div class="button-container">
                 <button class="dv-button primary" @click="dismissModal">
