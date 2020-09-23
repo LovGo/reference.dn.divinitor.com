@@ -136,7 +136,7 @@ export default Vue.extend({
 
             ret.forEach((g) => {
                 const rep = g.representative;
-                g.children.push(...(jobs.filter((j) => j.id != rep.id && j.baseClass == rep.id && j.jobNumber == 2)
+                g.children.push(...(jobs.filter((j) => j.id != rep.id && j.baseClass == rep.baseClass && j.jobNumber == 2)
                     .map((j) => {
                         const r = j as IStatJob;
                         r.stats = null;
