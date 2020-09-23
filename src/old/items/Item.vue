@@ -3,7 +3,7 @@
         <!--
             LOADING
          -->
-        <div class="top">&nbsp; <!-- Prevent margin collapse --></div>
+        <div class="top"></div>
         <transition name="fade">
             <div v-if="loading" class="loading">
                 <load-indicator
@@ -37,11 +37,11 @@
             RESULT
          -->
         <div v-if="!loading && itemData">
-            <div class="go-back"
+            <!-- <div class="go-back"
                 v-on:click="goBack"
                 v-if="!$route.query.embed">
                 <i class="fa fa-angle-double-left"></i>Back
-            </div>
+            </div> -->
 
             <div class="header">
                 <div class="icon">
@@ -758,6 +758,7 @@ export default {
         padding-bottom: 0;
         display: flex;
         flex-direction: row;
+        margin: 8px 0;
 
         .icon{ 
             flex: 0 0 50px;
