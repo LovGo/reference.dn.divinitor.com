@@ -505,13 +505,13 @@ export const Blows: ITypedMap<IStateBlow> = {
     },
 
     132: {
-        name: "Generate Threat",
+        name: "Provoke",
         describe(effect, value) {
             if (value) {
                 let param = Number(value.value);
                 if (!isNaN(param)) {
                     return {
-                        text: `Caster's threat to unit increased by ${filters.thousands(param, undefined, true)}`,
+                        text: `Caster has provoke priority level ${filters.thousands(param, undefined, true)}`,
                         appendDuration: true,
                     };
                 }
@@ -552,7 +552,7 @@ export const Blows: ITypedMap<IStateBlow> = {
     },
 
     144: {
-        name: "Movement/Action/Cooldown Speed",
+        name: "Movement-Action Speed Slow/Ice Defense",
         describe(effect, value) {
             if (value) {
                 let v = value.value;
@@ -565,7 +565,7 @@ export const Blows: ITypedMap<IStateBlow> = {
                     }
                 }
 
-                let prefix = ["movement", "action", "cooldown"];
+                let prefix = ["movement", "action", "ice defense"];
                 let mods = slows.map((v, i) => (v == 0 ? null : `${prefix[i]} speed ${v < 0 ? 'reduced' : 'increased'} by ${filters.percent((v < 0 ? -1 : 1) * v)}%`))
                     .filter((v) => v != null);
 

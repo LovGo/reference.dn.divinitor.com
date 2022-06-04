@@ -11,7 +11,7 @@
             </div>
             <div class="title">
                 <div class="remark">
-                    <span class="id">#{{ this.skillId }} / {{ this.skillData.ownerTable }}</span>
+                    <span class="id">#<div class="inline-select">{{ this.skillId }}</div> / {{ this.skillData.ownerTable }}</span>
                 </div>
                 <h2 class="head">
                     <ui-string class="name" :message-data="this.skillData.name" />
@@ -54,13 +54,13 @@
         <div class="rank page-section">
             <div class="title">Skill Rank Info</div>
 
-        <div class="warn toast">
-            <div class="content">
-                <div class="heading">*Beeping truck noises*</div>
-                This section is highly experimental and obviously not complete. Pardon the layout and bugs!
-                <br/>Some information may be incomplete or incorrect.
-            </div>
-        </div>
+            <!-- <div class="warn toast">
+                <div class="content">
+                    <div class="heading">*Beeping truck noises*</div>
+                    This section is highly experimental and obviously not complete. Pardon the layout and bugs!
+                    <br/>Some information may be incomplete or incorrect.
+                </div>
+            </div> -->
 
             <div class="options">
                 <div class="checkbox">
@@ -69,94 +69,146 @@
                 </div>
             </div>
 
-            <!-- todo select rank -->
-            <button v-on:click="down">-</button>
-            <button v-on:click="up">+</button>
-            {{ activeSkillRank }}
+            <div class="rank-select">
+                <!-- todo select rank -->
+                <div class="tooltip">
+                    <button v-on:click="down" :disabled="activeSkillRank === realMinSkillLevel">-</button>
+                    <div class="tooltext" v-if="activeSkillRank !== realMinSkillLevel">Hold SHIFT while clicking to jump to {{ realMinSkillLevel }}</div>
+                </div>
+                <input type="number" :max="realMaxSkillLevel" :min="1" v-model.number="pendingSkillRank" />
+                <div class="tooltip">
+                    <button v-on:click="up" :disabled="activeSkillRank === realMaxSkillLevel">+</button>
+                    <div class="tooltext" v-if="activeSkillRank !== realMaxSkillLevel">{{ upTooltipText }}</div>
+                </div>
+            </div>
 
             <template v-if="activeRankData">
-            <div class="rank-view">
-                <div class="desc-pane">
-                    <div class="rank-level">Rank {{ rankText }}<span v-if="pvp"> (PvP)</span></div>
-                    <div class="entry" v-if="activeRankData.cooldown > 0">
-                        <div class="key">Cooldown: </div>
-                        <div class="value">
-                            {{ activeRankData.cooldown | milliseconds }}s
+                <div class="rank-view">
+                    <div class="desc-pane">
+                        <div class="rank-level">Rank {{ rankText }}<span v-if="pvp"> (PvP)</span></div>
+                        <div class="entry" v-if="activeRankData.cooldown > 0">
+                            <div class="key">Cooldown: </div>
+                            <div class="value">
+                                {{ activeRankData.cooldown | milliseconds }}s
+                            </div>
+                        </div>
+                        <div class="entry" v-if="skillData.globalCooldownPvE > 0 && !pvp">
+                            <div class="key">Shared Cooldown: </div>
+                            <div class="value">
+                                {{ skillData.globalCooldownPvE | milliseconds }}s (G {{ skillData.globalSkillGroupId }})
+                            </div>
+                        </div>
+                        <div class="entry" v-if="skillData.globalCooldownPvP > 0 && pvp">
+                            <div class="key">Shared Cooldown: </div>
+                            <div class="value">
+                                {{ skillData.globalCooldownPvP | milliseconds }}s (G {{ skillData.globalSkillGroupId }})
+                            </div>
+                        </div>
+                        <div class="entry" v-if="activeRankData.requiredLevel > 0">
+                            <div class="key">Required Level: </div>
+                            <div class="value">
+                                Lv {{ activeRankData.requiredLevel }}
+                            </div>
+                        </div>
+                        <div class="entry" v-if="activeRankData.needHp > 0 || activeRankData.hpConsumeType > 0">
+                            <div class="key">HP cost: </div>
+                            <div class="value">
+                                <template v-if="activeRankData.hpConsumeType > 0">
+                                    {{ activeRankData.hpConsumeType | statPercent }}
+                                </template>
+                                <template v-else>
+                                    {{ activeRankData.needHp | thousands }}
+                                </template>
+                            </div>
+                        </div>
+                        <div class="entry" v-if="activeRankData.needSp > 0">
+                            <div class="key">Mana cost: </div>
+                            <div class="value">
+                                {{ activeRankData.needSp | thousands }}
+                            </div>
+                        </div>
+                        <div class="entry" v-if="activeRankData.addThreat > 0">
+                            <div class="key">Additional Threat: </div>
+                            <div class="value">
+                                {{ activeRankData.addThreat | thousands }}
+                            </div>
+                        </div>
+                        <div class="entry" v-if="activeRankData.heroPoints">
+                            <div class="key">Hero points: </div>
+                            <div class="value">
+                                {{ activeRankData.heroPoints | thousands }}
+                            </div>
+                        </div>
+                        <ui-string :message-data="activeRankData.skillDesc" :params="activeRankData.skillDescParam" :format="'html'" />
+                        
+                        <div class="entry" v-if="activeRankData.pdmgBoardDamage > 0">
+                            <div class="key">Internal PDMG: </div>
+                            <div class="value">
+                                {{ (activeRankData.pdmgBoardDamage + 1) | statPercent }}
+                            </div>
+                        </div>
+                        <div class="entry" v-if="activeRankData.mdmgBoardDamage > 0">
+                            <div class="key">Internal MDMG: </div>
+                            <div class="value">
+                                {{ (activeRankData.mdmgBoardDamage + 1) | statPercent }}
+                            </div>
+                        </div>
+                        <div class="entry">
+                            <div class="key">SLTID: </div>
+                            <div class="value">
+                                {{ activeRankData.id }}
+                            </div>
                         </div>
                     </div>
-                    <div class="entry" v-if="skillData.globalCooldownPvE > 0 && !pvp">
-                        <div class="key">Shared Cooldown: </div>
-                        <div class="value">
-                            {{ skillData.globalCooldownPvE | milliseconds }}s (G {{ skillData.globalSkillGroupId }})
+                    <div class="effect-pane" v-if="skillData.effects.length > 0">
+                        <h4 class="pane-header">Applied effects</h4>
+                        <div class="effect-options options">
+                            <div class="checkbox">
+                                <input id="show-all" type="checkbox" v-model="forceShowAllEffects" />
+                                <label for="show-all">Display all</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="entry" v-if="skillData.globalCooldownPvP > 0 && pvp">
-                        <div class="key">Shared Cooldown: </div>
-                        <div class="value">
-                            {{ skillData.globalCooldownPvP | milliseconds }}s (G {{ skillData.globalSkillGroupId }})
-                        </div>
-                    </div>
-                    <div class="entry" v-if="activeRankData.addThreat > 0">
-                        <div class="key">Additional Threat: </div>
-                        <div class="value">
-                            {{ activeRankData.addThreat | thousands }}
-                        </div>
-                    </div>
-                    <ui-string :message-data="activeRankData.skillDesc" :params="activeRankData.skillDescParam" :format="'html'" />
-                    
-                    <div class="entry" v-if="activeRankData.pdmgBoardDamage > 0">
-                        <div class="key">Internal PDMG: </div>
-                        <div class="value">
-                            {{ (activeRankData.pdmgBoardDamage + 1) | statPercent }}
-                        </div>
-                    </div>
-                    <div class="entry" v-if="activeRankData.mdmgBoardDamage > 0">
-                        <div class="key">Internal MDMG: </div>
-                        <div class="value">
-                            {{ (activeRankData.mdmgBoardDamage + 1) | statPercent }}
-                        </div>
-                    </div>
-                    <div class="entry">
-                        <div class="key">SLTID: </div>
-                        <div class="value">
-                            {{ activeRankData.id }}
+                        <div class="effect" v-for="effect of skillData.effects" :key="effect.index">
+                            <skill-effect
+                                :effect="effect"
+                                :value="effectValuesFor(effect.index, activeSkillRank)"
+                                :activeRankData="activeRankData"
+                                :forceShow="forceShowAllEffects" />
                         </div>
                     </div>
                 </div>
-                <div class="effect-pane" v-if="skillData.effects.length > 0">
-                    <h4 class="pane-header">Applied effects</h4>
-                    <div class="effect-options options">
-                        <div class="checkbox">
-                            <input id="show-all" type="checkbox" v-model="forceShowAllEffects" />
-                            <label for="show-all">Display all</label>
-                        </div>
+                <div class="rank-view">
+                    <div class="processor-pane">
+                        <h4 class="pane-header">Usage Constraints</h4>
+                        <skill-usable
+                            :canUseParams="activeRankData.canUseParams"
+                            :usableCheckers="skillData.usableCheckers"/>
                     </div>
-                    <div class="effect" v-for="effect of skillData.effects" :key="effect.index">
-                        <skill-effect
-                            :effect="effect"
-                            :value="effectValuesFor(effect.index, activeSkillRank)"
-                            :activeRankData="activeRankData"
-                            :forceShow="forceShowAllEffects" />
+                    <div class="processor-pane">
+                        <h4 class="pane-header">Skill Processors</h4>
+                        <skill-execution
+                            :processors="skillData.processors"
+                            :processParams="activeRankData.processParams"/>
                     </div>
                 </div>
-            </div>
-            <div class="rank-view">
-                <div class="processor-pane">
-                    <h4 class="pane-header">Usage Constraints</h4>
-                    <skill-usable
-                        :canUseParams="activeRankData.canUseParams"
-                        :usableCheckers="skillData.usableCheckers"/>
+                <div class="state-effect-visual">
+                    <div class="se-section" v-if="activeRankData.stateEffectIds.length">
+                        <h4 class="pane-header">Self State VFX</h4>
+                        <state-effect
+                            v-for="(seid, i) of activeRankData.stateEffectIds"
+                            :key="i"
+                            :stateEffectId="seid"
+                        />
+                    </div>
+                    <div class="se-section" v-if="activeRankData.stateEffectOtherIds.length">
+                        <h4 class="pane-header">Target State VFX</h4>
+                        <state-effect
+                            v-for="(seid, i) of activeRankData.stateEffectOtherIds"
+                            :key="i"
+                            :stateEffectId="seid"
+                        />
+                    </div>
                 </div>
-                <div class="processor-pane">
-                    <h4 class="pane-header">Skill Processors</h4>
-                    <skill-execution
-                        :processors="skillData.processors"
-                        :processParams="activeRankData.processParams"/>
-                </div>
-            </div>
-            <div class="state-effect-visual" v-if="activeRankData.stateEffectIds.length || activeRankData.stateEffectOtherIds.length">
-                SEIDs {{ activeRankData.stateEffectIds.concat(activeRankData.stateEffectOtherIds).join(", ") }}
-            </div>
             </template>
             <template v-else>
                 <div class="warn toast">
@@ -191,6 +243,7 @@ import SkillStubLink from "@/components/skill/SkillStubLink.vue";
 import SkillUsable from "@/components/skill/SkillUsable.vue";
 import SkillExecution from "@/components/skill/SkillExecution.vue";
 import SkillBasicInfo from "@/components/skill/SkillBasicInfo.vue";
+import StateEffect from './StateEffect.vue';
 
 import LoadingErrorable from "@/models/util/LoadingErrorable";
 import ISkill from '@/models/skills/ISkill';
@@ -212,6 +265,8 @@ interface IData {
     activeSkillRank: number;
     forceShowAllEffects: boolean;
     activeRankData: ISkillLevel|null;
+    
+    pendingSkillRank: number;
 }
 
 export default Vue.extend({
@@ -226,6 +281,7 @@ export default Vue.extend({
         SkillStubLink,
         SkillUsable,
         SkillExecution,
+        StateEffect,
     },
     props: {
         "skillSlug": {
@@ -242,6 +298,7 @@ export default Vue.extend({
             activeSkillRank: 0,
             forceShowAllEffects: false,
             activeRankData: null,
+            pendingSkillRank: 0,
         };
     },
     watch: {
@@ -254,6 +311,13 @@ export default Vue.extend({
         activeSkillRank() {
             this.setCurrentSkillLevelData();
             this.updateQueryParams();
+            this.pendingSkillRank = this.activeSkillRank;
+        },
+        pendingSkillRank() {
+            const n = Number(this.pendingSkillRank);
+            if (!isNaN(n) && n > 0 && n <= this.realMaxSkillLevel) {
+                this.activeSkillRank = n;
+            }
         },
         pvp() {
             this.setCurrentSkillLevelData();
@@ -306,12 +370,28 @@ export default Vue.extend({
 
             return 1;
         },
+        maxNonTechLevel(): number {
+            return this.skillData && this.skillData.spLevels || 0;
+        },
+        upTooltipText(): string {
+            if (this.activeSkillRank >= this.maxNonTechLevel) {
+                if (this.skillData) {
+                    const techLvls = this.skillData.techLevels;
+                    const overLvls = this.realMaxSkillLevel - this.skillData.spLevels;
+                    if (techLvls > 0 && overLvls > 0) {
+                        return `Hold SHIFT while clicking to jump to ${this.realMaxSkillLevel} (+${overLvls})`;
+                    }
+                }
+            }
+            
+            return `Hold SHIFT while clicking to jump to ${this.maxNonTechLevel}`;
+        },
         rankText(): string {
             if (this.skillData) {
                 const techLvls = this.skillData.techLevels;
                 const overLvls = this.activeSkillRank - this.skillData.spLevels;
                 if (techLvls > 0 && overLvls > 0) {
-                    return `${this.skillData.spLevels} (+${overLvls})`;
+                    return `${this.activeSkillRank} (+${overLvls})`;
                 }
             }
 
@@ -489,14 +569,22 @@ export default Vue.extend({
             this.activeRankData = skillLevelData.find((l) => l.level == this.activeSkillRank) || null;
         },
 
-        down() {
-            if (this.activeSkillRank > this.realMinSkillLevel) {
+        down(evt: MouseEvent) {
+            if (evt.shiftKey) {
+                this.activeSkillRank = this.realMinSkillLevel;
+            } else if (this.activeSkillRank > this.realMinSkillLevel) {
                 --this.activeSkillRank;
             }
         },
 
-        up() {
-            if (this.activeSkillRank < this.realMaxSkillLevel) {
+        up(evt: MouseEvent) {
+            if (evt.shiftKey) {
+                if (this.activeSkillRank >= this.maxNonTechLevel) {
+                    this.activeSkillRank = this.realMaxSkillLevel;
+                } else {
+                    this.activeSkillRank = this.maxNonTechLevel;
+                }
+            } else if (this.activeSkillRank < this.realMaxSkillLevel) {
                 ++this.activeSkillRank;
             }
         }
@@ -611,6 +699,27 @@ export default Vue.extend({
         .rank.page-section {
             .options {
                 margin: 8px 0 16px 0;
+            }
+            
+            .rank-select {
+                
+                input[type="number"] {
+                    background: none;
+                    color: @dv-c-foreground;
+                    font-size: 14px;
+                    font-family: @dv-f-geomanist;
+                    width: 40px;
+                    padding: 10px;
+                    text-align: center;
+                    border: 1px @dv-c-idle solid;
+                    transition: border-color ease-in 0.125s;
+                    margin: 0 2px;
+
+                    &:hover,
+                    &:focus {
+                        border-color: @dv-c-foreground;
+                    }
+                }
             }
 
             .rank-view {

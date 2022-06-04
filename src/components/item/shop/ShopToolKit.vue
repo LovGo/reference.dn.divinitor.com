@@ -2,7 +2,7 @@
 <div class="shop-toolkit">
     <input type="number" v-model.number="shopId"/>
     <div class="browser">
-        <shop-browser :shopId="shopId" v-if="shopId" />
+        <shop-browser :shopId="shopId" v-if="shopId"/>
     </div>
 </div>
 </template>

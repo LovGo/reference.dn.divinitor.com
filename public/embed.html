@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>Divinitor Minerva Embedded page</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="https://static.divinitor.com/site/fav/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="https://static.divinitor.com/site/fav/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://static.divinitor.com/site/fav/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="https://static.divinitor.com/site/fav/manifest.json">
+    <meta name="theme-color" content="#131315">
+    <meta property="og:site_name" content="Divinitor Minerva Embedded Page">
+    <meta property="og:image" content="https://divinitor.com/resources/img/dv-logo.png">
+    <meta property="og:title" content="Dragon Nest Reference">
+    <meta property="og:description" content="<%= VUE_APP_OG_DESC %>">
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700" rel="stylesheet"> 
+
+    <!-- Static region server -->
+    <script type="text/javascript">
+        window.STATIC_REGION = <%= VUE_APP_STATIC_REGION %>;
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but reference.dn.divinitor.com doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

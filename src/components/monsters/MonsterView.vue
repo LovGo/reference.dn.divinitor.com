@@ -41,7 +41,7 @@
             <div class="title">Stats</div>
 
             Please note that difficulty IDs are arbitrary and don't necessarily go in order of difficulty.
-            <div class="stats" :wide="monster.difficulties.length > 4">
+            <div class="stats">
                 <table>
                     <thead>
                         <th>RowID</th>
@@ -462,35 +462,31 @@ export default Vue.extend({
     }
 
     .stats {
-        
-        &[wide] {
-            overflow-x: auto;
-            max-width: 250px;
-            @media only screen and (min-width: 450px) {
-                max-width: 380px;
-            }
-
-            @media only screen and (min-width: 550px) {
-                max-width: 500px;
-            }
-
-            @media only screen and (min-width:650px) {
-                max-width: 400px;
-            }
-
-            @media only screen and (min-width:780px) {
-                max-width: 500px;
-            }
-
-            @media only screen and (min-width:900px) {
-                max-width: 644px;
-            }
-
-            @media only screen and (min-width:@min-desktop-wide-width) {
-                max-width: 950px;
-            }
+        overflow-x: auto;
+        max-width: 250px;
+        @media only screen and (min-width: 450px) {
+            max-width: 380px;
         }
-        
+
+        @media only screen and (min-width: 550px) {
+            max-width: 500px;
+        }
+
+        @media only screen and (min-width:650px) {
+            max-width: 400px;
+        }
+
+        @media only screen and (min-width:780px) {
+            max-width: 500px;
+        }
+
+        @media only screen and (min-width:900px) {
+            max-width: 644px;
+        }
+
+        @media only screen and (min-width:@min-desktop-wide-width) {
+            max-width: 950px;
+        }
     }
 
     .fid {

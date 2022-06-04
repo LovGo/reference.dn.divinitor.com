@@ -2,14 +2,14 @@
 <div class="home">
     <h1>Welcome</h1>
 
-    <div class="warn toast">
+    <!-- <div class="warn toast">
         <div class="content">
             <div class="heading">Under construction!</div>
             <p>
                 Pardon our dust, bugs, and broken features. We're in beta.
             </p>
         </div>
-    </div>
+    </div> -->
 
     <p>
         This site provides information on various aspects of Dragon Nest. Information on monsters, 

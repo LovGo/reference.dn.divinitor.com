@@ -4,7 +4,7 @@
             <transition name="fade">
             <div v-if="loading" class="loading">
                 <load-indicator
-                :loadText="'#' + itemId"></load-indicator>
+                :loadText="''"></load-indicator>
             </div>
             </transition>
             <transition name="fade">
@@ -18,7 +18,7 @@
                             :type="itemData.type.type"
                         ></item-icon>
                     </div>
-                    <div class="itemtip" v-if="!noTip">
+                    <div :class="'itemtip ' + directionHint" v-if="!noTip">
                         <div class="remark">
                             <span class="iid">#{{ itemId }}</span>
                         </div>
@@ -54,7 +54,7 @@
             <transition name="fade">
             <div v-if="loading" class="loading">
                 <load-indicator
-                :loadText="'#' + itemId"></load-indicator>
+                :loadText="''"></load-indicator>
             </div>
             </transition>
             <transition name="fade">
@@ -68,7 +68,7 @@
                             :type="itemData.type.type"
                         ></item-icon>
                     </div>
-                    <div class="itemtip" v-if="!noTip">
+                    <div :class="'itemtip ' + directionHint" v-if="!noTip">
                         <div class="remark">
                             <span class="iid">#{{ itemId }}</span>
                         </div>
@@ -127,6 +127,7 @@ export default {
         "rate",
         "userData",
         "noTip",
+        'directionHint',
     ],
     name: "item-icon-tooltip",
     data: function() {
@@ -273,7 +274,14 @@ export default {
         
         .itemtip {
             position: absolute;
-            bottom: 100%;
+            
+            &.up {
+                bottom: 100%;
+            }
+            &.down {
+                top: 100%;
+            }
+
             .left(0);
             opacity: 0.0;
             // transform: translateX(-50%);
